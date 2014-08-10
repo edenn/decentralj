@@ -8,9 +8,9 @@ public class ServerThread {
 	
 	    private ZMQ.Context context = ZMQ.context(1);
 	    private ZMQ.Socket socket = null;
-	    private Peer peer;
+	    private Node peer;
 
-	    public ServerThread(Socket socket, Peer peer) {
+	    public ServerThread(Socket socket, Node peer) {
 			this.socket = socket;
 			this.peer = peer;
 	    }

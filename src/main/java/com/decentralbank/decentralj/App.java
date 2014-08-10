@@ -11,7 +11,8 @@ public class App
       
 	  public static void main(String[] args) throws IOException {
 	    
-		  Peer lepeer= new Peer();
+		  Node lepeer= new Node();
+		  lepeer.setID("sd");
 
 		  		//lepeer.process();
 		  		//lepeer.run();

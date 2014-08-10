@@ -9,9 +9,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class Peer {
+public class Node {
 	
-	private static final int MAXCON=10;
+	private static final int MAXCON=11;
 	private String NextPeerID;
 	private String ID;
 	private String Port;
@@ -22,6 +22,7 @@ public class Peer {
 	private String NextPeerPort;
 	private String RedirectPort;
 	private String RedirectHostName;
+	private NodeWallet NodeWallet;
 	//a hashtable to keep track of nodes
 	private Hashtable<Integer, String> hashtable;
 
@@ -30,7 +31,7 @@ public class Peer {
 		return MAXCON;
 	}
 	
-	public Peer(){
+	public Node(){
 		this.hashtable = new Hashtable<Integer, String>();
 	}
 	
@@ -124,11 +125,28 @@ public class Peer {
 		hashtable = lehashtable;
 	}
 	
+	public NodeWallet getWallet(){
+		
+		return NodeWallet;
+		
+	}
+	
+	public void createWallet(){
+		
+		
+		
+	}
+	
 	 // return String of object
 	@Override
 	public String toString(){
 		return "Hostname: "+this.Hostname+" Port: "+this.Port+" ID: "+this.ID+" NextHostname: "+this.NextPeerHostName+" NextPort: "+
 			this.NextPeerPort+" NextID: "+this.NextPeerID+" Maximum connections: "+this.MAXCON+" Hashtable: "+this.getHashtable().toString();
 	}
+	
+	public void addPeers(){
+		
+	}
+	
 
 }

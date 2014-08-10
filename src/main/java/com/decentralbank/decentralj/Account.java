@@ -33,6 +33,8 @@ public class Account{
 		this.ecKey = new ECKey();
 	    this.address = this.ecKey.toAddress(netParams);
 	    
+        System.out.println("testnet address:\n" + this.address);
+	    
 	}
 
 	public Account(ECKey ecKey) {
@@ -44,8 +46,8 @@ public class Account{
 	public Account(ECKey ecKey, BigInteger nonce, BigInteger balance) {
 		
 		this.ecKey = ecKey;
-		this.nonce=nonce;
-		this.balance=balance;
+		this.nonce = nonce;
+		this.balance = balance;
 		
 	}	
 
@@ -68,6 +70,10 @@ public class Account{
 	}
 	
     public BigInteger getBalance() {
+    	
+		if(balance == BigInteger.valueOf(0)){
+			return BigInteger.valueOf(0);
+		}
 		
 		return balance;
 	
