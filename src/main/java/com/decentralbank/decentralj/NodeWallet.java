@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import com.google.bitcoin.core.*;
+import com.google.bitcoin.script.Script;
+import com.google.bitcoin.core.Transaction;
+import com.google.bitcoin.script.ScriptBuilder;
 import com.google.bitcoin.store.BlockStore;
 import com.google.bitcoin.store.BlockStoreException;
 import com.google.bitcoin.store.MemoryBlockStore;
 import com.google.bitcoin.store.UnreadableWalletException;
+import com.google.common.collect.ImmutableList;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 //TODO Add a Listener to detect changes in values
 
@@ -164,6 +169,81 @@ public class NodeWallet {
 	        Address address = account.getAddress();
 	        NodeInfo.put(address, account);
 	    }*/
+	 
+	 //create multisg transactions
+	 public ECKey.ECDSASignature  serializeTransaction(ECKey key, Transaction contracts ){
+		// Assume we get the multisig transaction we're trying to spend from 
+		// somewhere, like a network connection.
+		ECKey serverKey = key ;
+		Transaction contract = contracts;
+		Address clientKey = null;
+		
+		TransactionOutput multisigOutput = contract.getOutput(0);
+		Script multisigScript = multisigOutput.getScriptPubKey();
+		// Is the output what we expect?
+		//checkState(multisigScript.isSentToMultiSig());
+		BigInteger value = multisigOutput.getValue();
+
+		// OK, now build a transaction that spends the money back to the client.
+		Transaction spendTx = new Transaction(netParams);
+
+		spendTx.addOutput(value, clientKey);
+		spendTx.addInput(multisigOutput);
+
+		// It's of the right form. But the wallet can't sign it. So, we have to
+		// do it ourselves.
+		Sha256Hash sighash = spendTx.hashForSignature(0, multisigScript, Transaction.SigHash.ALL, false);
+		ECKey.ECDSASignature signature = serverKey.sign(sighash);
+		// We have calculated a valid signature, so send it back to the client:
+		return signature;
+		
+	 }
+	 
+	 public String deserializeTransaction(){
+		 
+		 return null;
+	 }
 	   
+	 public void createMultisig(byte [] publicKeyBytes) throws BlockStoreException, InsufficientMoneyException, InterruptedException, ExecutionException{
+			// how man milli-Bitcoins to send
+		 BigInteger btcToSend = new BigInteger(amountToSend);
+                   
+		 // initialize BlockChain object
+		 chain = new BlockChain(netParams, wallet, blockStore);
+		
+		 // instantiate Peer object to handle connections
+		// final Peer peer = new Peer(netParams, null, new PeerAddress(InetAddress.getLocalHost()), chain, null);
+		
+		 PeerGroup peerGroup = new PeerGroup(netParams, chain);
+		// Create a random key.
+		 ECKey clientKey = new ECKey();
+		 // We get the other parties public key from somewhere ...
+		 ECKey serverKey = new ECKey(null, publicKeyBytes);
+
+		 // Prepare a template for the contract.
+		 Transaction contract = new Transaction(netParams);
+		 List<ECKey> keys = ImmutableList.of(clientKey, serverKey);
+		 // Create a 2-of-2 multisig output script.
+		 Script script = ScriptBuilder.createMultiSigOutputScript(2, keys);
+		 // Now add an output for 0.50 bitcoins that uses that script.
+		 BigInteger amount = Utils.toNanoCoins(0, 50);
+		 contract.addOutput(amount, script);
+
+		 // We have said we want to make 0.5 coins controlled by us and them.
+		 // But it's not a valid tx yet because there are no inputs.
+		 Wallet.SendRequest req = Wallet.SendRequest.forTx(contract);
+		 wallet.completeTx(req);   // Could throw InsufficientMoneyException
+
+		 // Broadcast and wait for it to propagate across the network.
+		 // It should take a few seconds unless something went wrong.
+		 peerGroup.broadcastTransaction(req.tx).get();
+		 
+	 }
+	 
+	 //refund script
+	 public void refund(){
+		 
+	 }
+	 
     
 }

@@ -1,7 +1,10 @@
 package com.decentralbank.decentralj;
 import java.io.IOException;
+
 import org.zeromq.ZMQ;
+import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMQ.Context;
+import org.zeromq.ZThread;
 
 public class App 
 {
@@ -11,19 +14,29 @@ public class App
       
 	  public static void main(String[] args) throws IOException {
 	    
-		  Node lepeer= new Node();
-		  lepeer.setID("sd");
 
-		  		//lepeer.process();
-		  		//lepeer.run();
-	            
-	            try {
-	            	serverSocket = context.socket(ZMQ.REP);
-	    			System.out.println("Server "+lepeer.getID()+" Started!");
-	            } catch (Exception e) {
-	                System.err.println("Could not listen on port: "+Integer.parseInt(lepeer.getPort()));
-	                System.exit(-1);
-	            }
+	        Context context = ZMQ.context(1);
+
+	        //ZMQ.Socket clients = context.socket(ZMQ.ROUTER);
+	       // clients.connect ("tcp://*:59049");
+
+	        ZMQ.Socket workers = context.socket(ZMQ.DEALER);
+	        workers.bind ("inproc://servers");
+	        
+	        for(int thread_nbr = 0; thread_nbr < 5; thread_nbr++) {
+	            ZThread worker = new ServerThread(context);
+	         //   worker.start(arg0, arg1);;
+	    
+	           // worker.start();
+	        }
+	     
+	        //  Connect work threads to client threads via a queue
+	        //ZMQ.proxy (clients, workers, null);
+
+	        //  We never get here but clean up anyhow
+	        //clients.close();
+	        workers.close();
+	        context.term();
 	            //passing the object to the ServerThread object
 	           // while (listening)
 	            //	new ServerThread(serverSocket.accept(), peer).start();

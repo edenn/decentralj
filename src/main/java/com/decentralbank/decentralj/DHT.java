@@ -86,7 +86,20 @@ public class DHT {
         responder.bind("tcp://*:" + getPort());
         
         //finish this
+       /* while (!Thread.currentThread().isInterrupted()) {
+            // Wait for next request from the client
+            byte[] request = responder.recv(0);
+            String messageType = new String(request).split("/")[0];
 
+            if (messageType.contains(messageType)) {
+  
+                
+                
+                responder.send("OK".getBytes(), 0);
+            } else {
+                responder.send("ERR".getBytes(), 0);
+            }
+        }*/
         responder.close();
         context.term();
     }
