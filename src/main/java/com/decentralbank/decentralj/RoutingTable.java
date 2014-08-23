@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.decentralbank.decentralj.core.Node;
+
 //Routing Table to Keep track of network
 public class RoutingTable {
 	

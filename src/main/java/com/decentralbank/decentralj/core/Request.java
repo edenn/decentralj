@@ -1,4 +1,4 @@
-package com.decentralbank.decentralj;
+package com.decentralbank.decentralj.core;
 
 //This is to be used by a Node to send and receive requests
 public class Request {

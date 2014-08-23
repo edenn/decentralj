@@ -7,6 +7,8 @@ import java.util.Random;
 
 import org.zeromq.ZMQ;
 
+import com.decentralbank.decentralj.core.Node;
+
 //Decentralized Hash Table for Voting Pool Members 
 public class DHT {
 	

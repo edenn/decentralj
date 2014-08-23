@@ -1,4 +1,4 @@
-package com.decentralbank.decentralj;
+package com.decentralbank.decentralj.core;
 
 import java.io.File;
 import java.io.IOException;
