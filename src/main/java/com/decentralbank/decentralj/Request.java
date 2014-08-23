@@ -1,5 +1,6 @@
 package com.decentralbank.decentralj;
 
+//This is to be used by a Node to send and receive requests
 public class Request {
 	
 	private String status;

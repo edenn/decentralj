@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+//Routing Table to Keep track of network
 public class RoutingTable {
 	
     private Node node;
@@ -15,16 +16,19 @@ public class RoutingTable {
         return node;
     }
     
+    //get Pool ID
 	public String getID() {
 		
 		return node.getID();
 		
 	}
-
+	
+	//set a node
     public void setNode(Node node) {
         this.node = node;
     }
     
+    //routing table
     public RoutingTable(Node id) {
         this.setNode(id);
         for (int i = 0; i < CONSTANT; i++) {
@@ -32,11 +36,12 @@ public class RoutingTable {
         }
     }
 
+    //update a peer
     public void update(Node peer) {
      
     }
 
-    
+    //find available nodes
     public ArrayList findAvailableNodes(Node target, int count){
         ArrayList ret = new ArrayList<Object>();
         

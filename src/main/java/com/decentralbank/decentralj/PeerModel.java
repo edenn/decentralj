@@ -17,12 +17,14 @@ public class PeerModel {
 	private transient boolean isOnline = false;
 	private transient long    lastCheckTime = 0;
 
+	//peer model
     public PeerModel(byte[] ip, int port, byte[] peerId) {
         this.ip = ip;
         this.port = port & 0xFFFF;
         this.peerId = peerId;
     }
-
+    
+    //get the ip address
     public InetAddress getInetAddress() {
         InetAddress addr = null;
         try {
@@ -33,43 +35,43 @@ public class PeerModel {
         }
         return addr;
     }
-
+    //get ip address
     public byte[] getIp() {
         return ip;
     }
 
+    //get port number
     public int getPort() {
         return port;
     }
 
+    //get peer id
     public byte[] getPeerId() {
         return peerId;
     }
 
+    //detect if peer is online
     public boolean isOnline() {
         if (capabilities < 7) return false;
         return isOnline;
     }
 
+    //set online peer
     public void setOnline(boolean online) {
         isOnline = online;
     }
 
+    //get last checked time
     public long getLastCheckTime() {
         return lastCheckTime;
     }
 
+    //set last checked time
     public void setLastCheckTime(long lastCheckTime) {
         this.lastCheckTime = lastCheckTime;
     }
 
-    public byte getCapabilities() {
-        return capabilities;
-    }
 
-    public void setCapabilities(byte capabilities) {
-        this.capabilities = capabilities;
-    }
 
     @Override
     public String toString() {

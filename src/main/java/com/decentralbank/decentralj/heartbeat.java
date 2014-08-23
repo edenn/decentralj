@@ -12,14 +12,5 @@ public class heartbeat {
     private final static int HEARTBEAT_INTERVAL = 1000;    //  msecs
     private final static int INTERVAL_INIT      = 1000;    //  Initial reconnect
     private final static int INTERVAL_MAX      = 32000;    //  After exponential 
-    
-    
-    public heartbeat(){
-    	
-    	
-    	
-    }
-    
-    
 
 }

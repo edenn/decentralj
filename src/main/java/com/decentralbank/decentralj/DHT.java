@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.zeromq.ZMQ;
 
+//Decentralized Hash Table for Voting Pool Members 
 public class DHT {
 	
     private RoutingTable routes;
@@ -18,7 +19,7 @@ public class DHT {
 		this.routes = new RoutingTable(new Node());
 		
     }
-
+    
     public DHT(String poolID) {
     	
         this();
@@ -35,43 +36,50 @@ public class DHT {
         
     }
 
+    //get Routes
     public RoutingTable getRoutes() {
     	
         return routes;
         
     }
 
+    //set Routes
     public void setRoutes(RoutingTable routes) {
     	
         this.routes = routes;
         
     }
 
+    //get Pool ID
     public String getPoolID() {
     	
         return poolID;
         
     }
 
+    //set Pool Id
     public void setPoolID(String poolID) {
     	
         this.poolID = poolID;
         
     }
 
+    //get Port
     public int getPort() {
     	
         return port;
     
     }
 
+    //set Port
     public void setPort(int port) {
     
     	this.port = port;
     
     }
 
-    public String getNode() {
+    //get Node ID
+    public String getNodeID() {
     	
         return getRoutes().getID();
         

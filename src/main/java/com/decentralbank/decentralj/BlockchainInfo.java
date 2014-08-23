@@ -15,6 +15,7 @@ public class BlockchainInfo {
 	// use SOCKS5
 	//example addresses to check 1F6UU9EBPNyAFyPojDqHAtoCiNDX9mFmBP|1GDHkj6EoeQiG3HeUgdUnxLgL8pj1A2yAp|1H4WfM5u1sCQEQZLWeHXaKBBq6kcXknzrd
 	
+	//query unspent inputs given addresses array
 	public String unspent(String [] addresses){
 		  
 		  String result="";
@@ -42,6 +43,7 @@ public class BlockchainInfo {
 		  return result;
 	}
 	
+	//query all balances from an addresses array
 	public String multiaddr(String [] addresses){
 		 
 		 String result="";
@@ -80,6 +82,7 @@ public class BlockchainInfo {
 		
 	}
 	
+	// broadcast a transaction
 	public String pushTx(String tx_serialized, String tx_hash){
 		
 		 String PostData="";
