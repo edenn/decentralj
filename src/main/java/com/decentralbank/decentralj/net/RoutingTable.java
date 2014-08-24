@@ -1,4 +1,4 @@
-package com.decentralbank.decentralj;
+package com.decentralbank.decentralj.net;
 
 import java.util.ArrayList;
 import java.util.Collections;

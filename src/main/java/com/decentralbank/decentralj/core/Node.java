@@ -4,10 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
+import com.google.bitcoin.core.Address;
+import com.google.bitcoin.core.AddressFormatException;
+import com.google.bitcoin.core.NetworkParameters;
 
 public class Node {
 	
@@ -22,10 +27,25 @@ public class Node {
 	private String NextPeerPort;
 	private String RedirectPort;
 	private String RedirectHostName;
-	private NodeWallet NodeWallet;
+	private static NodeWallet wallet;
 	//a hashtable to keep track of nodes
 	private Hashtable<Integer, String> hashtable;
 
+	public static void main(String [] args) throws AddressFormatException {
+		
+		Node lenode = new Node();
+		NodeWallet lewallet = lenode.getWallet();
+		BigInteger leinteger = BigInteger.valueOf(20000000);
+		System.out.print(leinteger);
+		 NetworkParameters netParams = NetworkParameters.testNet();
+		// leaddress.equals("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
+		 Address targetAddress = new Address(netParams, "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
+		//Address.getParametersFromAddress("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
+		lewallet.setBalance(targetAddress, leinteger);
+		//BigInteger result = lewallet.getBalance(leaddress);
+		System.out.print(targetAddress.toString());
+		
+	}
 	
 	public int getMaxcon() {
 		return MAXCON;
@@ -127,13 +147,16 @@ public class Node {
 	
 	public NodeWallet getWallet(){
 		
-		return NodeWallet;
+		return wallet;
 		
 	}
 	
 	public void createWallet(){
 		
-		
+		if (wallet != null) {
+		   return;
+		}	
+		wallet = new NodeWallet();
 		
 	}
 	
@@ -144,7 +167,9 @@ public class Node {
 			this.NextPeerPort+" NextID: "+this.NextPeerID+" Maximum connections: "+this.MAXCON+" Hashtable: "+this.getHashtable().toString();
 	}
 	
-	public void addPeers(){
+	public void addPeer(int PeerID, String PeerHash){
+		
+		
 		
 	}
 	

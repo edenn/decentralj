@@ -1,4 +1,4 @@
-package com.decentralbank.decentralj;
+package com.decentralbank.decentralj.net;
 
 import org.spongycastle.util.encoders.Hex;
 

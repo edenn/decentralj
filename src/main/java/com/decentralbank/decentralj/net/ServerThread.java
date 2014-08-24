@@ -1,4 +1,4 @@
-package com.decentralbank.decentralj;
+package com.decentralbank.decentralj.net;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;

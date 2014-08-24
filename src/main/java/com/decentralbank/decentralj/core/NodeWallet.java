@@ -93,7 +93,7 @@ public class NodeWallet {
 	 }
 	 
 	 //set a balance on NodeInfo
-	 public void setBalance(Address _address,BigInteger amount) {
+	 public void setBalance(Address _address, BigInteger amount) {
 		 
 	    NodeInfo.get(_address).setBalance(amount);
 	        

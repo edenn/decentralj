@@ -6,6 +6,8 @@ import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMQ.Context;
 import org.zeromq.ZThread;
 
+import com.decentralbank.decentralj.net.ServerThread;
+
 public class App 
 {
 	  private static  ZMQ.Socket serverSocket = null;
