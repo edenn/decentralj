@@ -13,39 +13,44 @@ public class App
 	  private static  ZMQ.Socket serverSocket = null;
       private boolean listening = true;
       private static ZMQ.Context context = ZMQ.context(1);
+      private static final int Threads = 10;
+      
       
 	  public static void main(String[] args) throws IOException {
-	    
+		  Context context = ZMQ.context(1);
+		  ZMQ.Socket router = context.socket(ZMQ.ROUTER);
+		  router.bind("tcp://*:59049");
+	
+          for (int workerNbr = 0; workerNbr < 11; workerNbr++)
+          {
+        	  Thread worker = new ServerThread(context);
+              worker.start();
+          }
+          
+          //  Run for five seconds and then tell workers to end
+          long endTime = System.currentTimeMillis () + 5000;
+          int workersFired = 0;
+          
+          while (true) {
+              //  Next message gives us least recently used worker
+              String identity = router.recvStr ();
+              router.sendMore (identity);
+              router.recv (0);     //  Envelope delimiter
+              router.recv (0);     //  Response from worker
+              router.sendMore ("");
 
-	        Context context = ZMQ.context(1);
+              //  Encourage workers until it's time to fire them
+              if (System.currentTimeMillis () < endTime)
+            	  router.send ("Work harder");
+              else {
+            	  router.send ("Fired!");
+                  if (++workersFired == Threads)
+                      break;
+              }
+          }
 
-	        //ZMQ.Socket clients = context.socket(ZMQ.ROUTER);
-	       // clients.connect ("tcp://*:59049");
-
-	        ZMQ.Socket workers = context.socket(ZMQ.DEALER);
-	        workers.bind ("inproc://servers");
-	        
-	        for(int thread_nbr = 0; thread_nbr < 5; thread_nbr++) {
-	            ZThread worker = new ServerThread(context);
-	         //   worker.start(arg0, arg1);;
-	    
-	           // worker.start();
-	        }
-	     
-	        //  Connect work threads to client threads via a queue
-	        //ZMQ.proxy (clients, workers, null);
-
-	        //  We never get here but clean up anyhow
-	        //clients.close();
-	        workers.close();
-	        context.term();
-	            //passing the object to the ServerThread object
-	           // while (listening)
-	            //	new ServerThread(serverSocket.accept(), peer).start();
-
-	           // serverSocket.close();
-	        
-		  
+          router.close();
+          context.term();
 		  
 	  }
     
