@@ -19,7 +19,7 @@ public class App
 	  public static void main(String[] args) throws IOException {
 		  Context context = ZMQ.context(1);
 		  ZMQ.Socket router = context.socket(ZMQ.ROUTER);
-		  router.bind("tcp://*:59049");
+		  router.bind("tcp://*:7000");
 	
           for (int workerNbr = 0; workerNbr < 11; workerNbr++)
           {
@@ -43,7 +43,7 @@ public class App
               if (System.currentTimeMillis () < endTime)
             	  router.send ("Work harder");
               else {
-            	  router.send ("Fired!");
+            	  router.send ("Handshake");
                   if (++workersFired == Threads)
                       break;
               }

@@ -16,7 +16,7 @@ public class ServerThread extends Thread  {
 	    
 	    public void run(){
 	    	
-	    	System.out.print("herro");
+	    
 	    	   Context context = ZMQ.context(1);
 	            Socket worker = context.socket(ZMQ.DEALER);
 	            worker.connect("tcp://127.0.0.1:7000");
@@ -25,13 +25,13 @@ public class ServerThread extends Thread  {
 	            while (true) {
 	                //  Tell the broker we're ready for work
 	                worker.send ("Handshake");
-
+	            	System.out.print("herro");
 	                //  Get workload from broker, until finished
 	                worker.recvStr ();   //  Envelope delimiter
 	                String workload = worker.recvStr ();
 	                boolean finished = workload.equals ("Fired!");
 	                if (finished) {
-	                    System.out.printf ("Completed: %d tasks\n", total);
+	                    System.out.printf("Completed: %d tasks\n", total);
 	                    break;
 	                }
 	                total++;
