@@ -17,12 +17,13 @@ public class Reputation implements Serializable {
     public Reputation (long upTime, String solvency, String trust) {
     	this.upTime = upTime;
     	this.solvency = solvency;
+    	this.trust = trust;
     }
 
     //implement
     @Override
     public String toString() {
-        return "99.99999";
+        return "upTime: "+ upTime + " solvency:" +solvency  + " trust"+trust ;
     }
 
 }

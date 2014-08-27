@@ -164,6 +164,7 @@ public class Node {
 	}
 	
 	//get instance of node
+	//todo: make thread safe
 	public static Node getInstance() {
 	      if(instance == null) {
 	         instance = new Node();
