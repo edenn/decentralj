@@ -30,7 +30,10 @@ public class Node {
 	private static NodeWallet wallet;
 	//a hashtable to keep track of nodes
 	private Hashtable<Integer, String> hashtable;
-
+	
+	//singleton?
+	private static Node instance = null;
+	
 	public static void main(String [] args) throws AddressFormatException {
 		
 		Node lenode = new Node();
@@ -160,6 +163,14 @@ public class Node {
 		
 	}
 	
+	//get instance of node
+	public static Node getInstance() {
+	      if(instance == null) {
+	         instance = new Node();
+	      }
+	      return instance;
+	   }
+	
 	 // return String of object
 	@Override
 	public String toString(){
@@ -167,9 +178,10 @@ public class Node {
 			this.NextPeerPort+" NextID: "+this.NextPeerID+" Maximum connections: "+this.MAXCON+" Hashtable: "+this.getHashtable().toString();
 	}
 	
+	
 	public void addPeer(int PeerID, String PeerHash){
 		
-		
+		hashtable.put(PeerID, PeerHash);
 		
 	}
 	
