@@ -10,19 +10,19 @@ import org.zeromq.ZMQ;
 import com.decentralbank.decentralj.core.Node;
 
 //Decentralized Hash Table for Voting Pool Members 
-public class DHT {
+public class MiniDHT {
 	
     private RoutingTable routes;
     private String poolID;
     private int port;
  
-    public DHT() {
+    public MiniDHT() {
     	
 		this.routes = new RoutingTable(new Node());
 		
     }
     
-    public DHT(String poolID) {
+    public MiniDHT(String poolID) {
     	
         this();
         this.poolID = poolID;
@@ -30,7 +30,7 @@ public class DHT {
         
     }
 
-    public DHT(int port, String poolID) {
+    public MiniDHT(int port, String poolID) {
     	
         this();
         this.poolID = poolID;
