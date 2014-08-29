@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import com.decentralbank.decentralj.net.PeerModel;
+import com.decentralbank.decentralj.net.RoutingTable;
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.core.NetworkParameters;
@@ -27,11 +29,11 @@ public class Node {
 	private String NextPeerPort;
 	private String RedirectPort;
 	private String RedirectHostName;
-	private static NodeWallet wallet;
+	private NodeWallet wallet;
 	//a hashtable to keep track of nodes
-	private Hashtable<Integer, String> hashtable;
+	private Hashtable<Integer, PeerModel> hashtable;
 	
-	//singleton?
+	//singleton
 	private static Node instance = null;
 	
 	public static void main(String [] args) throws AddressFormatException {
@@ -55,7 +57,7 @@ public class Node {
 	}
 	
 	public Node(){
-		this.hashtable = new Hashtable<Integer, String>();
+		this.hashtable = new Hashtable<Integer, PeerModel>();
 	}
 	
 	public String getID() {
@@ -139,12 +141,12 @@ public class Node {
 	}
 
 
-	public Hashtable<Integer, String> getHashtable() {
+	public Hashtable<Integer, PeerModel> getHashtable() {
 		return hashtable;
 	}
 
 	
-	public void setHashtable(Hashtable<Integer, String> lehashtable) {
+	public void setHashtable(Hashtable<Integer, PeerModel> lehashtable) {
 		hashtable = lehashtable;
 	}
 	
@@ -180,9 +182,9 @@ public class Node {
 	}
 	
 	
-	public void addPeer(int PeerID, String PeerHash){
+	public void addPeer(int PeerID, PeerModel PeerModel){
 		
-		hashtable.put(PeerID, PeerHash);
+		hashtable.put(PeerID, PeerModel);
 		
 	}
 	

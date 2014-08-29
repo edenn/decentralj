@@ -1,7 +1,5 @@
 package com.decentralbank.decentralj.net;
 
-import org.spongycastle.util.encoders.Hex;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -24,7 +22,7 @@ public class PeerModel {
         this.peerId = peerId;
     }
     
-    //get the ip address
+    //get localhost ip address
     public InetAddress getInetAddress() {
         InetAddress addr = null;
         try {

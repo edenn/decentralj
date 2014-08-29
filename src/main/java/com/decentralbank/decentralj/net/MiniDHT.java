@@ -8,6 +8,7 @@ import java.util.Random;
 import org.zeromq.ZMQ;
 
 import com.decentralbank.decentralj.core.Node;
+import com.decentralbank.decentralj.core.Request;
 
 //Decentralized Hash Table for Voting Pool Members 
 public class MiniDHT {
@@ -15,7 +16,8 @@ public class MiniDHT {
     private RoutingTable routes;
     private String poolID;
     private int port;
- 
+    private HashMap<String, Request> Messagehandlers = new HashMap<>();
+    
     public MiniDHT() {
     	
 		this.routes = new RoutingTable(new Node());
@@ -87,38 +89,62 @@ public class MiniDHT {
         
     }
     
-    public void attach() {
-    	
-        ZMQ.Context context = ZMQ.context(1);
 
+    public void attach() {
+        ZMQ.Context context = ZMQ.context(1);
+       
         // Socket to talk to clients
         ZMQ.Socket responder = context.socket(ZMQ.REP);
         responder.bind("tcp://*:" + getPort());
         
-        //finish this
-       /* while (!Thread.currentThread().isInterrupted()) {
-            // Wait for next request from the client
+        while (!Thread.currentThread().isInterrupted()) {
             byte[] request = responder.recv(0);
             String messageType = new String(request).split("/")[0];
 
+            //implement message handling
             if (messageType.contains(messageType)) {
-  
-                
-                
+               // Request response = handlers.get(messageType).
+          
                 responder.send("OK".getBytes(), 0);
             } else {
                 responder.send("ERR".getBytes(), 0);
             }
-        }*/
+        }
+
         responder.close();
         context.term();
     }
 
-    //implement automatic port binding between a range 13000-18888?
+    //get available port at 8888
     private static int getAvailablePort() {
-        int port = 18888;
+        int port = 0;
+        do {
+            port = 8888;
+        } while (!isPortAvailable(port));
+
         return port;
     }
+
+    //check for an available port
+    private static boolean isPortAvailable(final int port) {
+        ServerSocket ss = null;
+        try {
+            ss = new ServerSocket(port);
+            ss.setReuseAddress(true);
+            return true;
+        } catch (final IOException e) {
+        } finally {
+            if (ss != null) {
+                try {
+                    ss.close();
+                } catch (IOException e2) {
+                }
+            }
+        }
+
+        return false;
+    }
+
 
 
 }

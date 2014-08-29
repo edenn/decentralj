@@ -1,11 +1,5 @@
 package com.decentralbank.decentralj.net;
 
-import org.zeromq.ZMQ.Poller;
-import org.zeromq.ZThread;
-import org.zeromq.ZMsg;
-import org.zeromq.ZContext;
-import org.zeromq.ZFrame;
-
 public class HeartBeat {
 	
     private final static int HEARTBEAT_LIVENESS = 4 ;      //  3-5 is reasonable
