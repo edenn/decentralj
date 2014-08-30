@@ -52,7 +52,7 @@ public class Node {
 		
 	}
 	
-	private Node(){
+	private Node() {
 		this.hashtable = new Hashtable<Integer, PeerModel>();
 	}
 	
