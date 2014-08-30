@@ -1,4 +1,4 @@
-package com.decentralbank.decentralj.net.user;
+package com.decentralbank.decentralj.user;
 
 import java.io.Serializable;
 import java.security.KeyPair;
