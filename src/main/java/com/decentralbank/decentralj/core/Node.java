@@ -18,7 +18,7 @@ import com.google.bitcoin.core.NetworkParameters;
 
 public class Node {
 	
-	private static final int MAXCON=11;
+	public static final int MAXCON=11;
 	private String NextPeerID;
 	private String ID;
 	private String Port;
@@ -38,7 +38,7 @@ public class Node {
 	
 	public static void main(String [] args) throws AddressFormatException {
 		
-		Node lenode = new Node();
+		Node lenode = Node.getInstance();
 		NodeWallet lewallet = lenode.getWallet();
 		BigInteger leinteger = BigInteger.valueOf(20000000);
 		System.out.print(leinteger);
@@ -52,11 +52,7 @@ public class Node {
 		
 	}
 	
-	public int getMaxcon() {
-		return MAXCON;
-	}
-	
-	public Node(){
+	private Node(){
 		this.hashtable = new Hashtable<Integer, PeerModel>();
 	}
 	

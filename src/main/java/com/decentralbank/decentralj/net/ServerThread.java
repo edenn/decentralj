@@ -24,7 +24,7 @@ public class ServerThread extends Thread  {
 	    
 	    public void run(){
 	    	
-	    	   Node Decentral = new Node();
+	    	   Node Decentral = Node.getInstance();
 	    	   //get our ip address
 	    	   String PeerInfo = PeerNetInfo.toString();
 	    	   Context context = ZMQ.context(1);

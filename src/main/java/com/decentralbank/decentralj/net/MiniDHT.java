@@ -20,7 +20,7 @@ public class MiniDHT {
     
     public MiniDHT() {
     	
-		this.routes = new RoutingTable(new Node());
+		this.routes = new RoutingTable(Node.getInstance());
 		
     }
     
