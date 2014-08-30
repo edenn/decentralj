@@ -21,37 +21,28 @@ public class Account{
 	private Address address;
 	//set to testnet for now
 	private final NetworkParameters netParams = NetworkParameters.testNet();
-
-	public BigInteger getNonce() {
-		
-        return nonce;
-        
-    }
 	
 	public Account() {
-		
 		this.ecKey = new ECKey();
-	    this.address = this.ecKey.toAddress(netParams);
-	    
+	    this.address = this.ecKey.toAddress(netParams);	    
         System.out.println("testnet address:\n" + this.address);
-	    
 	}
 
 	public Account(ECKey ecKey) {
-		
 		this.ecKey = ecKey;
-		
 	}
 
 	public Account(ECKey ecKey, BigInteger nonce, BigInteger balance) {
-		
 		this.ecKey = ecKey;
 		this.nonce = nonce;
 		this.balance = balance;
-		
 	}	
 
-    public ECKey getEcKey() {
+	public BigInteger getNonce() {
+        return nonce;
+    }
+	
+    public ECKey getECKey() {
     	
         return ecKey;
     
@@ -71,8 +62,8 @@ public class Account{
 	
     public BigInteger getBalance() {
     	
-		if(balance == BigInteger.valueOf(0)){
-			return BigInteger.valueOf(0);
+		if(balance.equals(BigInteger.ZERO)){
+			return BigInteger.ZERO;
 		}
 		
 		return balance;
