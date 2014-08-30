@@ -23,16 +23,15 @@ public class Account{
 	private final NetworkParameters netParams = NetworkParameters.testNet();
 	
 	public Account() {
-		this.ecKey = new ECKey();
-	    this.address = this.ecKey.toAddress(netParams);	    
-        System.out.println("testnet address:\n" + this.address);
+		this(new ECKey(), BigInteger.ZERO, BigInteger.ZERO);
 	}
 
 	public Account(ECKey ecKey) {
-		this.ecKey = ecKey;
+		this(ecKey, BigInteger.ZERO, BigInteger.ZERO);
 	}
 
 	public Account(ECKey ecKey, BigInteger nonce, BigInteger balance) {
+		this.address = this.ecKey.toAddress(netParams);	   
 		this.ecKey = ecKey;
 		this.nonce = nonce;
 		this.balance = balance;
