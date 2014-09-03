@@ -19,7 +19,7 @@ public class App
 	  public static void main(String[] args) throws IOException {
 		  Context context = ZMQ.context(1);
 		  ZMQ.Socket router = context.socket(ZMQ.ROUTER);
-		  router.bind("tcp://*:7000");
+		  router.bind("tcp://*:7001");
 	
           for (int workerNbr = 0; workerNbr < 11; workerNbr++)
           {

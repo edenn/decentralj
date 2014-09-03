@@ -23,7 +23,6 @@ interface ICommand {
 
 class printHello implements ICommand
 {
-	@Override
 	public void execute(Object ... args) {
 		System.out.println("Hello");
 	}	
@@ -31,7 +30,6 @@ class printHello implements ICommand
 
 class printString implements ICommand
 {
-	@Override
 	public void execute(Object... args) {
 		String out = "";
 		for(Object s : args)
@@ -43,7 +41,6 @@ class printString implements ICommand
 class add implements ICommand
 {
 
-	@Override
 	public void execute(Object... args) {
 		try {
 			if(args.length == 2)

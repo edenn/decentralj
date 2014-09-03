@@ -14,6 +14,10 @@ public class PeerModel {
 
 	private transient boolean isOnline = false;
 	private transient long    lastCheckTime = 0;
+	
+	public PeerModel(){
+		
+	}
 
 	//peer model
     public PeerModel(byte[] ip, int port, byte[] peerId) {
@@ -23,14 +27,15 @@ public class PeerModel {
     }
     
     //get localhost ip address
-    public InetAddress getInetAddress() {
-        InetAddress addr = null;
+    public String getInetAddress() {
+        String addr = null;
         try {
-            addr = InetAddress.getByAddress(ip);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            throw new Error("malformed ip");
-        }
+			addr = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
         return addr;
     }
     //get ip address
@@ -73,11 +78,11 @@ public class PeerModel {
 
     @Override
     public String toString() {
-        return "Peer: [ip=" + getInetAddress().getHostAddress() + ", port=" + getPort() +
+        return "Peer: [ip=" + getInetAddress() + ", port=" + getPort() +
                 ", peerId=" + (getPeerId() == null ? "": getPeerId()) + "]";
     }
 
-    @Override
+   // @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
         PeerModel peerData = (PeerModel) obj;

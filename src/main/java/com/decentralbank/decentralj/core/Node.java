@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import com.decentralbank.decentralj.net.MiniDHT;
 import com.decentralbank.decentralj.net.PeerModel;
 import com.decentralbank.decentralj.net.RoutingTable;
 import com.google.bitcoin.core.Address;
@@ -30,6 +31,7 @@ public class Node {
 	private String RedirectPort;
 	private String RedirectHostName;
 	private NodeWallet wallet;
+	private MiniDHT poolDHT;
 	//a hashtable to keep track of nodes
 	private Hashtable<Integer, PeerModel> hashtable;
 	
@@ -179,9 +181,7 @@ public class Node {
 	
 	
 	public void addPeer(int PeerID, PeerModel PeerModel){
-		
-		hashtable.put(PeerID, PeerModel);
-		
+		hashtable.put(PeerID, PeerModel);	
 	}
 	
 
