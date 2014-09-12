@@ -9,7 +9,7 @@ import org.hamcrest.CoreMatchers;
 
 import com.google.bitcoin.core.*;
 import com.decentralbank.decentralj.core.Node;
-import com.decentralbank.decentralj.net.PeerModel;
+import com.decentralbank.decentralj.net.DecentralPeer;
 
 public class NodeTest {
 
@@ -141,7 +141,7 @@ public class NodeTest {
 
 	@Test
 	public void setHashtable() {
-		Hashtable<Integer, PeerModel> table= new Hashtable<>();
+		Hashtable<Integer, DecentralPeer> table= new Hashtable<>();
 		Node.getInstance().setHashtable(table);
 		Assert.assertSame(Node.getInstance().getHashtable(), table);
 	}

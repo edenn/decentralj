@@ -13,11 +13,11 @@ import com.decentralbank.decentralj.core.Node;
 public class ServerThread extends Thread  {
 	
 	    private Context context;
-	    private PeerModel peermodel;
+	    private DecentralPeer peermodel;
 	    private HeartBeat heartbeat;
 	    private Node node;
 	    //set PeerModel to retrieve info from client server ip address and stuff
-	    private PeerModel PeerNetInfo = new PeerModel();
+	    private DecentralPeer PeerNetInfo = new DecentralPeer();
 	    
 	    public ServerThread(Context context) {
 			this.context = context;
