@@ -13,7 +13,8 @@ public class Request {
 	
 	public Request(String status, String peerID) {
 		this(status, peerID, "");
-	}	
+	}
+	
 	public Request(String status, String peerID, String responseMessage){
 		this.status = status;
 		this.peerID = peerID;

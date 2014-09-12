@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.decentralbank.decentralj.net.MiniDHT;
-import com.decentralbank.decentralj.net.PeerModel;
+import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.net.RoutingTable;
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
@@ -33,7 +33,7 @@ public class Node {
 	private NodeWallet wallet;
 	private MiniDHT poolDHT;
 	//a hashtable to keep track of nodes
-	private Hashtable<Integer, PeerModel> hashtable;
+	private Hashtable<Integer, DecentralPeer> hashtable;
 	
 	//singleton
 	private static Node instance = null;
@@ -55,7 +55,7 @@ public class Node {
 	}
 	
 	private Node() {
-		this.hashtable = new Hashtable<Integer, PeerModel>();
+		this.hashtable = new Hashtable<Integer, DecentralPeer>();
 	}
 	
 	public String getID() {
@@ -139,12 +139,12 @@ public class Node {
 	}
 
 
-	public Hashtable<Integer, PeerModel> getHashtable() {
+	public Hashtable<Integer, DecentralPeer> getHashtable() {
 		return hashtable;
 	}
 
 	
-	public void setHashtable(Hashtable<Integer, PeerModel> lehashtable) {
+	public void setHashtable(Hashtable<Integer, DecentralPeer> lehashtable) {
 		hashtable = lehashtable;
 	}
 	
@@ -180,7 +180,7 @@ public class Node {
 	}
 	
 	
-	public void addPeer(int PeerID, PeerModel PeerModel){
+	public void addPeer(int PeerID, DecentralPeer PeerModel){
 		hashtable.put(PeerID, PeerModel);	
 	}
 	
