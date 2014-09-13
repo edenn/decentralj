@@ -34,24 +34,16 @@ public class Node {
 	private MiniDHT poolDHT;
 	//a hashtable to keep track of nodes
 	private Hashtable<Integer, DecentralPeer> hashtable;
+	private static Node instance = new Node();
 	
-	//singleton
-	private static Node instance = null;
+	//get instance of node
+	public static synchronized Node getInstance() {
+	      return instance;
+	}
 	
-	public static void main(String [] args) throws AddressFormatException {
-		
-		Node lenode = Node.getInstance();
-		NodeWallet lewallet = lenode.getWallet();
-		BigInteger leinteger = BigInteger.valueOf(20000000);
-		System.out.print(leinteger);
-		 NetworkParameters netParams = NetworkParameters.testNet();
-		// leaddress.equals("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
-		 Address targetAddress = new Address(netParams, "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
-		//Address.getParametersFromAddress("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
-		lewallet.setBalance(targetAddress, leinteger);
-		//BigInteger result = lewallet.getBalance(leaddress);
-		System.out.print(targetAddress.toString());
-		
+	//override clone method
+	public Object clone() throws CloneNotSupportedException {
+		 throw new CloneNotSupportedException();
 	}
 	
 	private Node() {
@@ -163,15 +155,6 @@ public class Node {
 		
 	}
 	
-	//get instance of node
-	//todo: make thread safe
-	public static Node getInstance() {
-	      if(instance == null) {
-	         instance = new Node();
-	      }
-	      return instance;
-	   }
-	
 	 // return String of object
 	@Override
 	public String toString(){
@@ -182,6 +165,23 @@ public class Node {
 	
 	public void addPeer(int PeerID, DecentralPeer PeerModel){
 		hashtable.put(PeerID, PeerModel);	
+	}
+	
+	//testing
+	public static void main(String [] args) throws AddressFormatException {
+		
+		Node lenode = Node.getInstance();
+		NodeWallet lewallet = lenode.getWallet();
+		BigInteger leinteger = BigInteger.valueOf(20000000);
+		System.out.print(leinteger);
+		 NetworkParameters netParams = NetworkParameters.testNet();
+		// leaddress.equals("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
+		 Address targetAddress = new Address(netParams, "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
+		//Address.getParametersFromAddress("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
+		lewallet.setBalance(targetAddress, leinteger);
+		//BigInteger result = lewallet.getBalance(leaddress);
+		System.out.print(targetAddress.toString());
+		
 	}
 	
 
