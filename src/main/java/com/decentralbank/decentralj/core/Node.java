@@ -42,6 +42,7 @@ public class Node {
 	}
 	
 	//override clone method
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		 throw new CloneNotSupportedException();
 	}

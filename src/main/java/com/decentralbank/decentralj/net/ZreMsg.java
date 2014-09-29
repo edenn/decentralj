@@ -357,7 +357,7 @@ headersWrite (final Map.Entry <String, String> entry, ZreMsg self)
 //  --------------------------------------------------------------------------
 //  Send the ZreMsg to the socket, and destroy it
 
-public boolean send (java.net.Socket mailbox2)
+public boolean send (Socket mailbox2)
 {
     assert (mailbox2 != null);
 
