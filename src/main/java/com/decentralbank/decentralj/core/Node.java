@@ -10,14 +10,23 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.zeromq.ZMQ;
+import org.zeromq.ZMQ.Context;
+
 import com.decentralbank.decentralj.net.MiniDHT;
 import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.net.RoutingTable;
+import com.decentralbank.decentralj.net.ServerThread;
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.core.NetworkParameters;
 
 public class Node {
+	
+	private static  ZMQ.Socket serverSocket = null;
+    private boolean listening = true;
+    private static ZMQ.Context context = ZMQ.context(1);
+    private static final int Threads = 10;
 	
 	public static final int MAXCON=11;
 	private String NextPeerID;
@@ -47,7 +56,7 @@ public class Node {
 		 throw new CloneNotSupportedException();
 	}
 	
-	private Node() {
+	public Node() {
 		this.hashtable = new Hashtable<Integer, DecentralPeer>();
 	}
 	
@@ -166,6 +175,49 @@ public class Node {
 	
 	public void addPeer(int PeerID, DecentralPeer PeerModel){
 		hashtable.put(PeerID, PeerModel);	
+	}
+	
+	public static void start() {
+		  Context context = ZMQ.context(1);
+		  ZMQ.Socket router = context.socket(ZMQ.ROUTER);
+		  router.bind("tcp://*:7001");
+	
+          for (int workerNbr = 0; workerNbr < 11; workerNbr++)
+          {
+        	  Thread worker = new ServerThread(context);
+              worker.start();
+          }
+          
+          //  Run for five seconds and then tell workers to end
+          long endTime = System.currentTimeMillis () + 5000;
+          int workersFired = 0;
+          
+          while (true) {
+              //  Next message gives us least recently used worker
+              String identity = router.recvStr ();
+              router.sendMore (identity);
+              router.recv (0);     //  Envelope delimiter
+              router.recv (0);     //  Response from worker
+              router.sendMore ("");
+
+              //  Encourage workers until it's time to fire them
+              if (System.currentTimeMillis () < endTime)
+            	  router.send ("Work harder");
+              else {
+            	  router.send ("Handshake");
+                  if (++workersFired == Threads)
+                      break;
+              }
+          }
+
+          router.close();
+          context.term();
+		
+	}
+	
+	
+	public static void shutdown() {
+		
 	}
 	
 	//testing

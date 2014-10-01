@@ -8,10 +8,9 @@ import com.decentralbank.decentralj.core.Node;
 
 //Routing Table to Keep track of network
 public class RoutingTable {
-	
+
     private Node node;
-    // not sure if this is the best data structure, also just placing a random number.
-    private final int CONSTANT=11*6; 
+    private final int CONSTANT=100; //list of 100 nodes
     private ArrayList[] buckets = new ArrayList[CONSTANT];
 
     public Node getNode() {
@@ -46,8 +45,7 @@ public class RoutingTable {
     //find available nodes
     public ArrayList findAvailableNodes(Node target, int count){
         ArrayList ret = new ArrayList<Object>();
-        
-    
+       
         
         return ret;
     }

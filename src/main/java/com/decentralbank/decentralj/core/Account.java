@@ -27,14 +27,15 @@ public class Account{
 	}
 
 	public Account(ECKey ecKey) {
-		this(ecKey, BigInteger.ZERO, BigInteger.ZERO);
+		this.ecKey = ecKey;
 	}
 
 	public Account(ECKey ecKey, BigInteger nonce, BigInteger balance) {
-		this.address = this.ecKey.toAddress(netParams);	   
+		this.address = ecKey.toAddress(netParams);	   
 		this.ecKey = ecKey;
 		this.nonce = nonce;
 		this.balance = balance;
+		System.out.println(ecKey.toAddress(netParams));
 	}	
 
 	public BigInteger getNonce() {

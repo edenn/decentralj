@@ -42,21 +42,16 @@ public class NodeWallet {
   
     public static void main(String args[]) throws AddressFormatException {
     	NetworkParameters np = NetworkParameters.testNet();
-    	/*
-    	ECKey k = new ECKey();
-    	System.out.println(
-    			"private key " +
-    			k.toStringWithPrivate() +
-    			"\npublic key " + 
-    			k.toAddress(np)
-    			
-		);
-		*/
-    	//System.out.println()
-    	/*
-    	raw private key pub:02105526fe86ec0b187090709773071f3e49ddcb30e1d919ebba400cb17bc88f8e timestamp:1408309836 priv:109af6feaeb47aa2a5abd03416ec95a8f3af15a0ba62021c156c842d025f8479
-		public key mrZtCtsrjExC8ZCVtCYAcovXV13wu34Erb
-    	 */
+    	
+    	NodeWallet lewallet = new NodeWallet();
+    	lewallet.addNewAccount();
+    	lewallet.createWallet();
+    	lewallet.getTotalWalletBalance();
+    	
+    }
+    
+    public NodeWallet() {
+    	
     }
     
     // get amount to send
@@ -136,7 +131,7 @@ public class NodeWallet {
 	 }
 	 
 	 //total Bitcoin wallet balance
-	 public BigInteger totalWalletBalance() {
+	 public BigInteger getTotalWalletBalance() {
 		 
 	        BigInteger sum = BigInteger.ZERO;
 	        

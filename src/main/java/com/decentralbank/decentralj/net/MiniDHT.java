@@ -89,8 +89,8 @@ public class MiniDHT {
         
     }
     
-
-    public void attach() {
+    //handle incoming connection
+    public void handle() {
         ZMQ.Context context = ZMQ.context(1);
        
         // Socket to talk to clients
