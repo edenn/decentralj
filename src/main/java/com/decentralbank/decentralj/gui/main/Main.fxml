@@ -6,9 +6,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.AppController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decentralbank.decentralj.gui.main.MainController">
    <children>
-      <SplitPane dividerPositions="0.2608695652173913" prefHeight="160.0" prefWidth="200.0" stylesheets="css/test.css">
+      <SplitPane dividerPositions="0.2608695652173913" prefHeight="160.0" prefWidth="200.0">
         <items>
           <AnchorPane maxWidth="170.0" minHeight="0.0" minWidth="170.0" prefHeight="398.0" prefWidth="150.0" style="-fx-background-color: DCDCDC;">
                <children>
@@ -37,7 +37,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="418.0">
                <children>
-                  <Label layoutX="181.0" layoutY="207.0" text="You're Logged in!" />
+                  <Label layoutX="181.0" layoutY="207.0" text="Welcome to Decentral!" />
                </children>
             </AnchorPane>
         </items>

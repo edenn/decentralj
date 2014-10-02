@@ -7,7 +7,6 @@ import java.util.UUID;
 import javax.management.ObjectName;
 
 
-
 public class HeartBeat {
 	
     public final static int HEARTBEAT_LIVENESS = 4 ;      //  3-5 is reasonable
