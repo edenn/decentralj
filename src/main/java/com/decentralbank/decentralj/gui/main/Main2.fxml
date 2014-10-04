@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.fontawesome.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.decentralbank.decentralj.gui.main.MainController">
+   <children>
+      <SplitPane dividerPositions="0.14381270903010032" prefHeight="160.0" prefWidth="10.0" >
+        <items>
+          <AnchorPane maxWidth="108.0" minHeight="0.0" minWidth="108.0" prefHeight="397.0" prefWidth="108.0" style="-fx-background-color: #aeb0b2;">
+               <children>
+                     
+                  <GridPane fx:id="paneMenu" layoutX="8.0" layoutY="88.0" prefHeight="238.0" prefWidth="69.0">
+                     <children>
+         
+                        <Hyperlink prefHeight="56.0" prefWidth="81.0"  GridPane.rowIndex="1"/> <Icon awesomeIcon="HOME" style="-fx-font-size: 2em; -fx-text-fill: #fff; "  GridPane.rowIndex="1" styleClass="" size=""/>
+                        <Hyperlink prefHeight="56.0" prefWidth="81.0" GridPane.rowIndex="2" /> <Icon awesomeIcon="BANK" style="-fx-font-size: 2em; -fx-text-fill: #fff; "  GridPane.rowIndex="2" styleClass="" size=""/>
+                        <Hyperlink prefHeight="56.0" prefWidth="81.0" GridPane.rowIndex="3" /><Icon awesomeIcon="BITCOIN" style="-fx-font-size: 2em; -fx-text-fill: #fff; "  GridPane.rowIndex="3" styleClass="" size=""/>
+                        <Hyperlink prefHeight="56.0" prefWidth="81.0" GridPane.rowIndex="4" /><Icon awesomeIcon="USERS" style="-fx-font-size: 2em; -fx-text-fill: #fff; "  GridPane.rowIndex="4" styleClass="" size=""/>
+                        <Hyperlink prefHeight="56.0" prefWidth="81.0" GridPane.rowIndex="5" /><Icon awesomeIcon="GEAR" style="-fx-font-size: 2em; -fx-text-fill: #fff; "  GridPane.rowIndex="5" styleClass="" size=""/>
+                     </children>
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+                  <ImageView fitHeight="55.0" fitWidth="68.0" layoutX="9.0" layoutY="14.0" preserveRatio="true">
+                     <image>
+                        <Image url="@decentral.png" />
+                     </image>
+                  </ImageView>
+       
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="418.0">
+               <children>
+                  <Label layoutX="153.0" layoutY="149.0" prefHeight="50.0" prefWidth="160.0" text="Welcome to Decentral!" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</StackPane>
