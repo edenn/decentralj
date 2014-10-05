@@ -39,7 +39,11 @@ public class HeartBeat {
     private UUID uuid;
     private int port;
     
-    public HeartBeat (ByteBuffer buffer)
+    public HeartBeat() {
+    	
+    }
+    
+    public HeartBeat (UUID uuid,ByteBuffer buffer)
     {
         long msb = buffer.getLong ();
         long lsb = buffer.getLong ();
@@ -64,6 +68,17 @@ public class HeartBeat {
         buffer.putShort ((short) port);
         buffer.flip ();
         return buffer;
+    }
+    
+
+    public HeartBeat createRequest(UUID uuid, ByteBuffer data) {
+    	HeartBeat request = new HeartBeat(uuid, data);       
+        return request;
+    }
+
+    public HeartBeat createResponse(UUID uuid, ByteBuffer data) {
+    	HeartBeat response = new HeartBeat(uuid, data);
+        return response;
     }
    
  

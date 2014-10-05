@@ -27,6 +27,7 @@ License along with this program. If not, see
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -203,6 +204,7 @@ protected static class Agent
     private final ZContext ctx;             //  CZMQ context
     private final Socket pipe;              //  Pipe back to application
     //private final ZreUdp udp;               //  UDP object
+    private InetAddress address; 
     private final UUID uuid;                //  Our UUID as binary blob
     private final String identity;          //  Our UUID as hex string
     private final Socket inbox;             //  Our inbox socket (ROUTER)
@@ -214,24 +216,18 @@ protected static class Agent
     private final Map <String, DecentralGroup> peer_groups;     //  Groups that our peers are in
     private final Map <String, DecentralGroup> own_groups;      //  Groups that we are in
     private final Map <String, String> headers;           //  Our header values
+   
     
-   // private final FmqServer fmq_server;           //  FileMQ server object
-    private final int fmq_service;                //  FileMQ server port
-    private final String fmq_outbox;              //  FileMQ server outbox
-
-    //private final FmqClient fmq_client;           //  FileMQ client object
-    private final String fmq_inbox;               //  FileMQ client inbox
-    
-    private Agent (ZContext ctx, Socket pipe, Socket inbox, 
-                                 ZreUdp udp, int port)
+    private Agent (ZContext ctx, Socket pipe, Socket inbox, int port)                        //ZreUdp udp, int port)
     {
         this.ctx = ctx;
         this.pipe = pipe;
         this.inbox = inbox;
-        this.udp = udp;
+        //this.udp = udp;
         this.port = port;
         
-        host = udp.host ();
+		//host = udp.host ();
+        host = address.getHostAddress ();
         uuid = UUID.randomUUID ();
         identity = uuidStr (uuid);
         endpoint = String.format ("%s:%d", host, port);
@@ -245,12 +241,12 @@ protected static class Agent
         //  ephemeral port and publishes a temporary directory that acts
         //  as the outbox for this node.
         //
-        fmq_outbox = String.format ("%s/%s", OUTBOX, identity);
+        /*fmq_outbox = String.format ("%s/%s", OUTBOX, identity);
         new File (fmq_outbox).mkdir ();
         
         fmq_inbox = String.format ("%s/%s", INBOX, identity);
         new File (fmq_inbox).mkdir ();
-        
+        */
         /*fmq_server = new FmqServer ();
         fmq_service = fmq_server.bind ("tcp://*:*");
         fmq_server.publish (fmq_outbox, "/");
@@ -278,6 +274,7 @@ protected static class Agent
             //udp.destroy ();
             return null;
         }
+		return null;
         
         //return new Agent (ctx, pipe, inbox, udp, port);
     }

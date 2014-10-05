@@ -35,9 +35,7 @@ public class Node {
 	private String RedirectPort;
 	private String RedirectHostName;
 	private NodeWallet wallet;
-	private MiniDHT poolDHT;
-	//a hashtable to keep track of nodes
-	private Hashtable<Integer, DecentralPeer> hashtable;
+	private MiniDHT poolDHT; //DHT to keep track of all votin pool members
 	private static Node instance = new Node();
 	
 	//get instance of node
@@ -52,7 +50,7 @@ public class Node {
 	}
 	
 	public Node() {
-		this.hashtable = new Hashtable<Integer, DecentralPeer>();
+		this.poolDHT = new MiniDHT();
 	}
 	
 	public String getID() {
@@ -136,13 +134,13 @@ public class Node {
 	}
 
 
-	public Hashtable<Integer, DecentralPeer> getHashtable() {
-		return hashtable;
+	public MiniDHT getDHT() {
+		return poolDHT;
 	}
 
 	
-	public void setHashtable(Hashtable<Integer, DecentralPeer> lehashtable) {
-		hashtable = lehashtable;
+	public void setDHT(MiniDHT lehashtable) {
+		poolDHT = lehashtable;
 	}
 	
 	public NodeWallet getWallet(){
@@ -164,12 +162,12 @@ public class Node {
 	@Override
 	public String toString(){
 		return "Hostname: "+this.Hostname+" Port: "+this.Port+" ID: "+this.ID+" NextHostname: "+this.NextPeerHostName+" NextPort: "+
-			this.NextPeerPort+" NextID: "+this.NextPeerID+" Maximum connections: "+this.MAXCON+" Hashtable: "+this.getHashtable().toString();
+			this.NextPeerPort+" NextID: "+this.NextPeerID+" Maximum connections: "+this.MAXCON+" Hashtable: "+this.getDHT().toString();
 	}
 	
 	
 	public void addPeer(int PeerID, DecentralPeer PeerModel){
-		hashtable.put(PeerID, PeerModel);	
+		poolDHT.addPeer(PeerID, PeerModel);	
 	}
 	
 	
