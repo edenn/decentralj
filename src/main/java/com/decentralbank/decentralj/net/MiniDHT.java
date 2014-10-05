@@ -94,7 +94,7 @@ public class MiniDHT {
         ZMQ.Context context = ZMQ.context(1);
        
         // Socket to talk to clients
-        ZMQ.Socket responder = context.socket(ZMQ.REP);
+        ZMQ.Socket responder = context.socket(ZMQ.DEALER);
         responder.bind("tcp://*:" + getPort());
         
         while (!Thread.currentThread().isInterrupted()) {
@@ -144,6 +144,11 @@ public class MiniDHT {
 
         return false;
     }
+
+	public void addPeer(int peerID, DecentralPeer peerModel) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 
