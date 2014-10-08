@@ -1,17 +1,6 @@
 package com.decentralbank.decentralj.core;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.math.BigInteger;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-
-import org.zeromq.ZMQ;
-import org.zeromq.ZMQ.Context;
 
 import com.decentralbank.decentralj.net.MiniDHT;
 import com.decentralbank.decentralj.net.DecentralPeer;
@@ -161,13 +150,17 @@ public class Node {
 	 // return String of object
 	@Override
 	public String toString(){
+		
 		return "Hostname: "+this.Hostname+" Port: "+this.Port+" ID: "+this.ID+" NextHostname: "+this.NextPeerHostName+" NextPort: "+
 			this.NextPeerPort+" NextID: "+this.NextPeerID+" Maximum connections: "+this.MAXCON+" Hashtable: "+this.getDHT().toString();
+	
 	}
 	
 	
-	public void addPeer(int PeerID, DecentralPeer PeerModel){
-		poolDHT.addPeer(PeerID, PeerModel);	
+	public void addPeer(DecentralPeer PeerModel){
+		
+		poolDHT.addPeer(PeerModel);	
+	
 	}
 	
 	
