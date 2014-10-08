@@ -2,6 +2,7 @@ package com.decentralbank.decentralj.net;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -13,10 +14,11 @@ import com.decentralbank.decentralj.core.Request;
 //Decentralized Hash Table for Voting Pool Members 
 public class MiniDHT {
 	
-    private RoutingTable routes;
-    private String poolID;
-    private int port;
-    private HashMap<String, Request> Messagehandlers = new HashMap<>();
+    private RoutingTable routes; // all routes of pool
+    private String poolID; // id of the pool
+    private int port;  	// port number for pool
+    private HashMap<String, Request> identities = new HashMap<>(); // id to data 
+    private ArrayList<DecentralPeer> peers = new ArrayList<DecentralPeer>(); // List of Peers
     
     public MiniDHT() {
     	
@@ -89,14 +91,12 @@ public class MiniDHT {
         
     }
     
-    //handle incoming connection
-    public void handle() {
+    //handle connections to a node
+    public void connect() {
         ZMQ.Context context = ZMQ.context(1);
-       
         // Socket to talk to clients
         ZMQ.Socket responder = context.socket(ZMQ.DEALER);
         responder.bind("tcp://*:" + getPort());
-        
         while (!Thread.currentThread().isInterrupted()) {
             byte[] request = responder.recv(0);
             String messageType = new String(request).split("/")[0];
@@ -145,8 +145,8 @@ public class MiniDHT {
         return false;
     }
 
-	public void addPeer(int peerID, DecentralPeer peerModel) {
-		// TODO Auto-generated method stub
+	public void addPeer(DecentralPeer peerModel) {
+		
 		
 	}
 
