@@ -2,6 +2,7 @@ package com.decentralbank.decentralj.net;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,8 @@ import javax.management.ObjectName;
 import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+
+import com.decentralbank.decentralj.core.Request;
 
 // model for node peer's data
 
@@ -25,23 +28,23 @@ public class DecentralPeer {
 	private transient boolean isOnline = false;
 	private transient long    lastCheckTime = 0;
 	
-	private ZContext ctx;                //  CZMQ context
-    private Socket socket;              //  Socket through to peer
-    private String identity;             //  Identity string
-    private String endpoint;             //  Endpoint connected to
-    private long evasive_at;             //  Peer is being evasive
-    private long expired_at;             //  Peer has expired by now
-    private boolean connected;           //  Peer will send messages
-    private boolean ready;               //  Peer has said Hello to us
-    private int status;                  //  Our status counter
-    private int sent_sequence;           //  Outgoing message sequence
-    private int want_sequence;           //  Incoming message sequence
-    private Map <String, String> headers;           //  Peer headers
+	private ZContext ctx;                	//  CZMQ context
+    private Socket socket;              	//  Socket through to peer
+    private String identity;            	//  Identity string
+    private String endpoint;             	//  Endpoint connected to
+    private long evasive_at;             	//  Peer is being evasive
+    private long expired_at;             	//  Peer has expired by now
+    private boolean connected;          	//  Peer will send messages
+    private boolean ready;              	//  Peer has said Hello to us
+    private int status;                 	//  Our status counter
+    private int sent_sequence;           	//  Outgoing message sequence
+    private int want_sequence;           	//  Incoming message sequence
+    private Map <String, Request> headers; 	//  Peer headers
+    private ArrayList<Request> requests;    // list of requests;
 	
 	public DecentralPeer(){
 		
 	}
-
 	
 	//peer model
     public DecentralPeer(byte[] ip, int port, byte[] peerId, ZContext ctx, String identity) {
@@ -187,29 +190,38 @@ public class DecentralPeer {
 
 
 	public String identity() {
+		
 		return identity;
+		
 	}
 
 
 	public void incStatus() {
+		
 		if (++status > UBYTE_MAX)
             status = 0;		
+		
 	}
-	  public String header (String key, String defaultValue)
-	    {
+	  
+	
+	public Request header (String key, Request frames){
+		
 	        if (headers.containsKey (key))
 	            return headers.get (key);
 	        
-	        return defaultValue;
-	    }
+	        return frames;
+	}
 	    
-	    public void setHeaders (Map<String, String> headers)
-	    {
-	        this.headers = new HashMap <String, String> (headers);
-	    }
-
-	    public boolean checkMessage (ZreMsg msg)
-	    {
+	   
+	public void setHeaders (Map<String, Request> headers){
+		
+	        this.headers = new HashMap <String, Request> (headers);
+	    
+	}
+  
+	
+	public boolean checkMessage (ZreMsg msg){
+		
 	        int recd_sequence = msg.sequence ();
 	        if (++want_sequence > USHORT_MAX)
 	            want_sequence = 0;
@@ -220,58 +232,68 @@ public class DecentralPeer {
 	                want_sequence = USHORT_MAX;
 	        }
 	        return valid;
-	    }
+	        
+	}
 
+	
 	    //  ---------------------------------------------------------------------
 	    //  Return peer connection endpoint
-	    public String endpoint ()
-	    {
+	
+	
+	 public String endpoint (){
+		 
 	        if (connected)
 	            return endpoint;
 	        else
 	            return "";
 	                
-	    }
+	 }
 
-		public void invoke(ObjectName timer, String string, Object[] objects,
-				String[] strings) {
+		
+	 public void invoke(ObjectName timer, String string, Object[] objects, String[] strings) {
 			// TODO Auto-generated method stub
 			
-		}
+	}
 		
-		//  Return peer future expired time
-	    public long expiredAt ()
-	    {
+		
+	 //  Return peer future expired time    
+	 public long expiredAt (){
+		 
 	        return expired_at;
-	    }
-
-	    //  ---------------------------------------------------------------------
-	    //  Return peer future evasive time
-	    public long evasiveAt ()
-	    {
+	        
+	 }
+	    
+	 //  ---------------------------------------------------------------------    
+	 //  Return peer future evasive time
+	    
+	 public long evasiveAt (){
 	        return evasive_at;
-	    }
+	 }
 
 	    
-	    public void setReady (boolean ready)
-	    {
+	 public void setReady (boolean ready){
+		 
+		 
 	        this.ready = ready;
-	    }
+	 }
 
-	    public boolean ready ()
-	    {
-	        return ready;
-	    }
-
-	    public void setStatus (int status)
-	    {
-	        this.status = status;
-	    }
 	    
-	    public int status ()
-	    {
+	 public boolean ready (){
+		 
+	        return ready;
+	 }
+
+	    
+	 public void setStatus (int status){
+		 
+	        this.status = status;
+	 }
+	    
+	    
+	 public int status (){
+		 
 	        return status;
-	    }
+	 }
 
 
 
