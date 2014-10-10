@@ -46,8 +46,8 @@ public class Node {
 		return ID;
 	}
 
-	public void setID(String iD) {
-		ID = iD;
+	public void setID(String ID) {
+		ID = ID;
 	}
 
 	public String getPort() {
