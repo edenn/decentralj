@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.zeromq.ZMQ;
+import org.zeromq.ZMQ.Socket;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.core.Request;
@@ -93,14 +94,20 @@ public class MiniDHT {
     
     //handle connections to a node
     public void connect() {
-        ZMQ.Context context = ZMQ.context(1);
-        // Socket to talk to clients
+    	
+        ZMQ.Context context = ZMQ.context(1); 
+        //get Node instance
+        Node localhost = Node.getInstance();
+        // Socket to talk to servers
         ZMQ.Socket responder = context.socket(ZMQ.DEALER);
-        responder.bind("tcp://*:" + getPort());
+        //set socket identifier to the localhost id
+        responder.setIdentity(localhost.getID().getBytes());
+        //connect to a ROUTER socket
+        responder.connect("tcp://*:" + getPort());
         while (!Thread.currentThread().isInterrupted()) {
             byte[] request = responder.recv(0);
             String messageType = new String(request).split("/")[0];
-
+            
             //implement message handling
             if (messageType.contains(messageType)) {
                // Request response = handlers.get(messageType).
@@ -147,6 +154,7 @@ public class MiniDHT {
 
 	public void addPeer(DecentralPeer peerModel) {
 		
+		peers.add(peerModel);
 		
 	}
 

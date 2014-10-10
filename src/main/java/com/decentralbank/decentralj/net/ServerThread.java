@@ -30,17 +30,10 @@ public class ServerThread extends Thread  {
 	    	
 			    Context context = ZMQ.context(1);
 		        Socket sink = context.socket(ZMQ.ROUTER);
-		        sink.bind("inproc://example");
-
-		        //test socket
-		        Socket anonymous = context.socket(ZMQ.DEALER);
-		        anonymous.setIdentity("PEER".getBytes());
-		        anonymous.connect("inproc://example");
-		 
-		    	int i = 0;
+		        sink.bind("tcp://*:8400");
+		
 		        while (!Thread.currentThread().isInterrupted()) {
-		        	   
-		 
+		        	 
 		            // Wait for next request from the client, wrap it inside ZMsg		        	 
 		        	ZMsg reque = new ZMsg();
 		        	ZMsg request = reque.recvMsg(sink);
@@ -62,7 +55,6 @@ public class ServerThread extends Thread  {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-		            i++;
 		        }
 
 		    
