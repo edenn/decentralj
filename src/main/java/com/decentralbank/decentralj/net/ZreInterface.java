@@ -430,7 +430,7 @@ protected static class Agent
             peer.setStatus (msg.status ());
 
             //  Store peer headers for future reference
-            peer.setHeaders (msg.headers ());
+            //peer.setHeaders (msg.headers ());
 
             //  connect to peer
             String publisher = msg.headersString ("X-FILEMQ", null);

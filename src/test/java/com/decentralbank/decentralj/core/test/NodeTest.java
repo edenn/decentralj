@@ -133,7 +133,7 @@ public class NodeTest {
 		Node.getInstance().setRedirectPort("will it fail?");
 		Assert.assertEquals(Node.getInstance().getRedirectPort(), "will it fail?");
 	}
-
+/*
 	@Test
 	public void getHashtable() {
 		Assert.assertNotNull(Node.getInstance().getHashtable());
@@ -145,5 +145,6 @@ public class NodeTest {
 		Node.getInstance().setHashtable(table);
 		Assert.assertSame(Node.getInstance().getHashtable(), table);
 	}
+*/
 
 }
