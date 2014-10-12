@@ -63,7 +63,7 @@ Staying in Touch
 
 Contact the team and keep up to date using any of the following:
 
- - The [#DecentralBank](https://webchat.freenode.net/?channels=DecentralBank) IRC channel on Freenode ([logs](https://botbot.me/freenode/bitsquare)) 
+ - The [#DecentralBank](https://webchat.freenode.net/?channels=DecentralBank) IRC channel on Freenode
  - Our [mailing list](https://groups.google.com/forum/#!forum/DecentralBank)
  - [@decentralteam](https://twitter.com/decentralteam) on Twitter
  - [decentralteam@gmail.com](mailto:decentralteam@gmail.com)
