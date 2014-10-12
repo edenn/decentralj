@@ -65,8 +65,8 @@ Contact the team and keep up to date using any of the following:
 
  - The [#DecentralBank](https://webchat.freenode.net/?channels=DecentralBank) IRC channel on Freenode ([logs](https://botbot.me/freenode/bitsquare)) 
  - Our [mailing list](https://groups.google.com/forum/#!forum/DecentralBank)
- - [@decentralteam](https://twitter.com/bitsquare_) on Twitter
- - [decentralteam@gmail.com](mailto:team@bitsquare.io)
+ - [@decentralteam](https://twitter.com/decentralteam) on Twitter
+ - [decentralteam@gmail.com](mailto:decentralteam@gmail.com)
  - The [DecentralBank thread](https://bitcointalk.org/index.php?topic=718112.new#new) on the Bitcointalk forum
  - GitHub [Issues](https://github.com/DecentralBank/decentralj/issues)
 
