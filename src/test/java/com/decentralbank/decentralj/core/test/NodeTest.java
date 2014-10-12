@@ -5,7 +5,7 @@ import java.util.Hashtable;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.hamcrest.CoreMatchers;
+//import org.hamcrest.CoreMatchers;
 
 import com.google.bitcoin.core.*;
 import com.decentralbank.decentralj.core.Node;
