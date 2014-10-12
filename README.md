@@ -41,3 +41,35 @@ These are the limited-life time branches, that will be removed
 ### Feature branches
 ### Release branches
 ### Hotfix branches
+
+At the beginning each member will choose a feature to develop.
+The feature branch will exitst as long as the feature is in development.
+Once the feature has been completed, the code will be merged back into *develop*
+
+A feature branch will exist in your local repo, not in *origin*
+
+To start working on a new feature, branch off from the *develop* branch.
+
+
+Status
+------
+
+The [team](https://github.com/orgs/DecentralBank/people) is currently working on a series of pre-releases on the way to version 1.0. See the [roadmap](https://github.com/DecentralBank/decentralj/wiki/Roadmap) for details.
+
+
+
+Staying in Touch
+----------------
+
+Contact the team and keep up to date using any of the following:
+
+ - The [#DecentralBank](https://webchat.freenode.net/?channels=DecentralBank) IRC channel on Freenode ([logs](https://botbot.me/freenode/bitsquare)) 
+ - Our [mailing list](https://groups.google.com/forum/#!forum/DecentralBank)
+ - [@decentralteam](https://twitter.com/bitsquare_) on Twitter
+ - [decentralteam@gmail.com](mailto:team@bitsquare.io)
+ - The [DecentralBank thread](https://bitcointalk.org/index.php?topic=718112.new#new) on the Bitcointalk forum
+ - GitHub [Issues](https://github.com/DecentralBank/decentralj/issues)
+
+If you want to help request to join our Slack Account.
+
+
