@@ -41,6 +41,7 @@ public class NodeWallet {
 
   
     public static void main(String args[]) throws AddressFormatException {
+        System.out.println("NodeWallet");
     	NetworkParameters np = NetworkParameters.testNet();
     	
     	NodeWallet lewallet = new NodeWallet();
@@ -262,6 +263,6 @@ public class NodeWallet {
 	 public void refund(){
 		 
 	 }
-	 
+
     
 }

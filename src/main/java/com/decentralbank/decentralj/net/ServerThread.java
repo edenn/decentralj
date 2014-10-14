@@ -59,7 +59,6 @@ public class ServerThread extends Thread  {
 
 		    
 		        sink.close ();
-		        //anonymous.close ();
 		        context.term();
 
 		    }
