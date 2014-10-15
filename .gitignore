@@ -6,5 +6,6 @@ target
 bin/
 
 .idea/.name
+wallet/
 
-*.wallet
+wallet.dat

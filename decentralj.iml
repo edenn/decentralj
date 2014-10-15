@@ -21,15 +21,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER" level="application" />
     <orderEntry type="module-library">
-      <library name="bitcoinj-0.11-bundled.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/bitcoinj-0.11-bundled.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="zmq.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/zmq.jar!/" />
@@ -47,13 +38,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:2.5.0" level="project" />
-    <orderEntry type="library" name="Maven: de.jensd:fontawesomefx:8.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.github.briandilley.jsonrpc4j:jsonrpc4j:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.0.2" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -72,6 +56,21 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:2.5.0" level="project" />
+    <orderEntry type="library" name="Maven: de.jensd:fontawesomefx:8.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.briandilley.jsonrpc4j:jsonrpc4j:1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.bitcoinj:bitcoinj-core:0.12" level="project" />
+    <orderEntry type="library" name="Maven: com.madgag.spongycastle:core:1.51.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.lambdaworks:scrypt:1.4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.bitcoinj:orchid:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.6" level="project" />
   </component>
 </module>
 

@@ -35,13 +35,30 @@ public class DecentralJ {
 				case "start":
 					start();
 					break;
-					
-				case "next":
-					break;	
-					
+                case "?":
+                    printHelp();
+                    break;
 				case "help":
-					printHelp();
+                    printHelp();
 					break;
+                case "testnet":
+                    printHelp();
+                    break;
+                case "gen":
+                    printHelp();
+                    break;
+                case "port":
+                    printHelp();
+                    break;
+                case "connect":
+                    printHelp();
+                    break;
+                case "listen":
+                    printHelp();
+                    break;
+                case "bind":
+                    printHelp();
+                    break;
 			}
 		}
 	}
@@ -58,7 +75,13 @@ public class DecentralJ {
 	public void printHelp(){
 		System.out.println("Commands: ");
 		System.out.println("    -start                   Starts Decentral sever and clients");
-	}
+        System.out.println("    -testnet                 Use Bitcoin Testnet (Default)");
+        System.out.println("    -gen                     Generate Deposit Multisig Addresses");
+        System.out.println("    -connect                 Connect only to the specified node(s)");
+        System.out.println("    -listen                  Accept connections from outside");
+        System.out.println("    -bind                    Bind to given address and always listen on it.");
+        System.out.println("    -exit                    Shutdown");
+    }
 	
 
 }

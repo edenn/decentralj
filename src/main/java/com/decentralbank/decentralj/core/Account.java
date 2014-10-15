@@ -2,9 +2,9 @@ package com.decentralbank.decentralj.core;
 
 import java.math.BigInteger;
 
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.ECKey;
-import com.google.bitcoin.core.NetworkParameters;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 
 /**
  * A Node's Pool Account for currency or smart contracts

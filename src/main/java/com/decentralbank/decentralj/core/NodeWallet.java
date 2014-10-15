@@ -3,20 +3,22 @@ package com.decentralbank.decentralj.core;
 import java.io.File;
 import java.io.IOException;
 
-import com.google.bitcoin.core.*;
-import com.google.bitcoin.script.Script;
-import com.google.bitcoin.core.Transaction;
-import com.google.bitcoin.script.ScriptBuilder;
-import com.google.bitcoin.store.BlockStore;
-import com.google.bitcoin.store.BlockStoreException;
-import com.google.bitcoin.store.MemoryBlockStore;
-import com.google.bitcoin.store.UnreadableWalletException;
+import org.bitcoinj.core.*;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.store.BlockStore;
+import org.bitcoinj.store.BlockStoreException;
+import org.bitcoinj.store.MemoryBlockStore;
+import org.bitcoinj.store.UnreadableWalletException;
 import com.google.common.collect.ImmutableList;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,14 +42,38 @@ public class NodeWallet {
     //final Peer peer = new Peer(netParams, new PeerAddress(InetAddress.getLocalHost()), chain);
 
   
-    public static void main(String args[]) throws AddressFormatException {
+    public static void main(String args[]) throws AddressFormatException, BlockStoreException, UnknownHostException {
         System.out.println("NodeWallet");
     	NetworkParameters np = NetworkParameters.testNet();
     	
     	NodeWallet lewallet = new NodeWallet();
     	lewallet.addNewAccount();
-    	lewallet.createWallet();
-    	lewallet.getTotalWalletBalance();
+    	//lewallet.createWallet();
+        Address leaddress = new Address(NetworkParameters.testNet(),"moMR8WDJTd3PDKRNUpErwPs5MvPVyX2mri");
+       //lewallet.loadWallet("wallet.dat");
+
+
+        //System.out.print(lewallet.getBalance());
+    	lewallet.getTotalNodeBalance();
+        ECKey lekey = new ECKey();
+        ECKey lekey2 = new ECKey();
+        byte [] bytes = lekey.getPubKey();
+
+
+        try {
+            lewallet.createMultisigAccount(lekey,lekey2);
+        } catch (BlockStoreException e) {
+            e.printStackTrace();
+        } catch (InsufficientMoneyException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        //BigInteger Balance = this.wallet.getBalance();
+
     	
     }
     
@@ -82,9 +108,10 @@ public class NodeWallet {
 	     NodeInfo.put(address, account);
 	 }
 	 
-	 public BigInteger getBalance(Address _address) {
-		 
-	    return NodeInfo.get(_address).getBalance();
+	 public Coin getBalance() {
+
+
+	    return wallet.getWatchedBalance();
 	        
 	 }
 	 
@@ -97,18 +124,21 @@ public class NodeWallet {
 	 
 	 // create a wallet
 	 public void createWallet(){
-	    	
+
 	    Wallet wallet = null;
-	    final File walletFile = new File("test.wallet");
+	    final File walletFile = new File("wallet.dat");
 	    	         
 	    	try {
 	    			wallet = new Wallet(netParams);    	             
 	    	        // 5 times
 	    	        for (int i = 0; i < 5; i++) {          
 	    	             // create a key and add it to the wallet
-	    	             wallet.addKey(new ECKey());
+                        ECKey lekey = new ECKey();
+	    	             wallet.addKey(lekey);
+                        System.out.println("lekey"+lekey.toAddress(netParams).toString());
+
 	    	        }
-	    	             
+                System.out.println(wallet.toString());
 	    	             // save wallet contents to disk
 	    	         wallet.saveToFile(walletFile);
 	    	             
@@ -119,33 +149,51 @@ public class NodeWallet {
 	 }
 	 
 	 // load a Bitcoin wallet
-	 public void loadWallet(String filename){
+	 public void loadWallet(String filename) throws BlockStoreException, UnknownHostException {
 			 // wallet file that contains Bitcoins we can send
 	         walletFile = new File(filename);	
 		     // load wallet from file
 		     try {
 				wallet = Wallet.loadFromFile(walletFile);
+
+                 /*final PeerGroup peerGroup =
+                         new PeerGroup(blockStore, netParams, chain);
+                 peerGroup.setUserAgent("MyApp", "1.2");
+                 peerGroup.addWallet(wallet);
+                 peerGroup.addAddress(
+                         new PeerAddress(InetAddress.getLocalHost()));
+                 peerGroup.startAsync();*/
+
+                 BlockChain chain = new BlockChain(netParams, wallet,blockStore);
+                 PeerGroup peerGroup = new PeerGroup(netParams, chain);
+                 peerGroup.addWallet(wallet);
+                 peerGroup.startAsync();
+                 //peerGroup.;
+                 System.out.println("You have : " + wallet.getWatchedBalance() + " bitcoins" + wallet.toString());
+                 System.exit(0);
+
+                 System.out.println(wallet.toString());
 			 } catch (UnreadableWalletException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		           		
 	 }
 	 
-	 //total Bitcoin wallet balance
-	 public BigInteger getTotalWalletBalance() {
-		 
+	 //total Node's Bitcoin wallet balance
+	 public BigInteger getTotalNodeBalance() {
+
 	        BigInteger sum = BigInteger.ZERO;
 	        
 	        for (Account account : NodeInfo.values()) {
 	            sum = sum.add(account.getBalance());
 	        }
-	        
+	        System.out.println(sum);
 	        return sum;
 	    }
 	 
 	 //build transaction
 	 public void buildTransaction(Transaction transaction) throws BlockStoreException, AddressFormatException, InsufficientMoneyException, IOException{
-		    // how man milli-Bitcoins to send
+		    // how many milli-Bitcoins to send
 		    BigInteger btcToSend = new BigInteger(amountToSend);
                    
 		    // initialize BlockChain object
@@ -153,7 +201,7 @@ public class NodeWallet {
 		
 		    // instantiate Peer object to handle connections
 		    // final Peer peer = new Peer(netParams, null, new PeerAddress(InetAddress.getLocalHost()), chain, null);
-		    PeerGroup peerGroup = new PeerGroup(netParams, chain);
+		    PeerGroup peerGroup = new PeerGroup(netParams, chain); // PeerGroup.setFastCatchupTime
 		    peerGroup.addWallet(wallet);
 		    peerGroup.startAndWait();
 		             
@@ -162,9 +210,9 @@ public class NodeWallet {
 		 
 		    // tell peer to send amountToSend to recipientAddress
 		    //Transaction sendTxn = wallet.sendCoins(peer, recipientAddress, btcToSend);
-		    Wallet.SendResult result = wallet.sendCoins(peerGroup, recipientAddress, Utils.toNanoCoins(1, 23));           
+		   // Wallet.SendResult result = wallet.sendCoins(peerGroup, recipientAddress, Utils.toNanoCoins(1, 23));
 		    // null means we didn't have enough Bitcoins in our wallet for the transaction
-		    if (result == null) {
+		   /* if (result == null) {
 		    System.out.println("Cannot send requested amount of " + Utils.bitcoinValueToFriendlyString(btcToSend)
 		    + " BTC; wallet only contains " + Utils.bitcoinValueToFriendlyString(wallet.getBalance()) + " BTC.");
 		    } else {              
@@ -173,19 +221,12 @@ public class NodeWallet {
 	                 System.out.println(Utils.bitcoinValueToFriendlyString(btcToSend) + " BTC sent. You can monitor the transaction here:\n"
 		                        + "http://blockexplorer.com/tx/" + result.toString());
 	            }
-		 
+		 */
 		   // save wallet with new transaction(s)
 		   wallet.saveToFile(walletFile);
 		 
 	 }
-	 
-	 
-	 /*
-	 public void importKey(BigInteger privKey) {
-	        Account account = new Account(ECKey.fromPrivate(privKey));
-	        Address address = account.getAddress();
-	        NodeInfo.put(address, account);
-	    }*/
+
 	 
 	 //serialize a transaction
 	 public ECKey.ECDSASignature  serializeTransaction(ECKey key, Transaction contracts ){
@@ -199,12 +240,12 @@ public class NodeWallet {
 			Script multisigScript = multisigOutput.getScriptPubKey();
 			// Is the output what we expect?
 			//checkState(multisigScript.isSentToMultiSig());
-			BigInteger value = multisigOutput.getValue();
+			//BigInteger value = multisigOutput.getValue();
 	
 			// OK, now build a transaction that spends the money back to the client.
 			Transaction spendTx = new Transaction(netParams);
 	
-			spendTx.addOutput(value, clientKey);
+			//spendTx.addOutput(value, clientKey);
 			spendTx.addInput(multisigOutput);
 	
 			// It's of the right form. But the wallet can't sign it. So, we have to
@@ -216,53 +257,61 @@ public class NodeWallet {
 		
 	 }
 	 
-	 //deserialize a transaction
-	 public String deserializeTransaction(){
-		 
-		 return null;
-	 }
+
 	   
-	 // create p2sh account
-	 public void createMultisig(byte [] publicKeyBytes) throws BlockStoreException, InsufficientMoneyException, InterruptedException, ExecutionException{
-			// how man milli-Bitcoins to send
-		 BigInteger btcToSend = new BigInteger(amountToSend);
-                   
+	 // create a 2 of 3 p2sh account
+	 public Address createMultisigAccount(ECKey clientKey, ECKey clientKey2) throws BlockStoreException, InsufficientMoneyException, InterruptedException, ExecutionException, AddressFormatException {
 		 // initialize BlockChain object
 		 chain = new BlockChain(netParams, wallet, blockStore);
-		
-		 // instantiate Peer object to handle connections
-		// final Peer peer = new Peer(netParams, null, new PeerAddress(InetAddress.getLocalHost()), chain, null);
-		
 		 PeerGroup peerGroup = new PeerGroup(netParams, chain);
-		// Create a random key.
-		 ECKey clientKey = new ECKey();
-		 // We get the other parties public key from somewhere ...
-		 ECKey serverKey = new ECKey(null, publicKeyBytes);
+		 //The Node's Key for This Account
+		 ECKey serverKey = new ECKey();
 
 		 // Prepare a template for the contract.
 		 Transaction contract = new Transaction(netParams);
-		 List<ECKey> keys = ImmutableList.of(clientKey, serverKey);
-		 // Create a 2-of-2 multisig output script.
-		 Script script = ScriptBuilder.createMultiSigOutputScript(2, keys);
-		 // Now add an output for 0.50 bitcoins that uses that script.
-		 BigInteger amount = Utils.toNanoCoins(0, 50);
-		 contract.addOutput(amount, script);
+		 List<ECKey> keys = ImmutableList.of(clientKey, clientKey2, serverKey);
 
-		 // We have said we want to make 0.5 coins controlled by us and them.
-		 // But it's not a valid tx yet because there are no inputs.
-		 Wallet.SendRequest req = Wallet.SendRequest.forTx(contract);
-		 wallet.completeTx(req);   // Could throw InsufficientMoneyException
-
-		 // Broadcast and wait for it to propagate across the network.
-		 // It should take a few seconds unless something went wrong.
-		 peerGroup.broadcastTransaction(req.tx).get();
+		 /* Create a 2 of 3 MULTISIG redeem Script  */
+		 Script redeemScript = ScriptBuilder.createMultiSigOutputScript(3, keys);
+         /* Create a p2sh output script from the redeemScript */
+         Script multisig = ScriptBuilder.createP2SHOutputScript(redeemScript);
+         //format to address
+         Address   multisigAddress = Address.fromP2SHScript(netParams, multisig);
+         //return multisigAddress
+         return multisigAddress;
 		 
 	 }
 	 
-	 //n lock time implementa
+	 //n lock time implementation
 	 public void refund(){
 		 
 	 }
+
+    /*
+
+
+    // Get the address 1RbxbA1yP2Lebauuef3cBiBho853f7jxs in object form.
+Address targetAddress = new Address(params, "1RbxbA1yP2Lebauuef3cBiBho853f7jxs");
+// Do the send of 1 BTC in the background. This could throw InsufficientMoneyException.
+Wallet.SendResult result = wallet.sendCoins(peerGroup, targetAddress, Coin.COIN);
+// Save the wallet to disk, optional if using auto saving (see below).
+wallet.saveToFile(....);
+// Wait for the transaction to propagate across the P2P network, indicating acceptance.
+result.broadcastComplete.get();
+     */
+
+    /*
+
+
+    wallet.encrypt("password")
+
+Address a = new Address(params, "1RbxbA1yP2Lebauuef3cBiBho853f7jxs");
+Wallet.SendRequest req = Wallet.SendRequest.to(a, Coin.parseCoin("0.12"));
+req.aesKey = wallet.getKeyCrypter().deriveKey("password");
+wallet.sendCoins(req);
+
+The wallet can be decrypted by using the wallet.decrypt method which takes either a textual password or a KeyParameter.
+     */
 
     
 }

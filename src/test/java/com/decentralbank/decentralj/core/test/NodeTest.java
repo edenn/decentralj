@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 //import org.hamcrest.CoreMatchers;
 
-import com.google.bitcoin.core.*;
+import org.bitcoinj.core.*;
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.net.DecentralPeer;
 

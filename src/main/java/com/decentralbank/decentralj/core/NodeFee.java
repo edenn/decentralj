@@ -1,9 +1,9 @@
 package com.decentralbank.decentralj.core;
 
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.AddressFormatException;
-import com.google.bitcoin.core.NetworkParameters;
-import com.google.bitcoin.core.Transaction;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Transaction;
 
 public class NodeFee {
 
@@ -17,13 +17,10 @@ public class NodeFee {
         this.params = params;
     }
 
-    public Address getAddressForEscrowFee(String userAddress) {
-        try {
+    public Address getAddressForEscrowFee(String userAddress) throws AddressFormatException {
+
             return new Address(params, userAddress);
-        } catch (AddressFormatException e) {
-            e.printStackTrace();
-            return null;
-        }
+
     }
 
     public Address getAddressForBuyOfferFee(String BuyAddress) {

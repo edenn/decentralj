@@ -6,9 +6,9 @@ import com.decentralbank.decentralj.net.MiniDHT;
 import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.net.RoutingTable;
 import com.decentralbank.decentralj.net.ServerThread;
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.AddressFormatException;
-import com.google.bitcoin.core.NetworkParameters;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.NetworkParameters;
 
 public class Node {
 	
@@ -175,7 +175,7 @@ public class Node {
 		// leaddress.equals("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
 		 Address targetAddress = new Address(netParams, "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
 		//Address.getParametersFromAddress("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
-		lewallet.setBalance(targetAddress, leinteger);
+		//lewallet.setBalance(targetAddress, leinteger);
 		//BigInteger result = lewallet.getBalance(leaddress);
 		System.out.print(targetAddress.toString());
 		

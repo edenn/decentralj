@@ -29,9 +29,9 @@ public class ServerThread extends Thread  {
 	    public void run(){
 	    	
 			    Context context = ZMQ.context(1);
-		        Socket sink = context.socket(ZMQ.ROUTER);
-		        sink.bind("tcp://*:8400");
-		
+		        Socket sink = context.socket(ZMQ.ROUTER); // Establish a ROUTER socket to communicate with DEALER connections
+		        sink.bind("tcp://*:8400"); // bind to port 8400
+		        node = Node.getInstance();  //get instance of Node
 		        while (!Thread.currentThread().isInterrupted()) {
 		        	 
 		            // Wait for next request from the client, wrap it inside ZMsg		        	 
