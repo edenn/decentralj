@@ -1,7 +1,7 @@
 Command-line arguments
 ======================
 
-Give Decentralj (or Decentraljd) the -? or –-help argument and it will print out a list of the most commonly used command-line arguments and then exit:
+Give Decentralj (or Decentraljd) the -? or –-help argument and it will print out a list of the most commonly used command-line arguments.
 
 ##Usage:
 
@@ -15,7 +15,7 @@ Give Decentralj (or Decentraljd) the -? or –-help argument and it will print o
 
  -conf=<file>           Specify configuration file (default: bitcoin.conf)
 
- -datadir=<dir>         Specify data directory
+ -datadir=<directory>   Specify data directory
 
  -testnet               Use the test network
 
