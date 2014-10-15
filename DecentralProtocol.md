@@ -2,9 +2,9 @@
 
 Decen-protocol    = greeting *traffic
 
-greeting        = S:HELLO
+				greeting        = S:HELLO
 
-traffic         = S:ALIVE
+				traffic         = S:ALIVE
 
                 / S:BROADCAST
 
@@ -14,7 +14,7 @@ traffic         = S:ALIVE
 
                 / S:PING R:PING-OK
 
-###;   Greet a peer so it can connect back to us
+###   Greet a peer so it can connect back to us
 
 S:HELLO         = signature %x01 sequence ipaddress mailbox groups status headers
 
@@ -40,13 +40,13 @@ headers         = dictionary    ; Sender header properties
 
 key-value       = string        ; Formatted as name=value
 
-###; Send a message to a peer
+### Send a message to a peer
 
 S:ALIVE       = signature %x02 sequence content
 
 content         = FRAME         ; Message content as 0MQ frame
 
-###; Send a message to a pool
+### Send a message to a pool
 
 S:BROADCAST         = signature %x03 sequence group content
 
@@ -54,17 +54,17 @@ group           = string        ; Name of pool
 
 content         = FRAME         ; Message content as 0MQ frame
 
-###; Join a pool
+### Join a pool
 
 S:JOIN          = signature %x04 sequence pool status
 
 status          = OCTET         ; Sender group status sequence
 
-###; Leave a group
+### Leave a group
 
 S:LEAVE         = signature %x05 sequence group status
 
-###; Ping a peer that has gone silent
+### Ping a peer that has gone silent
 
 S:PING          = signature %06 sequence
 
