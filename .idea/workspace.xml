@@ -5,7 +5,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ /dat.spvchain" afterPath="$PROJECT_DIR$/ /dat.spvchain" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ /dat.wallet" afterPath="$PROJECT_DIR$/ /dat.wallet" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="9ccec881-c89f-461a-8ecf-94dab4cb5e9e" name="Rejected commit: Default" comment="adding rpc dependency" />
     <ignored path="decentralj.iws" />
@@ -46,20 +45,20 @@
       <file leaf-file-name="NodeWallet.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4099379" vertical-offset="2562" max-vertical-offset="4290">
-              <caret line="192" column="0" selection-start-line="192" selection-start-column="0" selection-end-line="192" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.2795031" vertical-offset="2655" max-vertical-offset="4275">
+              <caret line="194" column="8" selection-start-line="194" selection-start-column="8" selection-end-line="194" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1230#1248#0" expanded="true" />
-                <element signature="e#1321#1346#0" expanded="true" />
-                <element signature="e#3386#3387#0" expanded="true" />
-                <element signature="e#3430#3431#0" expanded="true" />
-                <element signature="e#3527#3528#0" expanded="true" />
-                <element signature="e#3579#3580#0" expanded="true" />
-                <element signature="e#9693#9694#0" expanded="true" />
-                <element signature="e#9744#9745#0" expanded="true" />
-                <element signature="e#9800#9801#0" expanded="true" />
-                <element signature="e#9851#9852#0" expanded="true" />
+                <element signature="e#1184#1202#0" expanded="true" />
+                <element signature="e#1275#1300#0" expanded="true" />
+                <element signature="e#3340#3341#0" expanded="true" />
+                <element signature="e#3384#3385#0" expanded="true" />
+                <element signature="e#3481#3482#0" expanded="true" />
+                <element signature="e#3533#3534#0" expanded="true" />
+                <element signature="e#9662#9663#0" expanded="true" />
+                <element signature="e#9713#9714#0" expanded="true" />
+                <element signature="e#9769#9770#0" expanded="true" />
+                <element signature="e#9820#9821#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -855,16 +854,16 @@
           <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1230#1248#0" expanded="true" />
-            <element signature="e#1321#1346#0" expanded="true" />
-            <element signature="e#3386#3387#0" expanded="true" />
-            <element signature="e#3430#3431#0" expanded="true" />
-            <element signature="e#3527#3528#0" expanded="true" />
-            <element signature="e#3579#3580#0" expanded="true" />
-            <element signature="e#9693#9694#0" expanded="true" />
-            <element signature="e#9744#9745#0" expanded="true" />
-            <element signature="e#9800#9801#0" expanded="true" />
-            <element signature="e#9851#9852#0" expanded="true" />
+            <element signature="e#1184#1202#0" expanded="true" />
+            <element signature="e#1275#1300#0" expanded="true" />
+            <element signature="e#3340#3341#0" expanded="true" />
+            <element signature="e#3384#3385#0" expanded="true" />
+            <element signature="e#3481#3482#0" expanded="true" />
+            <element signature="e#3533#3534#0" expanded="true" />
+            <element signature="e#9662#9663#0" expanded="true" />
+            <element signature="e#9713#9714#0" expanded="true" />
+            <element signature="e#9769#9770#0" expanded="true" />
+            <element signature="e#9820#9821#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -948,16 +947,16 @@
           <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1230#1248#0" expanded="true" />
-            <element signature="e#1321#1346#0" expanded="true" />
-            <element signature="e#3386#3387#0" expanded="true" />
-            <element signature="e#3430#3431#0" expanded="true" />
-            <element signature="e#3527#3528#0" expanded="true" />
-            <element signature="e#3579#3580#0" expanded="true" />
-            <element signature="e#9693#9694#0" expanded="true" />
-            <element signature="e#9744#9745#0" expanded="true" />
-            <element signature="e#9800#9801#0" expanded="true" />
-            <element signature="e#9851#9852#0" expanded="true" />
+            <element signature="e#1184#1202#0" expanded="true" />
+            <element signature="e#1275#1300#0" expanded="true" />
+            <element signature="e#3340#3341#0" expanded="true" />
+            <element signature="e#3384#3385#0" expanded="true" />
+            <element signature="e#3481#3482#0" expanded="true" />
+            <element signature="e#3533#3534#0" expanded="true" />
+            <element signature="e#9662#9663#0" expanded="true" />
+            <element signature="e#9713#9714#0" expanded="true" />
+            <element signature="e#9769#9770#0" expanded="true" />
+            <element signature="e#9820#9821#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1234,20 +1233,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4099379" vertical-offset="2562" max-vertical-offset="4290">
-          <caret line="192" column="0" selection-start-line="192" selection-start-column="0" selection-end-line="192" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.2795031" vertical-offset="2655" max-vertical-offset="4275">
+          <caret line="194" column="8" selection-start-line="194" selection-start-column="8" selection-end-line="194" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1230#1248#0" expanded="true" />
-            <element signature="e#1321#1346#0" expanded="true" />
-            <element signature="e#3386#3387#0" expanded="true" />
-            <element signature="e#3430#3431#0" expanded="true" />
-            <element signature="e#3527#3528#0" expanded="true" />
-            <element signature="e#3579#3580#0" expanded="true" />
-            <element signature="e#9693#9694#0" expanded="true" />
-            <element signature="e#9744#9745#0" expanded="true" />
-            <element signature="e#9800#9801#0" expanded="true" />
-            <element signature="e#9851#9852#0" expanded="true" />
+            <element signature="e#1184#1202#0" expanded="true" />
+            <element signature="e#1275#1300#0" expanded="true" />
+            <element signature="e#3340#3341#0" expanded="true" />
+            <element signature="e#3384#3385#0" expanded="true" />
+            <element signature="e#3481#3482#0" expanded="true" />
+            <element signature="e#3533#3534#0" expanded="true" />
+            <element signature="e#9662#9663#0" expanded="true" />
+            <element signature="e#9713#9714#0" expanded="true" />
+            <element signature="e#9769#9770#0" expanded="true" />
+            <element signature="e#9820#9821#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -3,7 +3,6 @@ package com.decentralbank.decentralj.core;
 import java.io.File;
 import java.io.IOException;
 
-import com.sun.crypto.provider.AESWrapCipher;
 import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.core.Transaction;
@@ -202,7 +201,7 @@ public class NodeWallet {
 		             
 		    // recipient address provided by official Bitcoin client
 		    Address recipientAddress = new Address(netParams, recipient);
-             Wallet.SendRequest req = Wallet.SendRequest.to(a, Coin.parseCoin(amountToSend));
+             Wallet.SendRequest req = Wallet.SendRequest.to(recipientAddress, Coin.parseCoin(amountToSend));
              req.aesKey = wallet.getKeyCrypter().deriveKey("passwordDigest");
              wallet.sendCoins(req);
 
