@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="486f1017-8515-44b5-8104-5b6f3b821d61" name="Default" comment="adding rpc dependency">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/ZreInterface.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/ZreMsg.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ /dat.spvchain" afterPath="$PROJECT_DIR$/ /dat.spvchain" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ /dat.wallet" afterPath="$PROJECT_DIR$/ /dat.wallet" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DecentralProtocol.md" afterPath="$PROJECT_DIR$/DecentralProtocol.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/MiniDHT.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/MiniDHT.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Request.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Request.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/ServerThread.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/ServerThread.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="9ccec881-c89f-461a-8ecf-94dab4cb5e9e" name="Rejected commit: Default" comment="adding rpc dependency" />
@@ -140,21 +131,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DecenMsg.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="DecenMsg.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.20761245" vertical-offset="4665" max-vertical-offset="14100">
-              <caret line="349" column="31" selection-start-line="349" selection-start-column="31" selection-end-line="349" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="14100">
+              <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DecenInterface.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="DecenInterface.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8310">
-              <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.6366782" vertical-offset="6367" max-vertical-offset="8340">
+              <caret line="474" column="39" selection-start-line="474" selection-start-column="39" selection-end-line="474" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -194,10 +185,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/ZreInterface.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" />
-        <option value="$PROJECT_DIR$/DecentralProtocol.md" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java" />
+        <option value="$PROJECT_DIR$/DecentralProtocol.md" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" />
       </list>
     </option>
   </component>
@@ -1220,14 +1211,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DecentralProtocol.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="660" max-vertical-offset="1935">
-          <caret line="56" column="22" selection-start-line="56" selection-start-column="22" selection-end-line="56" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="2100">
@@ -1255,18 +1238,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java">
+    <entry file="file://$PROJECT_DIR$/DecentralProtocol.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8310">
-          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.5833333" vertical-offset="1395" max-vertical-offset="1935">
+          <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20761245" vertical-offset="4665" max-vertical-offset="14100">
-          <caret line="349" column="31" selection-start-line="349" selection-start-column="31" selection-end-line="349" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="14100">
+          <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6366782" vertical-offset="6367" max-vertical-offset="8340">
+          <caret line="474" column="39" selection-start-line="474" selection-start-column="39" selection-end-line="474" selection-end-column="39" />
           <folding />
         </state>
       </provider>

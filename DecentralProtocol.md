@@ -30,7 +30,7 @@ Decen-protocol    = greeting *traffic
 
                 port            = 2OCTET        ; Sender port number
 
-                groups          = strings       ; List of groups sender is in
+                pools          = strings       ; List of pools sender is in
 
                 strings         = size *string
 
@@ -50,7 +50,7 @@ Decen-protocol    = greeting *traffic
 
                 S:BROADCAST         = signature %x03 sequence group content
 
-                group           = string        ; Name of pool
+                pool           = string        ; Name of pool
 
                 content         = FRAME         ; Message content as 0MQ frame
 

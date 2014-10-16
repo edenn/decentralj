@@ -10,24 +10,24 @@ Generated codec class for DecenMsg
 HELLO - Greet a peer so it can connect back to us
     sequence      number 2
     ipaddress     string
-    mailbox       number 2
-    groups        strings
+    port       number 2
+    pools        strings
     status        number 1
     headers       dictionary
 ALIVE - Send a message to a peer
     sequence      number 2
     content       frame
-BROADCAST - Send a message to a group
+BROADCAST - Send a message to a pool
     sequence      number 2
-    group         string
+    pool         string
     content       frame
-JOIN - Join a group
+JOIN - Join a pool
     sequence      number 2
-    group         string
+    pool         string
     status        number 1
-LEAVE - Leave a group
+LEAVE - Leave a pool
     sequence      number 2
-    group         string
+    pool         string
     status        number 1
 PING - Ping a peer that has gone silent
     sequence      number 2
@@ -65,13 +65,13 @@ private int id;                     //  DecenMsg message ID
 private ByteBuffer needle;          //  Read/write pointer for serialization
 private int sequence;
 private String ipaddress;
-private int mailbox;
-private List <String> groups;
+private int port;
+private List <String> pools;
 private int status;
 private Map <String, String> headers;
 private int headersBytes;
 private ZFrame content;
-private String group;
+private String pool;
 
 
 //  --------------------------------------------------------------------------
@@ -245,12 +245,12 @@ public static DecenMsg recv (Socket input)
         case HELLO:
             self.sequence = self.getNumber2 ();
             self.ipaddress = self.getString ();
-            self.mailbox = self.getNumber2 ();
+            self.port = self.getNumber2 ();
             listSize = self.getNumber1 ();
-            self.groups = new ArrayList<String> ();
+            self.pools = new ArrayList<String> ();
             while (listSize-- > 0) {
                 String string = self.getString ();
-                self.groups.add (string);
+                self.pools.add (string);
             }
             self.status = self.getNumber1 ();
             hashSize = self.getNumber1 ();
@@ -273,7 +273,7 @@ public static DecenMsg recv (Socket input)
 
         case BROADCAST:
             self.sequence = self.getNumber2 ();
-            self.group = self.getString ();
+            self.pool = self.getString ();
             //  Get next frame, leave current untouched
             if (!input.hasReceiveMore ())
                 throw new IllegalArgumentException ();
@@ -282,13 +282,13 @@ public static DecenMsg recv (Socket input)
 
         case JOIN:
             self.sequence = self.getNumber2 ();
-            self.group = self.getString ();
+            self.pool = self.getString ();
             self.status = self.getNumber1 ();
             break;
 
         case LEAVE:
             self.sequence = self.getNumber2 ();
-            self.group = self.getString ();
+            self.pool = self.getString ();
             self.status = self.getNumber1 ();
             break;
 
@@ -337,9 +337,9 @@ headersWrite (final Map.Entry <String, String> entry, DecenMsg self)
 //  --------------------------------------------------------------------------
 //  Send the DecenMsg to the socket, and destroy it
 
-public boolean send(Socket mailbox2)
+public boolean send(Socket port2)
 {
-    assert (mailbox2 != null);
+    assert (port2 != null);
 
     //  Calculate size of serialized data
     int frameSize = 2 + 1;          //  Signature and message ID
@@ -351,12 +351,12 @@ public boolean send(Socket mailbox2)
         frameSize++;       //  Size is one octet
         if (ipaddress != null)
             frameSize += ipaddress.length ();
-        //  mailbox is a 2-byte integer
+        //  port is a 2-byte integer
         frameSize += 2;
-        //  groups is an array of strings
+        //  pools is an array of strings
         frameSize++;       //  Size is one octet
-        if (groups != null) {
-            for (String value : groups) 
+        if (pools != null) {
+            for (String value : pools) 
                 frameSize += 1 + value.length ();
         }
         //  status is a 1-byte integer
@@ -380,19 +380,19 @@ public boolean send(Socket mailbox2)
     case BROADCAST:
         //  sequence is a 2-byte integer
         frameSize += 2;
-        //  group is a string with 1-byte length
+        //  pool is a string with 1-byte length
         frameSize++;       //  Size is one octet
-        if (group != null)
-            frameSize += group.length ();
+        if (pool != null)
+            frameSize += pool.length ();
         break;
         
     case JOIN:
         //  sequence is a 2-byte integer
         frameSize += 2;
-        //  group is a string with 1-byte length
+        //  pool is a string with 1-byte length
         frameSize++;       //  Size is one octet
-        if (group != null)
-            frameSize += group.length ();
+        if (pool != null)
+            frameSize += pool.length ();
         //  status is a 1-byte integer
         frameSize += 1;
         break;
@@ -400,10 +400,10 @@ public boolean send(Socket mailbox2)
     case LEAVE:
         //  sequence is a 2-byte integer
         frameSize += 2;
-        //  group is a string with 1-byte length
+        //  pool is a string with 1-byte length
         frameSize++;       //  Size is one octet
-        if (group != null)
-            frameSize += group.length ();
+        if (pool != null)
+            frameSize += pool.length ();
         //  status is a 1-byte integer
         frameSize += 1;
         break;
@@ -436,10 +436,10 @@ public boolean send(Socket mailbox2)
             putString (ipaddress);
         else
             putNumber1 ((byte) 0);      //  Empty string
-        putNumber2 (mailbox);
-        if (groups != null) {
-            putNumber1 ((byte) groups.size ());
-            for (String value : groups) {
+        putNumber2 (port);
+        if (pools != null) {
+            putNumber1 ((byte) pools.size ());
+            for (String value : pools) {
                 putString (value);
             }
         }
@@ -463,8 +463,8 @@ public boolean send(Socket mailbox2)
         
     case BROADCAST:
         putNumber2 (sequence);
-        if (group != null)
-            putString (group);
+        if (pool != null)
+            putString (pool);
         else
             putNumber1 ((byte) 0);      //  Empty string
         frameFlags = ZMQ.SNDMORE;
@@ -472,8 +472,8 @@ public boolean send(Socket mailbox2)
         
     case JOIN:
         putNumber2 (sequence);
-        if (group != null)
-            putString (group);
+        if (pool != null)
+            putString (pool);
         else
             putNumber1 ((byte) 0);      //  Empty string
         putNumber1 (status);
@@ -481,8 +481,8 @@ public boolean send(Socket mailbox2)
         
     case LEAVE:
         putNumber2 (sequence);
-        if (group != null)
-            putString (group);
+        if (pool != null)
+            putString (pool);
         else
             putNumber1 ((byte) 0);      //  Empty string
         putNumber1 (status);
@@ -498,9 +498,9 @@ public boolean send(Socket mailbox2)
         
     }
     //  If we're sending to a ROUTER, we send the address first
-    if (mailbox2.getType () == ZMQ.ROUTER) {
+    if (port2.getType () == ZMQ.ROUTER) {
         assert (address != null);
-        if (!address.send (mailbox2, ZMQ.SNDMORE)) {
+        if (!address.send (port2, ZMQ.SNDMORE)) {
             destroy ();
             return false;
         }
@@ -518,7 +518,7 @@ public boolean send(Socket mailbox2)
         //  If content isn't set, send an empty frame
         if (content == null)
             content = new ZFrame ("".getBytes ());
-        if (!content.send (mailbox2, 0)) {
+        if (!content.send (port2, 0)) {
             frame.destroy ();
             destroy ();
             return false;
@@ -528,7 +528,7 @@ public boolean send(Socket mailbox2)
         //  If content isn't set, send an empty frame
         if (content == null)
             content = new ZFrame ("".getBytes ());
-        if (!content.send (mailbox2, 0)) {
+        if (!content.send (port2, 0)) {
             frame.destroy ();
             destroy ();
             return false;
@@ -548,16 +548,16 @@ public static void sendHello (
     Socket output,
     int sequence,
     String ipaddress,
-    int mailbox,
-    Collection <String> groups,
+    int port,
+    Collection <String> pools,
     int status,
     Map <String, String> headers) 
 {
     DecenMsg self = new DecenMsg(DecenMsg.HELLO);
     self.setSequence (sequence);
     self.setIpaddress (ipaddress);
-    self.setMailbox (mailbox);
-    self.setGroups (new ArrayList <String> (groups));
+    self.setport (port);
+    self.setpools (new ArrayList <String> (pools));
     self.setStatus (status);
     self.setHeaders (new HashMap <String, String> (headers));
     self.send (output); 
@@ -583,12 +583,12 @@ public static void sendALIVE (
 public static void sendBROADCAST (
     Socket output,
     int sequence,
-    String group,
+    String pool,
     ZFrame content) 
 {
     DecenMsg self = new DecenMsg(DecenMsg.BROADCAST);
     self.setSequence (sequence);
-    self.setGroup (group);
+    self.setpool (pool);
     self.setContent (content.duplicate ());
     self.send (output); 
 }
@@ -599,12 +599,12 @@ public static void sendBROADCAST (
 public static void sendJoin (
     Socket output,
     int sequence,
-    String group,
+    String pool,
     int status) 
 {
     DecenMsg self = new DecenMsg(DecenMsg.JOIN);
     self.setSequence (sequence);
-    self.setGroup (group);
+    self.setpool (pool);
     self.setStatus (status);
     self.send (output); 
 }
@@ -615,12 +615,12 @@ public static void sendJoin (
 public static void sendLeave (
     Socket output,
     int sequence,
-    String group,
+    String pool,
     int status) 
 {
     DecenMsg self = new DecenMsg(DecenMsg.LEAVE);
     self.setSequence (sequence);
-    self.setGroup (group);
+    self.setpool (pool);
     self.setStatus (status);
     self.send (output); 
 }
@@ -662,8 +662,8 @@ public DecenMsg dup ()
     case HELLO:
         copy.sequence = this.sequence;
         copy.ipaddress = this.ipaddress;
-        copy.mailbox = this.mailbox;
-        copy.groups = new ArrayList <String> (this.groups);
+        copy.port = this.port;
+        copy.pools = new ArrayList <String> (this.pools);
         copy.status = this.status;
         copy.headers = new HashMap <String, String> (this.headers);
     break;
@@ -673,17 +673,17 @@ public DecenMsg dup ()
     break;
     case BROADCAST:
         copy.sequence = this.sequence;
-        copy.group = this.group;
+        copy.pool = this.pool;
         copy.content = this.content.duplicate ();
     break;
     case JOIN:
         copy.sequence = this.sequence;
-        copy.group = this.group;
+        copy.pool = this.pool;
         copy.status = this.status;
     break;
     case LEAVE:
         copy.sequence = this.sequence;
-        copy.group = this.group;
+        copy.pool = this.pool;
         copy.status = this.status;
     break;
     case PING:
@@ -716,10 +716,10 @@ public void dump ()
             System.out.printf ("    ipaddress='%s'\n", ipaddress);
         else
             System.out.printf ("    ipaddress=\n");
-        System.out.printf ("    mailbox=%d\n", (long)mailbox);
-        System.out.printf ("    groups={");
-        if (groups != null) {
-            for (String value : groups) {
+        System.out.printf ("    port=%d\n", (long)port);
+        System.out.printf ("    pools={");
+        if (pools != null) {
+            for (String value : pools) {
                 System.out.printf (" '%s'", value);
             }
         }
@@ -756,10 +756,10 @@ public void dump ()
     case BROADCAST:
         System.out.println ("BROADCAST:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
-        if (group != null)
-            System.out.printf ("    group='%s'\n", group);
+        if (pool != null)
+            System.out.printf ("    pool='%s'\n", pool);
         else
-            System.out.printf ("    group=\n");
+            System.out.printf ("    pool=\n");
         System.out.printf ("    content={\n");
         if (content != null) {
             int size = content.size ();
@@ -780,20 +780,20 @@ public void dump ()
     case JOIN:
         System.out.println ("JOIN:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
-        if (group != null)
-            System.out.printf ("    group='%s'\n", group);
+        if (pool != null)
+            System.out.printf ("    pool='%s'\n", pool);
         else
-            System.out.printf ("    group=\n");
+            System.out.printf ("    pool=\n");
         System.out.printf ("    status=%d\n", (long)status);
         break;
         
     case LEAVE:
         System.out.println ("LEAVE:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
-        if (group != null)
-            System.out.printf ("    group='%s'\n", group);
+        if (pool != null)
+            System.out.printf ("    pool='%s'\n", pool);
         else
-            System.out.printf ("    group=\n");
+            System.out.printf ("    pool=\n");
         System.out.printf ("    status=%d\n", (long)status);
         break;
         
@@ -870,41 +870,41 @@ public void setIpaddress (String format, Object ... args)
 
 
 //  --------------------------------------------------------------------------
-//  Get/set the mailbox field
+//  Get/set the port field
 
-public int mailbox ()
+public int port ()
 {
-    return mailbox;
+    return port;
 }
 
-public void setMailbox (int mailbox)
+public void setport (int port)
 {
-    this.mailbox = mailbox;
+    this.port = port;
 }
 
 
 //  --------------------------------------------------------------------------
-//  Iterate through the groups field, and append a groups value
+//  Iterate through the pools field, and append a pools value
 
-public List <String> groups ()
+public List <String> pools ()
 {
-    return groups;
+    return pools;
 }
 
-public void appendGroups (String format, Object ... args)
+public void appendpools (String format, Object ... args)
 {
     //  Format into newly allocated string
     
     String string = String.format (format, args);
     //  Attach string to list
-    if (groups == null)
-        groups = new ArrayList <String> ();
-    groups.add (string);
+    if (pools == null)
+        pools = new ArrayList <String> ();
+    pools.add (string);
 }
 
-public void setGroups (Collection <String> value)
+public void setpools (Collection <String> value)
 {
-    groups = new ArrayList (value); 
+    pools = new ArrayList (value); 
 }
 
 
@@ -991,17 +991,17 @@ public void setContent (ZFrame frame)
 }
 
 //  --------------------------------------------------------------------------
-//  Get/set the group field
+//  Get/set the pool field
 
-public String group ()
+public String pool ()
 {
-    return group;
+    return pool;
 }
 
-public void setGroup (String format, Object ... args)
+public void setpool (String format, Object ... args)
 {
     //  Format into newly allocated string
-    group = String.format (format, args);
+    pool = String.format (format, args);
 }
 
 

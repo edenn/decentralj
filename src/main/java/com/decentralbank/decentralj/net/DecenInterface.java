@@ -78,7 +78,7 @@ public void leave (String group)
 //  Destroys message after sending
 public void whisper (ZMsg msg) 
 {
-    pipe.sendMore ("WHISPER");
+    pipe.sendMore ("ALIVE");
     msg.send (pipe);
 }
 
@@ -86,7 +86,7 @@ public void whisper (ZMsg msg)
 //  Send message to a group of peers
 public void shout (ZMsg msg) 
 {
-    pipe.sendMore ("SHOUT");
+    pipe.sendMore ("HEARTBEAT");
     msg.send (pipe);
 }
 
@@ -315,8 +315,8 @@ protected static class Agent
             //  Handshake discovery by sending HELLO as first message
             DecenMsg msg = new DecenMsg(DecenMsg.HELLO);
             //msg.setIpaddress (this.udp.host ()); 
-            msg.setMailbox (this.port);
-            msg.setGroups (own_groups.keySet ());
+            msg.setport(this.port);
+            msg.setpools(own_groups.keySet());
             msg.setStatus (status);
             msg.setHeaders (new HashMap <String, String> (headers));
             peer.send (msg);
@@ -381,7 +381,7 @@ protected static class Agent
         DecentralPeer peer = peers.get (identity);
         if (msg.id () == DecenMsg.HELLO) {
             peer = requirePeer (
-                identity, msg.ipaddress (), msg.mailbox ());
+                identity, msg.ipaddress (), msg.port());
             assert (peer != null);
             peer.setReady (true);
         }
@@ -399,7 +399,7 @@ protected static class Agent
         //  Now process each command
         if (msg.id () == DecenMsg.HELLO) {
             //  Join peer to listed groups
-            for (String name : msg.groups ()) {
+            for (String name : msg.pools()) {
                 joinPeerGroup (peer, name);
             }
             //  Hello command holds latest status of peer
@@ -414,7 +414,7 @@ protected static class Agent
                 //fmq_client.connect (publisher);
         }
         else
-        if (msg.id () == DecenMsg.WHISPER) {
+        if (msg.id () == DecenMsg.ALIVE) {
             //  Pass up to caller API as WHISPER event
             ZFrame cookie = msg.content ();
             pipe.sendMore ("WHISPER");
@@ -422,27 +422,27 @@ protected static class Agent
             //cookie.sendAndKeep (pipe); // let msg free the frame
         }
         else
-        if (msg.id () == DecenMsg.SHOUT) {
+        if (msg.id () == DecenMsg.BROADCAST) {
             //  Pass up to caller as SHOUT event
             ZFrame cookie = msg.content ();
             pipe.sendMore ("SHOUT");
             pipe.sendMore (identity);
-            pipe.sendMore (msg.group ());
+            pipe.sendMore (msg.pool());
             //cookie.sendAndKeep (pipe); // let msg free the frame
         }
         else
         if (msg.id () == DecenMsg.PING) {
-            DecenMsg pingOK = new DecenMsg(DecenMsg.PING_OK);
+            DecenMsg pingOK = new DecenMsg(DecenMsg.DECENACK);
             peer.send (pingOK);
         }
         else
         if (msg.id () == DecenMsg.JOIN) {
-            joinPeerGroup (peer, msg.group ());
+            joinPeerGroup (peer, msg.pool());
             assert (msg.status () == peer.status ());
         }
         else
         if (msg.id () == DecenMsg.LEAVE) {
-            leavePeerGroup (peer, msg.group ());
+            leavePeerGroup (peer, msg.pool());
             assert (msg.status () == peer.status ());
         }
         msg.destroy ();
@@ -463,9 +463,11 @@ protected static class Agent
         
         //  Basic validation on the frame
         if (size != Beacon.BEACON_SIZE
-                || buffer.get () != 'Z'
-                || buffer.get () != 'R'
+                || buffer.get () != 'D'
                 || buffer.get () != 'E'
+                || buffer.get () != 'C'
+                || buffer.get () != 'E'
+                || buffer.get () != 'N'
                 || buffer.get () != Beacon.BEACON_VERSION)
             return true;       //  Ignore invalid beacons
         
