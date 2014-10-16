@@ -1,29 +1,9 @@
 package com.decentralbank.decentralj.net;
 
 /*  =========================================================================
-ZreMsg.java
+DecenMsg.java
 
-Generated codec class for ZreMsg
--------------------------------------------------------------------------
-Copyright (c) 1991-2012 iMatix Corporation -- http://www.imatix.com     
-Copyright other contributors as noted in the AUTHORS file.              
-                                                                        
-This file is part of Zyre, an open-source framework for proximity-based 
-peer-to-peer applications -- See http://zyre.org.                       
-                                                                        
-This is free software; you can redistribute it and/or modify it under   
-the terms of the GNU Lesser General Public License as published by the  
-Free Software Foundation; either version 3 of the License, or (at your  
-option) any later version.                                              
-                                                                        
-This software is distributed in the hope that it will be useful, but    
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTA-   
-BILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General  
-Public License for more details.                                        
-                                                                        
-You should have received a copy of the GNU Lesser General Public License
-along with this program. If not, see http://www.gnu.org/licenses/.      
-=========================================================================
+Generated codec class for DecenMsg
 */
 
 /*  These are the zre_msg messages
@@ -34,10 +14,10 @@ HELLO - Greet a peer so it can connect back to us
     groups        strings
     status        number 1
     headers       dictionary
-WHISPER - Send a message to a peer
+ALIVE - Send a message to a peer
     sequence      number 2
     content       frame
-SHOUT - Send a message to a group
+BROADCAST - Send a message to a group
     sequence      number 2
     group         string
     content       frame
@@ -51,7 +31,7 @@ LEAVE - Leave a group
     status        number 1
 PING - Ping a peer that has gone silent
     sequence      number 2
-PING_OK - Reply to a peer's ping
+DECENACK - Reply to a peer's ping
     sequence      number 2
 */
 
@@ -67,21 +47,21 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
 
 //Opaque class structure
-public class ZreMsg 
+public class DecenMsg
 {
 public static final int ZRE_MSG_VERSION                 = 1;
 
 public static final int HELLO                 = 1;
-public static final int WHISPER               = 2;
-public static final int SHOUT                 = 3;
+public static final int ALIVE                 = 2;
+public static final int BROADCAST             = 3;
 public static final int JOIN                  = 4;
 public static final int LEAVE                 = 5;
 public static final int PING                  = 6;
-public static final int PING_OK               = 7;
+public static final int DECENACK              = 7;
 
 //  Structure of our class
 private ZFrame address;             //  Address of peer if any
-private int id;                     //  ZreMsg message ID
+private int id;                     //  DecenMsg message ID
 private ByteBuffer needle;          //  Read/write pointer for serialization
 private int sequence;
 private String ipaddress;
@@ -95,9 +75,9 @@ private String group;
 
 
 //  --------------------------------------------------------------------------
-//  Create a new ZreMsg
+//  Create a new DecenMsg
 
-public ZreMsg (int id)
+public DecenMsg(int id)
 {
     this.id = id;
 }
@@ -216,13 +196,13 @@ public String getString ()
 }
 
 //  --------------------------------------------------------------------------
-//  Receive and parse a ZreMsg from the socket. Returns new object or
+//  Receive and parse a DecenMsg from the socket. Returns new object or
 //  null if error. Will block if there's no message waiting.
 
-public static ZreMsg recv (Socket input)
+public static DecenMsg recv (Socket input)
 {
     assert (input != null);
-    ZreMsg self = new ZreMsg (0);
+    DecenMsg self = new DecenMsg(0);
     ZFrame frame = null;
 
     try {
@@ -283,7 +263,7 @@ public static ZreMsg recv (Socket input)
 
             break;
 
-        case WHISPER:
+        case ALIVE:
             self.sequence = self.getNumber2 ();
             //  Get next frame, leave current untouched
             if (!input.hasReceiveMore ())
@@ -291,7 +271,7 @@ public static ZreMsg recv (Socket input)
             self.content = ZFrame.recvFrame (input);
             break;
 
-        case SHOUT:
+        case BROADCAST:
             self.sequence = self.getNumber2 ();
             self.group = self.getString ();
             //  Get next frame, leave current untouched
@@ -316,7 +296,7 @@ public static ZreMsg recv (Socket input)
             self.sequence = self.getNumber2 ();
             break;
 
-        case PING_OK:
+        case DECENACK:
             self.sequence = self.getNumber2 ();
             break;
 
@@ -340,14 +320,14 @@ public static ZreMsg recv (Socket input)
 
 //  Count size of key=value pair
 private static void 
-headersCount (final Map.Entry <String, String> entry, ZreMsg self)
+headersCount (final Map.Entry <String, String> entry, DecenMsg self)
 {
     self.headersBytes += entry.getKey ().length () + 1 + entry.getValue ().length () + 1;
 }
 
 //  Serialize headers key=value pair
 private static void
-headersWrite (final Map.Entry <String, String> entry, ZreMsg self)
+headersWrite (final Map.Entry <String, String> entry, DecenMsg self)
 {
     String string = entry.getKey () + "=" + entry.getValue ();
     self.putString (string);
@@ -355,9 +335,9 @@ headersWrite (final Map.Entry <String, String> entry, ZreMsg self)
 
 
 //  --------------------------------------------------------------------------
-//  Send the ZreMsg to the socket, and destroy it
+//  Send the DecenMsg to the socket, and destroy it
 
-public boolean send (Socket mailbox2)
+public boolean send(Socket mailbox2)
 {
     assert (mailbox2 != null);
 
@@ -392,12 +372,12 @@ public boolean send (Socket mailbox2)
         }
         break;
         
-    case WHISPER:
+    case ALIVE:
         //  sequence is a 2-byte integer
         frameSize += 2;
         break;
         
-    case SHOUT:
+    case BROADCAST:
         //  sequence is a 2-byte integer
         frameSize += 2;
         //  group is a string with 1-byte length
@@ -433,7 +413,7 @@ public boolean send (Socket mailbox2)
         frameSize += 2;
         break;
         
-    case PING_OK:
+    case DECENACK:
         //  sequence is a 2-byte integer
         frameSize += 2;
         break;
@@ -476,12 +456,12 @@ public boolean send (Socket mailbox2)
             putNumber1 ((byte) 0);      //  Empty dictionary
         break;
         
-    case WHISPER:
+    case ALIVE:
         putNumber2 (sequence);
         frameFlags = ZMQ.SNDMORE;
         break;
         
-    case SHOUT:
+    case BROADCAST:
         putNumber2 (sequence);
         if (group != null)
             putString (group);
@@ -512,7 +492,7 @@ public boolean send (Socket mailbox2)
         putNumber2 (sequence);
         break;
         
-    case PING_OK:
+    case DECENACK:
         putNumber2 (sequence);
         break;
         
@@ -534,7 +514,7 @@ public boolean send (Socket mailbox2)
     */
     //  Now send any frame fields, in order
     switch (id) {
-    case WHISPER:
+    case ALIVE:
         //  If content isn't set, send an empty frame
         if (content == null)
             content = new ZFrame ("".getBytes ());
@@ -544,7 +524,7 @@ public boolean send (Socket mailbox2)
             return false;
         }
         break;
-    case SHOUT:
+    case BROADCAST:
         //  If content isn't set, send an empty frame
         if (content == null)
             content = new ZFrame ("".getBytes ());
@@ -555,7 +535,7 @@ public boolean send (Socket mailbox2)
         }
         break;
     }
-    //  Destroy ZreMsg object
+    //  Destroy DecenMsg object
     destroy ();
     return true;
 }
@@ -573,7 +553,7 @@ public static void sendHello (
     int status,
     Map <String, String> headers) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.HELLO);
+    DecenMsg self = new DecenMsg(DecenMsg.HELLO);
     self.setSequence (sequence);
     self.setIpaddress (ipaddress);
     self.setMailbox (mailbox);
@@ -584,29 +564,29 @@ public static void sendHello (
 }
 
 //--------------------------------------------------------------------------
-//Send the WHISPER to the socket in one step
+//Send the ALIVE to the socket in one step
 
-public static void sendWhisper (
+public static void sendALIVE (
     Socket output,
     int sequence,
     ZFrame content) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.WHISPER);
+    DecenMsg self = new DecenMsg(DecenMsg.ALIVE);
     self.setSequence (sequence);
     self.setContent (content.duplicate ());
     self.send (output); 
 }
 
 //--------------------------------------------------------------------------
-//Send the SHOUT to the socket in one step
+//Send the BROADCAST to the socket in one step
 
-public static void sendShout (
+public static void sendBROADCAST (
     Socket output,
     int sequence,
     String group,
     ZFrame content) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.SHOUT);
+    DecenMsg self = new DecenMsg(DecenMsg.BROADCAST);
     self.setSequence (sequence);
     self.setGroup (group);
     self.setContent (content.duplicate ());
@@ -622,7 +602,7 @@ public static void sendJoin (
     String group,
     int status) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.JOIN);
+    DecenMsg self = new DecenMsg(DecenMsg.JOIN);
     self.setSequence (sequence);
     self.setGroup (group);
     self.setStatus (status);
@@ -638,7 +618,7 @@ public static void sendLeave (
     String group,
     int status) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.LEAVE);
+    DecenMsg self = new DecenMsg(DecenMsg.LEAVE);
     self.setSequence (sequence);
     self.setGroup (group);
     self.setStatus (status);
@@ -652,30 +632,30 @@ public static void sendPing (
     Socket output,
     int sequence) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.PING);
+    DecenMsg self = new DecenMsg(DecenMsg.PING);
     self.setSequence (sequence);
     self.send (output); 
 }
 
 //--------------------------------------------------------------------------
-//Send the PING_OK to the socket in one step
+//Send the DECENACK to the socket in one step
 
-public static void sendPing_Ok (
+public static void sendDECENACK (
     Socket output,
     int sequence) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.PING_OK);
+    DecenMsg self = new DecenMsg(DecenMsg.DECENACK);
     self.setSequence (sequence);
     self.send (output); 
 }
 
 
 //  --------------------------------------------------------------------------
-//  Duplicate the ZreMsg message
+//  Duplicate the DecenMsg message
 
-public ZreMsg dup ()
+public DecenMsg dup ()
 {
-    ZreMsg copy = new ZreMsg (this.id);
+    DecenMsg copy = new DecenMsg(this.id);
     if (this.address != null)
         copy.address = this.address.duplicate ();
     switch (this.id) {
@@ -687,11 +667,11 @@ public ZreMsg dup ()
         copy.status = this.status;
         copy.headers = new HashMap <String, String> (this.headers);
     break;
-    case WHISPER:
+    case ALIVE:
         copy.sequence = this.sequence;
         copy.content = this.content.duplicate ();
     break;
-    case SHOUT:
+    case BROADCAST:
         copy.sequence = this.sequence;
         copy.group = this.group;
         copy.content = this.content.duplicate ();
@@ -709,7 +689,7 @@ public ZreMsg dup ()
     case PING:
         copy.sequence = this.sequence;
     break;
-    case PING_OK:
+    case DECENACK:
         copy.sequence = this.sequence;
     break;
     }
@@ -717,7 +697,7 @@ public ZreMsg dup ()
 }
 
 //  Dump headers key=value pair to stdout
-public static void headersDump (Map.Entry <String, String> entry, ZreMsg self)
+public static void headersDump (Map.Entry <String, String> entry, DecenMsg self)
 {
     System.out.printf ("        %s=%s\n", entry.getKey (), entry.getValue ());
 }
@@ -753,8 +733,8 @@ public void dump ()
         System.out.printf ("    }\n");
         break;
         
-    case WHISPER:
-        System.out.println ("WHISPER:");
+    case ALIVE:
+        System.out.println ("ALIVE:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
         System.out.printf ("    content={\n");
         if (content != null) {
@@ -773,8 +753,8 @@ public void dump ()
         System.out.printf ("    }\n");
         break;
         
-    case SHOUT:
-        System.out.println ("SHOUT:");
+    case BROADCAST:
+        System.out.println ("BROADCAST:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
         if (group != null)
             System.out.printf ("    group='%s'\n", group);
@@ -822,8 +802,8 @@ public void dump ()
         System.out.printf ("    sequence=%d\n", (long)sequence);
         break;
         
-    case PING_OK:
-        System.out.println ("PING_OK:");
+    case DECENACK:
+        System.out.println ("DECENACK:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
         break;
         

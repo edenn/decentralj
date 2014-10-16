@@ -1,7 +1,7 @@
-decentralj
+DECENTRALJ
 ==========
 
-Decentral Java Implementation
+Decentral Server Java Implementation
 
 # Environment
 IntelliJ (JDK1.8)

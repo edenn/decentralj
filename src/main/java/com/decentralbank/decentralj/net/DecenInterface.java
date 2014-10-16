@@ -1,32 +1,8 @@
 package com.decentralbank.decentralj.net;
 /*  =========================================================================
-ZreInterface - interface to a ZyRE network
-
--------------------------------------------------------------------------
-Copyright (c) 1991-2012 iMatix Corporation <www.imatix.com>
-Copyright other contributors as noted in the AUTHORS file.
-
-This file is part of ZyRE, the ZeroMQ Realtime Experience framework:
-http://zyre.org.
-
-This is free software; you can redistribute it and/or modify it under
-the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
-
-This software is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this program. If not, see
-<http://www.gnu.org/licenses/>.
-=========================================================================
+DecenInterface - interface to a Decen network
 */
 
-import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -42,7 +18,7 @@ import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMsg;
 import org.zeromq.ZThread;
 
-public class ZreInterface
+public class DecenInterface
 {
 public static final int UBYTE_MAX = 0xff;
 //  Defined port numbers, pending IANA submission
@@ -60,7 +36,7 @@ private Socket pipe;        //  Pipe through to agent
 //  ---------------------------------------------------------------------
 //  Constructor
 
-public ZreInterface () 
+public DecenInterface()
 {
     ctx = new ZContext ();
     pipe = ZThread.fork (ctx, new ZreInterfaceAgent ());
@@ -337,7 +313,7 @@ protected static class Agent
             peer.connect (this.identity, endpoint);
 
             //  Handshake discovery by sending HELLO as first message
-            ZreMsg msg = new ZreMsg (ZreMsg.HELLO);
+            DecenMsg msg = new DecenMsg(DecenMsg.HELLO);
             //msg.setIpaddress (this.udp.host ()); 
             msg.setMailbox (this.port);
             msg.setGroups (own_groups.keySet ());
@@ -394,7 +370,7 @@ protected static class Agent
     protected boolean recvFromPeer ()
     {
         //  Router socket tells us the identity of this peer
-        ZreMsg msg = ZreMsg.recv (inbox);
+        DecenMsg msg = DecenMsg.recv(inbox);
         if (msg == null)
             return false;               //  Interrupted
 
@@ -403,7 +379,7 @@ protected static class Agent
         //  On HELLO we may create the peer if it's unknown
         //  On other commands the peer must already exist
         DecentralPeer peer = peers.get (identity);
-        if (msg.id () == ZreMsg.HELLO) {
+        if (msg.id () == DecenMsg.HELLO) {
             peer = requirePeer (
                 identity, msg.ipaddress (), msg.mailbox ());
             assert (peer != null);
@@ -421,7 +397,7 @@ protected static class Agent
         }
 
         //  Now process each command
-        if (msg.id () == ZreMsg.HELLO) {
+        if (msg.id () == DecenMsg.HELLO) {
             //  Join peer to listed groups
             for (String name : msg.groups ()) {
                 joinPeerGroup (peer, name);
@@ -438,7 +414,7 @@ protected static class Agent
                 //fmq_client.connect (publisher);
         }
         else
-        if (msg.id () == ZreMsg.WHISPER) {
+        if (msg.id () == DecenMsg.WHISPER) {
             //  Pass up to caller API as WHISPER event
             ZFrame cookie = msg.content ();
             pipe.sendMore ("WHISPER");
@@ -446,7 +422,7 @@ protected static class Agent
             //cookie.sendAndKeep (pipe); // let msg free the frame
         }
         else
-        if (msg.id () == ZreMsg.SHOUT) {
+        if (msg.id () == DecenMsg.SHOUT) {
             //  Pass up to caller as SHOUT event
             ZFrame cookie = msg.content ();
             pipe.sendMore ("SHOUT");
@@ -455,17 +431,17 @@ protected static class Agent
             //cookie.sendAndKeep (pipe); // let msg free the frame
         }
         else
-        if (msg.id () == ZreMsg.PING) {
-            ZreMsg pingOK = new ZreMsg (ZreMsg.PING_OK);
+        if (msg.id () == DecenMsg.PING) {
+            DecenMsg pingOK = new DecenMsg(DecenMsg.PING_OK);
             peer.send (pingOK);
         }
         else
-        if (msg.id () == ZreMsg.JOIN) {
+        if (msg.id () == DecenMsg.JOIN) {
             joinPeerGroup (peer, msg.group ());
             assert (msg.status () == peer.status ());
         }
         else
-        if (msg.id () == ZreMsg.LEAVE) {
+        if (msg.id () == DecenMsg.LEAVE) {
             leavePeerGroup (peer, msg.group ());
             assert (msg.status () == peer.status ());
         }
@@ -533,7 +509,7 @@ protected static class Agent
                 //  TODO: do this only once for a peer in this state;
                 //  it would be nicer to use a proper state machine
                 //  for peer management.
-                ZreMsg msg = new ZreMsg (ZreMsg.PING);
+                DecenMsg msg = new DecenMsg(DecenMsg.PING);
                 peer.send (msg);
             }
         }
@@ -542,7 +518,7 @@ protected static class Agent
 }
 
 //  Send message to all peers
-private static void sendPeers (Map <String, DecentralPeer> peers, ZreMsg msg)
+private static void sendPeers (Map <String, DecentralPeer> peers, DecenMsg msg)
 {
     for (DecentralPeer peer : peers.values ())
         peer.send (msg);

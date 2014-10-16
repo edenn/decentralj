@@ -43,8 +43,14 @@ public class ServerThread extends Thread  {
 		        	 //create a list to store frames in
 		        	 Object[] list = new Object[request.size()];     
 		        	  list = request.toArray();
-		        	  //list[0] is peer identity, list[1] is data
-		        	  identities.put(list[0].toString(), list[1].toString());
+		        	//list[0] is peer identity, list[1] is data
+                    //if peer id is not in list add to it
+                    if(!identities.containsKey(list[0].toString())){
+                        identities.put(list[0].toString(), list[1].toString());
+                    } else {
+                        //update value
+                        identities.put(list[0].toString(), list[1].toString());
+                    }
 		        	//print identities
 		            System.out.println(identities);
 		            

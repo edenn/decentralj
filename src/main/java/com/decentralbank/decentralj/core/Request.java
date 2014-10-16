@@ -1,6 +1,6 @@
 package com.decentralbank.decentralj.core;
 
-//This is to be used by a Node to send and receive requests
+//This is to be used by a Node to send and receive HELLO requests
 public class Request {
 	
 	private String status;

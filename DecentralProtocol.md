@@ -14,59 +14,62 @@ Decen-protocol    = greeting *traffic
 
                 / S:PING R:PING-OK
 
-###   Greet a peer so it can connect back to us
+                ###   Greet a peer so it can connect back to us
 
-S:HELLO         = signature %x01 sequence ipaddress mailbox groups status headers
+                S:HELLO         = signature %x01 sequence ipaddress mailbox groups status headers
 
-signature       = %xAA %xA1
+                signature       = %xAA %xA1
 
-sequence        = 2OCTET        ; Incremental sequence number
+                sequence        = 2OCTET        ; Incremental sequence number
 
-ipaddress       = string        ; Sender IP address
+                ipaddress       = string        ; Sender IP address
 
-string          = size *VCHAR   ; Information about a node
+                string          = size *VCHAR   ; Information about a node
 
-size            = OCTET
+                size            = OCTET
 
-port            = 2OCTET        ; Sender port number
+                port            = 2OCTET        ; Sender port number
 
-groups          = strings       ; List of groups sender is in
+                groups          = strings       ; List of groups sender is in
 
-strings         = size *string
+                strings         = size *string
 
-status          = OCTET         ; Sender group status sequence
+                status          = OCTET         ; Sender group status sequence
 
-headers         = dictionary    ; Sender header properties
+                headers         = dictionary    ; Sender header properties
 
-key-value       = string        ; Formatted as name=value
+                key-value       = string        ; Formatted as name=value
 
-### Send a message to a peer
+                ### Send a message to a peer
 
-S:ALIVE       = signature %x02 sequence content
+                S:ALIVE       = signature %x02 sequence content
 
-content         = FRAME         ; Message content as 0MQ frame
+                content         = FRAME         ; Message content as 0MQ frame
 
-### Send a message to a pool
+                ### Send a message to a pool
 
-S:BROADCAST         = signature %x03 sequence group content
+                S:BROADCAST         = signature %x03 sequence group content
 
-group           = string        ; Name of pool
+                group           = string        ; Name of pool
 
-content         = FRAME         ; Message content as 0MQ frame
+                content         = FRAME         ; Message content as 0MQ frame
 
-### Join a pool
+                ### Join a pool
 
-S:JOIN          = signature %x04 sequence pool status
+                S:JOIN          = signature %x04 sequence pool status
 
-status          = OCTET         ; Sender group status sequence
+                status          = OCTET         ; Sender group status sequence
 
-### Leave a group
+                ### Leave a group
 
-S:LEAVE         = signature %x05 sequence group status
+                S:LEAVE         = signature %x05 sequence group status
 
-### Ping a peer that has gone silent
+                ### Ping a peer that has gone silent
 
-S:PING          = signature %06 sequence
+                S:PING          = signature %06 sequence
+
+                ### Reply to a peer's ping request
+                S:DECENACK      = signature %07 sequence
 
 
 
@@ -115,3 +118,7 @@ When a node leaves a group it SHALL broadcast a LEAVE command to all its peers. 
 A node SHOULD send a PING command to any peer that it has not received a UDP beacon from within a certain time (typically five seconds). Note that UDP traffic may be dropped on a network that is heavily saturated. If a node receives no reply to a PING command, and no other traffic from a peer within a somewhat longer time (typically 30 seconds), it SHOULD treat that peer as dead.
 
 Note that PING commands SHOULD be used only in targeted cases where a peer is otherwise silent. Otherwise, the cost of PING commands will rise exponentially with the number of peers connected, and can degrade network performance.
+
+##The DECENACK Command
+
+A node sends DECENACK as a reply to a PING command

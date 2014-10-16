@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.management.ObjectName;
@@ -14,8 +15,7 @@ import org.zeromq.ZMQ;
 
 import com.decentralbank.decentralj.core.Request;
 
-// model for node peer's data
-
+//Decentral Peer to handle connections with peers
 public class DecentralPeer {
 
 	private byte[] ip;
@@ -41,9 +41,9 @@ public class DecentralPeer {
     private int want_sequence;           	//  Incoming message sequence
     private Map <String, Request> headers; 	//  Peer headers
     private ArrayList<Request> requests;    // list of requests;
+    private List<DecentralGroup> pools;     //pools peer is a member of
 	
 	public DecentralPeer(){
-		
 	}
 	
 	//peer model
@@ -59,7 +59,6 @@ public class DecentralPeer {
         connected = false;
         sent_sequence = 0;
         want_sequence = 0;
-        
     }
     
     //  ---------------------------------------------------------------------
@@ -77,7 +76,7 @@ public class DecentralPeer {
             socket.setIdentity (replyTo.getBytes ());
     
             //  Set a high-water mark that allows for reasonable activity
-            socket.setSndHWM (ZreInterface.PEER_EXPIRED * 100);
+            socket.setSndHWM (DecenInterface.PEER_EXPIRED * 100);
            
             //  Send messages immediately or return EAGAIN
             socket.setSendTimeOut (0);
@@ -104,8 +103,7 @@ public class DecentralPeer {
     }
     
     //send message
-    public boolean send (ZreMsg msg)
-    {
+    public boolean send(DecenMsg msg) {
         if (connected) {
             if (++sent_sequence > USHORT_MAX)
                 sent_sequence = 0;
@@ -117,7 +115,6 @@ public class DecentralPeer {
         }
         else
             msg.destroy ();
-
         return true;
     }
     
@@ -220,7 +217,7 @@ public class DecentralPeer {
 	}
   
 	
-	public boolean checkMessage (ZreMsg msg){
+	public boolean checkMessage (DecenMsg msg){
 		
 	        int recd_sequence = msg.sequence ();
 	        if (++want_sequence > USHORT_MAX)

@@ -1,18 +1,20 @@
 package com.decentralbank.decentralj.net;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
-//voting pool
+//peers that are members of a voting pool
 public class DecentralGroup
 {
 
-    private final String name;
-    private final Map <String, DecentralPeer> peers;
+    private final String poolName;
+    private final ArrayList<DecentralPeer> peers;
+    private MiniDHT pool;
     
     private DecentralGroup (String name) {
-        this.name = name;
-        peers = new HashMap <String, DecentralPeer> ();
+        this.poolName = name;
+        peers = new ArrayList<DecentralPeer> ();
+        pool = new MiniDHT();
     }
     
     //  Construct new group object
@@ -24,10 +26,9 @@ public class DecentralGroup
         return group;
     }
 
-    //  Add peer to group
-    //  Ignore duplicate joins
-    public void join (DecentralPeer peer) {
-        peers.put (peer.identity (), peer);
+    //  Add peers to group
+    public void join(DecentralPeer peer) {
+        peers.add(peer);
         peer.incStatus ();
     }
     
@@ -38,10 +39,9 @@ public class DecentralGroup
     }
     
     //  Send message to all peers in group
-    public void send (ZreMsg msg) {
-        for (DecentralPeer peer: peers.values ())
-            peer.send (msg.dup ());
-        
+    public void send (DecenMsg msg) {
+        for (DecentralPeer peer: peers)
+               peer.send (msg);
         msg.destroy ();
     }
 
