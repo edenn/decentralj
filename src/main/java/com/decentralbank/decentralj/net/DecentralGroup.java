@@ -45,4 +45,6 @@ public class DecentralGroup
         msg.destroy ();
     }
 
+    public void destroy() {
+    }
 }

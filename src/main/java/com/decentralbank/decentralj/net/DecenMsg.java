@@ -49,7 +49,7 @@ import org.zeromq.ZMQ.Socket;
 //Opaque class structure
 public class DecenMsg
 {
-public static final int ZRE_MSG_VERSION                 = 1;
+public static final int DECEN_MSG_VERSION     = 1;
 
 public static final int HELLO                 = 1;
 public static final int ALIVE                 = 2;
@@ -199,7 +199,7 @@ public String getString ()
 //  Receive and parse a DecenMsg from the socket. Returns new object or
 //  null if error. Will block if there's no message waiting.
 
-public static DecenMsg recv (Socket input)
+public static DecenMsg recv(Socket input)
 {
     assert (input != null);
     DecenMsg self = new DecenMsg(0);
@@ -268,7 +268,8 @@ public static DecenMsg recv (Socket input)
             //  Get next frame, leave current untouched
             if (!input.hasReceiveMore ())
                 throw new IllegalArgumentException ();
-            self.content = ZFrame.recvFrame (input);
+            self
+                    .content = ZFrame.recvFrame (input);
             break;
 
         case BROADCAST:
