@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="486f1017-8515-44b5-8104-5b6f3b821d61" name="Default" comment="adding rpc dependency">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/MiniDHT.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DHT.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/user/Reputation.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/user/Reputation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/COMPONENTS.md" afterPath="$PROJECT_DIR$/COMPONENTS.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="9ccec881-c89f-461a-8ecf-94dab4cb5e9e" name="Rejected commit: Default" comment="adding rpc dependency" />
@@ -61,8 +56,18 @@
       <file leaf-file-name="Node.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1890" max-vertical-offset="2940">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1950">
               <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HeartBeat.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/HeartBeat.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1245">
+              <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -71,28 +76,8 @@
       <file leaf-file-name="DecentralGroup.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="645" max-vertical-offset="825">
-              <caret line="43" column="27" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DecenMsg.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenMsg.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.7777777" vertical-offset="13302" max-vertical-offset="14115">
-              <caret line="969" column="22" selection-start-line="969" selection-start-column="12" selection-end-line="969" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DecenInterface.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6453287" vertical-offset="92" max-vertical-offset="2145">
-              <caret line="45" column="40" selection-start-line="45" selection-start-column="40" selection-end-line="45" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="810">
+              <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -101,31 +86,38 @@
       <file leaf-file-name="DecentralPeer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.8888888" vertical-offset="0" max-vertical-offset="7755">
-              <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
-              <folding>
-                <element signature="e#5114#5115#0" expanded="true" />
-                <element signature="e#5143#5144#0" expanded="true" />
-                <element signature="e#5470#5471#0" expanded="true" />
-                <element signature="e#5497#5498#0" expanded="true" />
-                <element signature="e#9519#9520#0" expanded="true" />
-                <element signature="e#9555#9556#0" expanded="true" />
-                <element signature="e#10027#10028#0" expanded="true" />
-                <element signature="e#10068#10069#0" expanded="true" />
-                <element signature="e#10226#10227#0" expanded="true" />
-                <element signature="e#10267#10268#0" expanded="true" />
-                <element signature="e#15376#15377#0" expanded="true" />
-                <element signature="e#15444#15445#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-13.555555" vertical-offset="2034" max-vertical-offset="7545">
+              <caret line="185" column="0" selection-start-line="185" selection-start-column="0" selection-end-line="185" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HeartBeat.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/HeartBeat.java">
+      <file leaf-file-name="NodeWallet.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="1290">
-              <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
+            <state vertical-scroll-proportion="-5.0442476" vertical-offset="2880" max-vertical-offset="3750">
+              <caret line="27" column="47" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TODO.md" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TODO.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="285">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NodeFee.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeFee.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -155,8 +147,6 @@
         <option value="$PROJECT_DIR$/src/test/java/com/decentralbank/decentralj/core/test/AccountTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/decentralbank/decentralj/core/test/NodeTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/decentralbank/decentralj/core/test/RequestTest.java" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" />
         <option value="$PROJECT_DIR$/Commands.md" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/ServerThread.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/MiniDHT.java" />
@@ -170,8 +160,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Request.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DHT.java" />
         <option value="$PROJECT_DIR$/COMPONENTS.md" />
-        <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -778,14 +770,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DHT.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="2520">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="2865">
@@ -960,24 +944,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.198939" vertical-offset="0" max-vertical-offset="377">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/crypto/Crypto.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2581262" vertical-offset="0" max-vertical-offset="900">
           <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeFee.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="690">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -992,13 +962,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="722" max-vertical-offset="1290">
           <caret line="69" column="21" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2910" max-vertical-offset="4395">
-          <caret line="194" column="8" selection-start-line="194" selection-start-column="8" selection-end-line="194" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -1020,6 +983,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="750">
           <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1045,34 +1009,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1890" max-vertical-offset="2940">
-          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Request.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="262" max-vertical-offset="840">
           <caret line="41" column="31" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="232" max-vertical-offset="810">
-          <caret line="43" column="27" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/HeartBeat.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1245">
-          <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
           <folding />
         </state>
       </provider>
@@ -1130,27 +1070,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.8888888" vertical-offset="0" max-vertical-offset="7755">
-          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
-          <folding>
-            <element signature="e#5114#5115#0" expanded="true" />
-            <element signature="e#5143#5144#0" expanded="true" />
-            <element signature="e#5470#5471#0" expanded="true" />
-            <element signature="e#5497#5498#0" expanded="true" />
-            <element signature="e#9519#9520#0" expanded="true" />
-            <element signature="e#9555#9556#0" expanded="true" />
-            <element signature="e#10027#10028#0" expanded="true" />
-            <element signature="e#10068#10069#0" expanded="true" />
-            <element signature="e#10226#10227#0" expanded="true" />
-            <element signature="e#10267#10268#0" expanded="true" />
-            <element signature="e#15376#15377#0" expanded="true" />
-            <element signature="e#15444#15445#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///usr/lib/jvm/java-8-oracle/src.zip!/java/lang/System.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46193773" vertical-offset="4428" max-vertical-offset="18015">
@@ -1161,8 +1080,72 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecenInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6453287" vertical-offset="92" max-vertical-offset="2145">
+        <state vertical-scroll-proportion="0.775" vertical-offset="0" max-vertical-offset="2145">
           <caret line="45" column="40" selection-start-line="45" selection-start-column="40" selection-end-line="45" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/HeartBeat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1245">
+          <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1950">
+          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralGroup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="810">
+          <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/net/DecentralPeer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.555555" vertical-offset="2034" max-vertical-offset="7545">
+          <caret line="185" column="0" selection-start-line="185" selection-start-column="0" selection-end-line="185" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeFee.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.051903114" vertical-offset="0" max-vertical-offset="578">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TODO.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.0442476" vertical-offset="2880" max-vertical-offset="3750">
+          <caret line="27" column="47" selection-start-line="27" selection-start-column="47" selection-end-line="27" selection-end-column="47" />
           <folding />
         </state>
       </provider>

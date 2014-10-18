@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-//TODO Add a Listener to detect changes in values
-
 public class NodeWallet {
 	
 	private String amountToSend;

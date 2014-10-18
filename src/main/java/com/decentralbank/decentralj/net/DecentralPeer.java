@@ -185,14 +185,14 @@ public class DecentralPeer {
     }
 
 
-	public String identity() {
+	protected String identity() {
 		
 		return identity;
 		
 	}
 
 
-	private int incStatus ()
+	protected int incStatus ()
     {
         if (++status > UBYTE_MAX)
             status = 0;
