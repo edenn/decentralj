@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="486f1017-8515-44b5-8104-5b6f3b821d61" name="Default" comment="adding rpc dependency">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/listeners/AddressConfidenceListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/listeners/BalanceListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/listeners/BlockchainDownloadListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/listeners/TxConfidenceListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeFee.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeFee.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" afterPath="$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="486f1017-8515-44b5-8104-5b6f3b821d61" name="Default" comment="adding rpc dependency" />
     <list id="9ccec881-c89f-461a-8ecf-94dab4cb5e9e" name="Rejected commit: Default" comment="adding rpc dependency" />
     <ignored path="decentralj.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -80,8 +71,8 @@
       <file leaf-file-name="NodeWallet.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.35873607" vertical-offset="9227" max-vertical-offset="9765">
-              <caret line="628" column="44" selection-start-line="628" selection-start-column="44" selection-end-line="628" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.3605948" vertical-offset="1906" max-vertical-offset="9765">
+              <caret line="140" column="71" selection-start-line="140" selection-start-column="35" selection-end-line="140" selection-end-column="71" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2280#2298#0" expanded="true" />
@@ -1209,8 +1200,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/decentralbank/decentralj/core/NodeWallet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35873607" vertical-offset="9227" max-vertical-offset="9765">
-          <caret line="628" column="44" selection-start-line="628" selection-start-column="44" selection-end-line="628" selection-end-column="44" />
+        <state vertical-scroll-proportion="0.3605948" vertical-offset="1906" max-vertical-offset="9765">
+          <caret line="140" column="71" selection-start-line="140" selection-start-column="35" selection-end-line="140" selection-end-column="71" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2280#2298#0" expanded="true" />
