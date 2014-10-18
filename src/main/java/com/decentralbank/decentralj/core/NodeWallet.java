@@ -3,7 +3,12 @@ package com.decentralbank.decentralj.core;
 import java.io.File;
 import java.io.IOException;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import org.bitcoinj.core.*;
+import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.script.ScriptBuilder;
@@ -12,36 +17,63 @@ import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.MemoryBlockStore;
 import org.bitcoinj.store.UnreadableWalletException;
 import com.google.common.collect.ImmutableList;
+import org.bitcoinj.utils.Threading;
+import org.bitcoinj.params.MainNetParams;
+import org.bitcoinj.crypto.DeterministicKey;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.InsufficientMoneyException;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.ScriptException;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.Wallet;
+import org.bitcoinj.core.WalletEventListener;
 
-import javax.transaction.TransactionRequiredException;
+import com.decentralbank.decentralj.core.listeners.AddressConfidenceListener;
+import com.decentralbank.decentralj.core.listeners.BalanceListener;
+import com.decentralbank.decentralj.core.listeners.TxConfidenceListener;
+import com.decentralbank.decentralj.core.listeners.BlockchainDownloadListener;
+
 import java.io.File;
+import java.io.Serializable;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+import static org.bitcoinj.script.ScriptOpCodes.OP_RETURN;
+import static java.net.InetAddress.*;
 
 public class NodeWallet {
 	
 	private String amountToSend;
 	private String recipient;
-	private Wallet wallet;  
+	private Wallet wallet;
 	final NetworkParameters netParams = NetworkParameters.testNet();
 	private File walletFile;
     private Map<Address, Account> NodeInfo = new HashMap<Address, Account>();
     private Map<BigInteger, Transaction> transactionMap = new HashMap<BigInteger, Transaction>();
-    private BlockStore blockStore = new MemoryBlockStore(netParams);
-    private BlockChain chain;
-    //final Peer peer = new Peer(netParams, new PeerAddress(InetAddress.getLocalHost()), chain);
+    private BlockStore blockStore = new MemoryBlockStore(netParams); //instance which keeps the block chain data structure somewhere, like on disk.
+    private BlockChain chain;                                       // bitcoinj blockchain data structure
+    private WalletAppKit walletKit;                                  //high level wallet wrapper
+    private WalletEventListener walletEventListener;                 // wallet listener for events
+    private final List<AddressConfidenceListener> addressConfidenceListeners = new CopyOnWriteArrayList<>();
+    private final List<TxConfidenceListener> txConfidenceListeners = new CopyOnWriteArrayList<>();
+    private final List<BalanceListener> balanceListeners = new CopyOnWriteArrayList<>();
+    private final List<DownloadListener> downloadListener = new CopyOnWriteArrayList<>();
+    
 
-  
     public static void main(String args[]) throws AddressFormatException, BlockStoreException, UnknownHostException {
+        
+
         System.out.println("NodeWallet");
     	NetworkParameters np = NetworkParameters.testNet();
     	
@@ -60,7 +92,7 @@ public class NodeWallet {
 
 
         try {
-            lewallet.createMultisigAccount(lekey, lekey2);
+            lewallet.createMultisigScript(lekey, lekey2);
         } catch (BlockStoreException e) {
             e.printStackTrace();
         } catch (InsufficientMoneyException e) {
@@ -79,7 +111,284 @@ public class NodeWallet {
     public NodeWallet() {
     	
     }
-    
+
+    //start downloading the blockchain
+    public void walletStart() {
+        // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
+            walletKit = new WalletAppKit(netParams, new File("."), "decentral") {
+            @Override
+            protected void onSetupCompleted() {
+                // This is called in a background thread after startAndWait is called, as setting up various objects
+                // can do disk and network IO that may cause UI jank/stuttering in wallet apps if it were to be done
+                // on the main thread.
+                if (wallet().getKeychainSize() < 1)
+                    wallet().importKey(new ECKey());
+            }
+        };
+        // Download the block chain and wait until it's done.
+        walletKit.startAndWait();
+    }
+     /******* Wallet ******/
+
+    //start waller and download the blockchain
+    public void initialize(org.bitcoinj.core.DownloadListener downloadListener) {
+
+        // If seed is non-null it means we are restoring from backup.
+        walletKit = new WalletAppKit(netParams, new File("."), "DECENTRAL") {
+            @Override
+            protected void onSetupCompleted() {
+                // TODO: make user wait for 1 confirmation
+                walletKit.wallet().allowSpendingUnconfirmedTransactions();
+                if (params != RegTestParams.get())
+                    walletKit.peerGroup().setMaxConnections(11);
+                walletKit.peerGroup().setBloomFilterFalsePositiveRate(0.00001);
+                initWallet();
+            }
+        };
+
+        /*if (params == RegTestParams.get()) {
+            walletKit.connectToLocalHost();   //regtest mode
+        }*/
+        if (netParams == MainNetParams.get()) {
+            try {
+                walletKit.setCheckpoints(getClass().getResourceAsStream("/wallet/checkpoints"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else if (netParams == TestNet3Params.get()) {
+            walletKit.setCheckpoints(getClass().getResourceAsStream("/wallet/checkpoints.testnet"));
+            //walletAppKit.useTor();
+        }
+        walletKit.setDownloadListener(downloadListener)
+                .setBlockingStartup(false)
+                .setUserAgent("BitSquare", "0.1");
+
+
+        walletKit.startAsync();
+    }
+
+    private void initWallet() {
+        wallet = walletKit.wallet();
+
+        //walletAppKit.peerGroup().setMaxConnections(11);
+
+       /* if (params == RegTestParams.get())
+            walletAppKit.peerGroup().setMinBroadcastConnections(1);
+        else
+            walletAppKit.peerGroup().setMinBroadcastConnections(3);*/
+
+
+        walletEventListener = new WalletEventListener() {
+            @Override
+            public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+                notifyBalanceListeners();
+            }
+
+            @Override
+            public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+                notifyBalanceListeners();
+            }
+
+            @Override
+            public void onReorganize(Wallet wallet) {
+
+            }
+
+            @Override
+            public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+                notifyConfidenceListeners(tx);
+            }
+
+            @Override
+            public void onWalletChanged(Wallet wallet) {
+
+            }
+
+            @Override
+            public void onScriptsAdded(Wallet wallet, List<Script> scripts) {
+
+            }
+
+            @Override
+            public void onKeysAdded(List<ECKey> keys) {
+
+            }
+        };
+        wallet.addEventListener(walletEventListener);
+
+        //TODO: Store into File
+
+    }
+
+    /*******************************************************************************************************************
+     ** Listeners **
+    *******************************************************************************************************************/
+
+    public AddressConfidenceListener addAddressConfidenceListener(AddressConfidenceListener listener) {
+        addressConfidenceListeners.add(listener);
+        return listener;
+    }
+
+    public void removeAddressConfidenceListener(AddressConfidenceListener listener) {
+        addressConfidenceListeners.remove(listener);
+    }
+
+    public TxConfidenceListener addTxConfidenceListener(TxConfidenceListener listener) {
+        txConfidenceListeners.add(listener);
+        return listener;
+    }
+
+    public void removeTxConfidenceListener(TxConfidenceListener listener) {
+        txConfidenceListeners.remove(listener);
+    }
+
+    public BalanceListener addBalanceListener(BalanceListener listener) {
+        balanceListeners.add(listener);
+        return listener;
+    }
+
+    public void removeBalanceListener(BalanceListener listener) {
+        balanceListeners.remove(listener);
+    }
+
+
+
+    // TransactionConfidence
+    public TransactionConfidence getConfidenceForAddress(Address address) {
+        List<TransactionConfidence> transactionConfidenceList = new ArrayList<>();
+        if (wallet != null) {
+            Set<Transaction> transactions = wallet.getTransactions(true);
+            if (transactions != null) {
+                transactionConfidenceList.addAll(transactions.stream().map(tx ->
+                        getTransactionConfidence(tx, address)).collect(Collectors.toList()));
+            }
+        }
+        return getMostRecentConfidence(transactionConfidenceList);
+    }
+
+    public TransactionConfidence getConfidenceForTxId(String txId) {
+        if (wallet != null) {
+            Set<Transaction> transactions = wallet.getTransactions(true);
+            for (Transaction tx : transactions) {
+                if (tx.getHashAsString().equals(txId))
+                    return tx.getConfidence();
+            }
+        }
+        return null;
+    }
+
+        //notify all confidence listeners
+    private void notifyConfidenceListeners(Transaction tx) {
+        for (AddressConfidenceListener addressConfidenceListener : addressConfidenceListeners) {
+            List<TransactionConfidence> transactionConfidenceList = new ArrayList<>();
+            transactionConfidenceList.add(getTransactionConfidence(tx, addressConfidenceListener.getAddress()));
+
+            TransactionConfidence transactionConfidence = getMostRecentConfidence(transactionConfidenceList);
+            addressConfidenceListener.onTransactionConfidenceChanged(transactionConfidence);
+        }
+
+        txConfidenceListeners.stream().filter(txConfidenceListener -> tx.getHashAsString().equals
+                (txConfidenceListener.getTxID())).forEach(txConfidenceListener -> txConfidenceListener
+                .onTransactionConfidenceChanged(tx.getConfidence()));
+    }
+
+   //get transaction confidence
+    private TransactionConfidence getTransactionConfidence(Transaction tx, Address address) {
+        List<TransactionOutput> mergedOutputs = getOutputsWithConnectedOutputs(tx);
+        List<TransactionConfidence> transactionConfidenceList = new ArrayList<>();
+
+        mergedOutputs.stream().filter(e -> e.getScriptPubKey().isSentToAddress() ||
+                e.getScriptPubKey().isSentToP2SH()).forEach(transactionOutput -> {
+            Address outputAddress = transactionOutput.getScriptPubKey().getToAddress(netParams);
+            if (address.equals(outputAddress)) {
+                transactionConfidenceList.add(tx.getConfidence());
+            }
+        });
+        return getMostRecentConfidence(transactionConfidenceList);
+    }
+
+    //get the list of all outputs in a a transactions
+    private List<TransactionOutput> getOutputsWithConnectedOutputs(Transaction tx) {
+        List<TransactionOutput> transactionOutputs = tx.getOutputs();
+        List<TransactionOutput> connectedOutputs = new ArrayList<>();
+
+        // add all connected outputs from any inputs as well
+        List<TransactionInput> transactionInputs = tx.getInputs();
+        for (TransactionInput transactionInput : transactionInputs) {
+            TransactionOutput transactionOutput = transactionInput.getConnectedOutput();
+            if (transactionOutput != null) {
+                connectedOutputs.add(transactionOutput);
+            }
+        }
+
+        List<TransactionOutput> mergedOutputs = new ArrayList<>();
+        mergedOutputs.addAll(transactionOutputs);
+        mergedOutputs.addAll(connectedOutputs);
+        return mergedOutputs;
+    }
+
+    // get most recent confidence for a transaction
+    private TransactionConfidence getMostRecentConfidence(List<TransactionConfidence> transactionConfidenceList) {
+        TransactionConfidence transactionConfidence = null;
+        for (TransactionConfidence confidence : transactionConfidenceList) {
+            if (confidence != null) {
+                if (transactionConfidence == null ||
+                        confidence.getConfidenceType().equals(TransactionConfidence.ConfidenceType.PENDING) ||
+                        (confidence.getConfidenceType().equals(TransactionConfidence.ConfidenceType.BUILDING) &&
+                                transactionConfidence.getConfidenceType().equals(
+                                        TransactionConfidence.ConfidenceType.BUILDING) &&
+                                confidence.getDepthInBlocks() < transactionConfidence.getDepthInBlocks())) {
+                    transactionConfidence = confidence;
+                }
+            }
+
+        }
+        return transactionConfidence;
+    }
+
+    /*******************************************************************************************************************
+     **  Balance **
+    *******************************************************************************************************************/
+
+    public Coin getAddressBalance(Address address) {
+        if(wallet != null) {
+            return getBalance(wallet.calculateAllSpendCandidates(true), address);
+        }else {
+           return Coin.ZERO;
+        }
+    }
+
+    private Coin getBalance(LinkedList<TransactionOutput> transactionOutputs, Address address) {
+        Coin balance = Coin.ZERO;
+        for (TransactionOutput transactionOutput : transactionOutputs) {
+            if (transactionOutput.getScriptPubKey().isSentToAddress() || transactionOutput.getScriptPubKey()
+                    .isSentToP2SH()) {
+                Address addressOutput = transactionOutput.getScriptPubKey().getToAddress(netParams);
+                if (addressOutput.equals(address)) {
+                    balance = balance.add(transactionOutput.getValue());
+                }
+            }
+        }
+        return balance;
+    }
+
+    private void notifyBalanceListeners() {
+        for (BalanceListener balanceListener : balanceListeners) {
+            Coin balance;
+            if (balanceListener.getAddress() != null)
+                balance = getAddressBalance(balanceListener.getAddress());
+            else
+                balance = getWalletBalance();
+
+            balanceListener.onBalanceChanged(balance);
+        }
+    }
+
+    public Coin getWalletBalance() {
+        return wallet.getBalance(Wallet.BalanceType.ESTIMATED);
+    }
+
     // get amount to send
     public String getamountToSend(){
     	return amountToSend;
@@ -89,16 +398,7 @@ public class NodeWallet {
     public void setamountToSend(String amount){
     	amountToSend = amount;
     }
-    
-    //get Recipient
-    public String getRecipient(){
-    	return recipient;
-    }
-    
-    // set Recipient
-    public void setRecipient(String recipient){
-    	this.recipient = recipient;
-    }
+
     
     //add a new account to NodeInfo
 	 public void addNewAccount() {
@@ -115,9 +415,37 @@ public class NodeWallet {
 	 public void setBalance(Address _address, BigInteger amount) {
 	    NodeInfo.get(_address).setBalance(amount);
 	 }
-	 
-	 // create a wallet
-	 public void createWallet(){
+
+    /*******************************************************************************************************************
+        **Send**
+    *******************************************************************************************************************/
+
+    public void sendFunds(String withdrawFromAddress,String withdrawToAddress, Coin amount, FutureCallback<Transaction> callback) throws AddressFormatException,
+            InsufficientMoneyException, IllegalArgumentException {
+        Transaction tx = new Transaction(netParams);
+        tx.addOutput(amount.subtract(NodeFee.TX_FEE), new Address(netParams, withdrawToAddress));
+
+        Wallet.SendRequest sendRequest = Wallet.SendRequest.forTx(tx);
+        sendRequest.shuffleOutputs = false;
+        //get address from nodeinfo
+
+        //sendRequest.coinSelector = new AddressBasedCoinSelector(netParams, //address , true);
+        //sendRequest.changeAddress;
+
+        Wallet.SendResult sendResult = wallet.sendCoins(sendRequest);
+        Futures.addCallback(sendResult.broadcastComplete, callback);
+
+         System.out.print("sendFunds: " + tx);
+    }
+
+
+
+
+    /*******************************************************************************************************************
+         **Wallet**
+     *******************************************************************************************************************/
+	//create a wallet
+    public void createWallet(){
 
 	    Wallet wallet = null;
 	    final File walletFile = new File("wallet.dat");
@@ -141,8 +469,8 @@ public class NodeWallet {
 	    	     }
 	        
 	 }
-	 
-	 // load a Bitcoin wallet
+
+    // load a wallet
 	 public void loadWallet(String filename) throws BlockStoreException, UnknownHostException {
 			 // wallet file that contains Bitcoins we can send
 	         walletFile = new File(filename);	
@@ -172,8 +500,16 @@ public class NodeWallet {
 				e.printStackTrace();
 			}		           		
 	 }
-	 
-	 //total Node's Bitcoin wallet balance
+
+    public void encryptWallet(String passwordDigest) {
+        this.wallet.encrypt(passwordDigest);
+    }
+
+    public void decryptWallet(String passwordDigest) {
+        this.wallet.decrypt(passwordDigest);
+    }
+
+     //total Node's Bitcoin wallet balance
 	 public BigInteger getTotalNodeBalance() {
 
 	        BigInteger sum = BigInteger.ZERO;
@@ -183,8 +519,12 @@ public class NodeWallet {
 	        }
 	        System.out.println(sum);
 	        return sum;
-	    }
-	 
+	   }
+
+      /*******************************************************************************************************************
+         **Transaction**
+       *******************************************************************************************************************/
+
 	 //build transaction
 	 public void buildTransaction(Transaction transaction, String passwordDigest, String amountToSend, String recipient) throws BlockStoreException, AddressFormatException, InsufficientMoneyException, IOException{
 
@@ -238,15 +578,18 @@ public class NodeWallet {
 		
 	 }
 	 /* deserialize transactions*/
-    public void deserializeMultisigTransaction(Transaction transaction) throws TransactionRequiredException{
+   // public void deserializeMultisigTransaction(Transaction transaction) throws TransactionRequiredException{
+
+
+    //}
 
 
 
-
-    }
-	   
+    /*******************************************************************************************************************
+        **Multisignature**
+     *******************************************************************************************************************/
 	 // create a 2 of 3 p2sh account
-	 public Address createMultisigAccount(ECKey clientKey, ECKey clientKey2) throws BlockStoreException, InsufficientMoneyException, InterruptedException, ExecutionException, AddressFormatException {
+	 public Address createMultisigScript(ECKey clientKey, ECKey clientKey2) throws BlockStoreException, InsufficientMoneyException, InterruptedException, ExecutionException, AddressFormatException {
 		 // initialize BlockChain object
 		 chain = new BlockChain(netParams, wallet, blockStore);
 		 PeerGroup peerGroup = new PeerGroup(netParams, chain);
@@ -269,18 +612,35 @@ public class NodeWallet {
 		 
 	 }
 
-    public void encryptWallet(String passwordDigest) {
-        this.wallet.encrypt(passwordDigest);
+    private Script getMultiSigScript(String offererPubKey, String takerPubKey, String arbitratorPubKey) {
+        ECKey offererKey = ECKey.fromPublicOnly(Utils.parseAsHexOrBase58(offererPubKey));
+        ECKey takerKey = ECKey.fromPublicOnly(Utils.parseAsHexOrBase58(takerPubKey));
+        ECKey arbitratorKey = ECKey.fromPublicOnly(Utils.parseAsHexOrBase58(arbitratorPubKey));
+
+        List<ECKey> keys = ImmutableList.of(offererKey, takerKey, arbitratorKey);
+        return ScriptBuilder.createMultiSigOutputScript(2, keys);
     }
 
-    public void decryptWallet(String passwordDigest) {
-        this.wallet.decrypt(passwordDigest);
+
+    private Transaction createP2SH(String depositTxAsHex, Coin offererPaybackAmount, Coin takerPaybackAmount,
+                                       String offererAddress, String takerAddress) throws AddressFormatException {
+
+        Transaction depositTx = new Transaction(netParams, Utils.parseAsHexOrBase58(depositTxAsHex));
+        TransactionOutput multiSigOutput = depositTx.getOutput(0);
+        Transaction tx = new Transaction(netParams);
+        tx.addInput(multiSigOutput);
+        tx.addOutput(offererPaybackAmount, new Address(netParams, offererAddress));
+        tx.addOutput(takerPaybackAmount, new Address(netParams, takerAddress));
+        return tx;
     }
+
+
 	 
 	 //n lock time implementation
 	 public void refund(){
 		 
 	 }
 
-    
+
+
 }

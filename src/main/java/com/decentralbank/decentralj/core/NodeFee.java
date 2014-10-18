@@ -1,15 +1,13 @@
 package com.decentralbank.decentralj.core;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.*;
 
 public class NodeFee {
 
     private static String userAddress;
     private static String BuyAddress;
     private static String SellAddress;
+    public static final Coin TX_FEE = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
 
     private final NetworkParameters params;
 
