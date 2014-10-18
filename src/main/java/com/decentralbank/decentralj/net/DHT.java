@@ -4,18 +4,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import org.zeromq.ZMQ;
-import org.zeromq.ZMQ.Socket;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.core.Request;
 
-import javax.portlet.ResourceRequest;
-
 //Decentralized Hash Table for Voting Pool Members 
-public class MiniDHT {
+public class DHT {
 	
     private RoutingTable routes; // all routes of pool
     private String poolID; // id of the pool
@@ -23,17 +19,17 @@ public class MiniDHT {
     private HashMap<String, Request> identities = new HashMap<>(); // id to data 
     private ArrayList<DecentralPeer> peers = new ArrayList<DecentralPeer>(); // List of Peers
     
-    public MiniDHT() {
+    public DHT() {
 		this.routes = new RoutingTable(Node.getInstance());
     }
     
-    public MiniDHT(String poolID) {
+    public DHT(String poolID) {
         this();
         this.poolID = poolID;
         this.port = getAvailablePort();
     }
 
-    public MiniDHT(int port, String poolID) {
+    public DHT(int port, String poolID) {
         this();
         this.poolID = poolID;
         this.port = port;

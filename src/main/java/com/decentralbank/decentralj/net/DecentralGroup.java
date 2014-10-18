@@ -9,12 +9,12 @@ public class DecentralGroup
 
     private final String poolName;
     private final ArrayList<DecentralPeer> peers;
-    private MiniDHT pool;
+    private DHT pool;
     
     private DecentralGroup (String name) {
         this.poolName = name;
         peers = new ArrayList<DecentralPeer> ();
-        pool = new MiniDHT();
+        pool = new DHT();
     }
     
     //  Construct new group object

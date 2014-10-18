@@ -20,4 +20,5 @@ Descentralized hashtable
 P2P routing
 
 ## User 
-Citi Bank stuff
+Node User Information
+Node Reputation Information

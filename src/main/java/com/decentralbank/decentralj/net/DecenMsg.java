@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.nio.ByteBuffer;
 
+import com.decentralbank.decentralj.core.Request;
 import org.zeromq.ZFrame;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
@@ -966,7 +967,7 @@ public void insertHeaders (String key, String format, Object ... args)
     headersBytes += key.length () + 1 + string.length ();
 }
 
-public void setHeaders (Map <String, String> value)
+public void setHeaders (HashMap<String, Request> value)
 {
     if (value != null)
         headers = new HashMap <String, String> (value); 

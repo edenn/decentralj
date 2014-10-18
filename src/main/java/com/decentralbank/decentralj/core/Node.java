@@ -2,14 +2,11 @@ package com.decentralbank.decentralj.core;
 
 import java.math.BigInteger;
 
-import com.decentralbank.decentralj.net.MiniDHT;
+import com.decentralbank.decentralj.net.DHT;
 import com.decentralbank.decentralj.net.DecentralPeer;
-import com.decentralbank.decentralj.net.RoutingTable;
-import com.decentralbank.decentralj.net.ServerThread;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Peer;
 
 public class Node {
 	
@@ -26,7 +23,7 @@ public class Node {
 	private String redirectPort;
 	private String redirectHostName;
 	private NodeWallet wallet;
-	private MiniDHT poolDHT; //DHT to keep track of all votin pool members
+	private DHT poolDHT; //DHT to keep track of all votin pool members
 	private static Node instance = new Node();
 	
 	//get instance of node
@@ -41,7 +38,7 @@ public class Node {
 	}
 	
 	public Node() {
-		this.poolDHT = new MiniDHT();
+		this.poolDHT = new DHT();
 	}
 	
 	public String getID() {
@@ -124,11 +121,11 @@ public class Node {
 		redirectPort = redirectPort;
 	}
 
-	public MiniDHT getDHT() {
+	public DHT getDHT() {
         return this.poolDHT;
     }
 
-	public void setDHT(MiniDHT lehashtable) {
+	public void setDHT(DHT lehashtable) {
 		poolDHT = lehashtable;
 	}
 	
