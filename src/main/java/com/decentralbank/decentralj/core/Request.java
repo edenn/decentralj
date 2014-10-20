@@ -1,11 +1,19 @@
 package com.decentralbank.decentralj.core;
 
-//This is to be used by a Node to send and receive requests
+import java.net.InetAddress;
+import java.net.SocketAddress;
+
+//This is to be used by a Node to send and receive HELLO requests
 public class Request {
 	
 	private String status;
 	private String peerID;
 	private String message;
+    private InetAddress address;        //  Own address
+    private InetAddress broadcast;      //  Broadcast address
+    private SocketAddress sender;       //  Where last recv came from
+    private String host;                //  Our own address as string
+    private String from;                //  Sender address of last message
 	
 	public Request() {
 		this("","","");
@@ -20,8 +28,14 @@ public class Request {
 		this.peerID = peerID;
 		this.message = responseMessage;
 	}
-	
-	public String getStatus() {
+
+    public Request(int pingPortNumber) {
+
+    }
+
+
+
+    public String getStatus() {
 		return status;
 	}
 	
@@ -49,4 +63,6 @@ public class Request {
 		return this.getStatus()+" "+this.getPeerID()+" "+this.getMessage();	
 	}
 
+    public static void destroy() {
+    }
 }

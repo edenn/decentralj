@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import org.zeromq.ZMQ;
-import org.zeromq.ZMQ.Socket;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.core.Request;
 
 //Decentralized Hash Table for Voting Pool Members 
-public class MiniDHT {
+public class DHT {
 	
     private RoutingTable routes; // all routes of pool
     private String poolID; // id of the pool
@@ -21,80 +19,67 @@ public class MiniDHT {
     private HashMap<String, Request> identities = new HashMap<>(); // id to data 
     private ArrayList<DecentralPeer> peers = new ArrayList<DecentralPeer>(); // List of Peers
     
-    public MiniDHT() {
-    	
+    public DHT() {
 		this.routes = new RoutingTable(Node.getInstance());
-		
     }
     
-    public MiniDHT(String poolID) {
-    	
+    public DHT(String poolID) {
         this();
         this.poolID = poolID;
         this.port = getAvailablePort();
-        
     }
 
-    public MiniDHT(int port, String poolID) {
-    	
+    public DHT(int port, String poolID) {
         this();
         this.poolID = poolID;
         this.port = port;
-        
     }
 
     //get Routes
     public RoutingTable getRoutes() {
-    	
         return routes;
-        
     }
 
     //set Routes
     public void setRoutes(RoutingTable routes) {
-    	
         this.routes = routes;
-        
     }
 
     //get Pool ID
     public String getPoolID() {
-    	
         return poolID;
-        
     }
 
     //set Pool Id
     public void setPoolID(String poolID) {
-    	
         this.poolID = poolID;
-        
     }
 
     //get Port
     public int getPort() {
-    	
         return port;
-    
     }
 
     //set Port
     public void setPort(int port) {
-    
     	this.port = port;
-    
     }
 
     //get Node ID
     public String getNodeID() {
-    	
         return getRoutes().getID();
-        
     }
     
     //handle connections to a node
-    public void connect() {
-    	
+    public void connect(String ID,String peerId) {
+        //initialize request packet
+        Request packet = new Request();
+        //set local id to packet
+        packet.setPeerID(ID);
+        //Node Status(if available accept new petitions to form pool)
+        packet.setStatus("available");
+        packet.setMessage(Node.getInstance().toString()); //redo this
+        //open context
         ZMQ.Context context = ZMQ.context(1); 
         //get Node instance
         Node localhost = Node.getInstance();
@@ -107,7 +92,8 @@ public class MiniDHT {
         while (!Thread.currentThread().isInterrupted()) {
             byte[] request = responder.recv(0);
             String messageType = new String(request).split("/")[0];
-            
+            responder.send("Hello");
+            responder.sendMore(packet.toString());
             //implement message handling
             if (messageType.contains(messageType)) {
                // Request response = handlers.get(messageType).
@@ -152,11 +138,12 @@ public class MiniDHT {
         return false;
     }
 
+    public void disconnect() {
+    }
+
 	public void addPeer(DecentralPeer peerModel) {
-		
 		peers.add(peerModel);
-		
-	}
+    }
 
 
 

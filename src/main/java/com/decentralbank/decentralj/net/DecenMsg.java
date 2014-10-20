@@ -1,57 +1,37 @@
 package com.decentralbank.decentralj.net;
 
 /*  =========================================================================
-ZreMsg.java
+DecenMsg.java
 
-Generated codec class for ZreMsg
--------------------------------------------------------------------------
-Copyright (c) 1991-2012 iMatix Corporation -- http://www.imatix.com     
-Copyright other contributors as noted in the AUTHORS file.              
-                                                                        
-This file is part of Zyre, an open-source framework for proximity-based 
-peer-to-peer applications -- See http://zyre.org.                       
-                                                                        
-This is free software; you can redistribute it and/or modify it under   
-the terms of the GNU Lesser General Public License as published by the  
-Free Software Foundation; either version 3 of the License, or (at your  
-option) any later version.                                              
-                                                                        
-This software is distributed in the hope that it will be useful, but    
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTA-   
-BILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General  
-Public License for more details.                                        
-                                                                        
-You should have received a copy of the GNU Lesser General Public License
-along with this program. If not, see http://www.gnu.org/licenses/.      
-=========================================================================
+Generated codec class for DecenMsg
 */
 
 /*  These are the zre_msg messages
 HELLO - Greet a peer so it can connect back to us
     sequence      number 2
     ipaddress     string
-    mailbox       number 2
-    groups        strings
+    port       number 2
+    pools        strings
     status        number 1
     headers       dictionary
-WHISPER - Send a message to a peer
+ALIVE - Send a message to a peer
     sequence      number 2
     content       frame
-SHOUT - Send a message to a group
+BROADCAST - Send a message to a pool
     sequence      number 2
-    group         string
+    pool         string
     content       frame
-JOIN - Join a group
+JOIN - Join a pool
     sequence      number 2
-    group         string
+    pool         string
     status        number 1
-LEAVE - Leave a group
+LEAVE - Leave a pool
     sequence      number 2
-    group         string
+    pool         string
     status        number 1
 PING - Ping a peer that has gone silent
     sequence      number 2
-PING_OK - Reply to a peer's ping
+DECENACK - Reply to a peer's ping
     sequence      number 2
 */
 
@@ -62,42 +42,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.nio.ByteBuffer;
 
+import com.decentralbank.decentralj.core.Request;
 import org.zeromq.ZFrame;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
 
 //Opaque class structure
-public class ZreMsg 
+public class DecenMsg
 {
-public static final int ZRE_MSG_VERSION                 = 1;
+public static final int DECEN_MSG_VERSION     = 1;
 
 public static final int HELLO                 = 1;
-public static final int WHISPER               = 2;
-public static final int SHOUT                 = 3;
+public static final int ALIVE                 = 2;
+public static final int BROADCAST             = 3;
 public static final int JOIN                  = 4;
 public static final int LEAVE                 = 5;
 public static final int PING                  = 6;
-public static final int PING_OK               = 7;
+public static final int DECENACK              = 7;
 
 //  Structure of our class
 private ZFrame address;             //  Address of peer if any
-private int id;                     //  ZreMsg message ID
+private int id;                     //  DecenMsg message ID
 private ByteBuffer needle;          //  Read/write pointer for serialization
 private int sequence;
 private String ipaddress;
-private int mailbox;
-private List <String> groups;
+private int port;
+private List <String> pools;
 private int status;
 private Map <String, String> headers;
 private int headersBytes;
 private ZFrame content;
-private String group;
+private String pool;
 
 
 //  --------------------------------------------------------------------------
-//  Create a new ZreMsg
+//  Create a new DecenMsg
 
-public ZreMsg (int id)
+public DecenMsg(int id)
 {
     this.id = id;
 }
@@ -216,13 +197,13 @@ public String getString ()
 }
 
 //  --------------------------------------------------------------------------
-//  Receive and parse a ZreMsg from the socket. Returns new object or
+//  Receive and parse a DecenMsg from the socket. Returns new object or
 //  null if error. Will block if there's no message waiting.
 
-public static ZreMsg recv (Socket input)
+public static DecenMsg recv(Socket input)
 {
     assert (input != null);
-    ZreMsg self = new ZreMsg (0);
+    DecenMsg self = new DecenMsg(0);
     ZFrame frame = null;
 
     try {
@@ -265,12 +246,12 @@ public static ZreMsg recv (Socket input)
         case HELLO:
             self.sequence = self.getNumber2 ();
             self.ipaddress = self.getString ();
-            self.mailbox = self.getNumber2 ();
+            self.port = self.getNumber2 ();
             listSize = self.getNumber1 ();
-            self.groups = new ArrayList<String> ();
+            self.pools = new ArrayList<String> ();
             while (listSize-- > 0) {
                 String string = self.getString ();
-                self.groups.add (string);
+                self.pools.add (string);
             }
             self.status = self.getNumber1 ();
             hashSize = self.getNumber1 ();
@@ -283,17 +264,18 @@ public static ZreMsg recv (Socket input)
 
             break;
 
-        case WHISPER:
+        case ALIVE:
             self.sequence = self.getNumber2 ();
             //  Get next frame, leave current untouched
             if (!input.hasReceiveMore ())
                 throw new IllegalArgumentException ();
-            self.content = ZFrame.recvFrame (input);
+            self
+                    .content = ZFrame.recvFrame (input);
             break;
 
-        case SHOUT:
+        case BROADCAST:
             self.sequence = self.getNumber2 ();
-            self.group = self.getString ();
+            self.pool = self.getString ();
             //  Get next frame, leave current untouched
             if (!input.hasReceiveMore ())
                 throw new IllegalArgumentException ();
@@ -302,13 +284,13 @@ public static ZreMsg recv (Socket input)
 
         case JOIN:
             self.sequence = self.getNumber2 ();
-            self.group = self.getString ();
+            self.pool = self.getString ();
             self.status = self.getNumber1 ();
             break;
 
         case LEAVE:
             self.sequence = self.getNumber2 ();
-            self.group = self.getString ();
+            self.pool = self.getString ();
             self.status = self.getNumber1 ();
             break;
 
@@ -316,7 +298,7 @@ public static ZreMsg recv (Socket input)
             self.sequence = self.getNumber2 ();
             break;
 
-        case PING_OK:
+        case DECENACK:
             self.sequence = self.getNumber2 ();
             break;
 
@@ -340,14 +322,14 @@ public static ZreMsg recv (Socket input)
 
 //  Count size of key=value pair
 private static void 
-headersCount (final Map.Entry <String, String> entry, ZreMsg self)
+headersCount (final Map.Entry <String, String> entry, DecenMsg self)
 {
     self.headersBytes += entry.getKey ().length () + 1 + entry.getValue ().length () + 1;
 }
 
 //  Serialize headers key=value pair
 private static void
-headersWrite (final Map.Entry <String, String> entry, ZreMsg self)
+headersWrite (final Map.Entry <String, String> entry, DecenMsg self)
 {
     String string = entry.getKey () + "=" + entry.getValue ();
     self.putString (string);
@@ -355,11 +337,11 @@ headersWrite (final Map.Entry <String, String> entry, ZreMsg self)
 
 
 //  --------------------------------------------------------------------------
-//  Send the ZreMsg to the socket, and destroy it
+//  Send the DecenMsg to the socket, and destroy it
 
-public boolean send (Socket mailbox2)
+public boolean send(Socket port2)
 {
-    assert (mailbox2 != null);
+    assert (port2 != null);
 
     //  Calculate size of serialized data
     int frameSize = 2 + 1;          //  Signature and message ID
@@ -371,12 +353,12 @@ public boolean send (Socket mailbox2)
         frameSize++;       //  Size is one octet
         if (ipaddress != null)
             frameSize += ipaddress.length ();
-        //  mailbox is a 2-byte integer
+        //  port is a 2-byte integer
         frameSize += 2;
-        //  groups is an array of strings
+        //  pools is an array of strings
         frameSize++;       //  Size is one octet
-        if (groups != null) {
-            for (String value : groups) 
+        if (pools != null) {
+            for (String value : pools) 
                 frameSize += 1 + value.length ();
         }
         //  status is a 1-byte integer
@@ -392,27 +374,27 @@ public boolean send (Socket mailbox2)
         }
         break;
         
-    case WHISPER:
+    case ALIVE:
         //  sequence is a 2-byte integer
         frameSize += 2;
         break;
         
-    case SHOUT:
+    case BROADCAST:
         //  sequence is a 2-byte integer
         frameSize += 2;
-        //  group is a string with 1-byte length
+        //  pool is a string with 1-byte length
         frameSize++;       //  Size is one octet
-        if (group != null)
-            frameSize += group.length ();
+        if (pool != null)
+            frameSize += pool.length ();
         break;
         
     case JOIN:
         //  sequence is a 2-byte integer
         frameSize += 2;
-        //  group is a string with 1-byte length
+        //  pool is a string with 1-byte length
         frameSize++;       //  Size is one octet
-        if (group != null)
-            frameSize += group.length ();
+        if (pool != null)
+            frameSize += pool.length ();
         //  status is a 1-byte integer
         frameSize += 1;
         break;
@@ -420,10 +402,10 @@ public boolean send (Socket mailbox2)
     case LEAVE:
         //  sequence is a 2-byte integer
         frameSize += 2;
-        //  group is a string with 1-byte length
+        //  pool is a string with 1-byte length
         frameSize++;       //  Size is one octet
-        if (group != null)
-            frameSize += group.length ();
+        if (pool != null)
+            frameSize += pool.length ();
         //  status is a 1-byte integer
         frameSize += 1;
         break;
@@ -433,7 +415,7 @@ public boolean send (Socket mailbox2)
         frameSize += 2;
         break;
         
-    case PING_OK:
+    case DECENACK:
         //  sequence is a 2-byte integer
         frameSize += 2;
         break;
@@ -456,10 +438,10 @@ public boolean send (Socket mailbox2)
             putString (ipaddress);
         else
             putNumber1 ((byte) 0);      //  Empty string
-        putNumber2 (mailbox);
-        if (groups != null) {
-            putNumber1 ((byte) groups.size ());
-            for (String value : groups) {
+        putNumber2 (port);
+        if (pools != null) {
+            putNumber1 ((byte) pools.size ());
+            for (String value : pools) {
                 putString (value);
             }
         }
@@ -476,15 +458,15 @@ public boolean send (Socket mailbox2)
             putNumber1 ((byte) 0);      //  Empty dictionary
         break;
         
-    case WHISPER:
+    case ALIVE:
         putNumber2 (sequence);
         frameFlags = ZMQ.SNDMORE;
         break;
         
-    case SHOUT:
+    case BROADCAST:
         putNumber2 (sequence);
-        if (group != null)
-            putString (group);
+        if (pool != null)
+            putString (pool);
         else
             putNumber1 ((byte) 0);      //  Empty string
         frameFlags = ZMQ.SNDMORE;
@@ -492,8 +474,8 @@ public boolean send (Socket mailbox2)
         
     case JOIN:
         putNumber2 (sequence);
-        if (group != null)
-            putString (group);
+        if (pool != null)
+            putString (pool);
         else
             putNumber1 ((byte) 0);      //  Empty string
         putNumber1 (status);
@@ -501,8 +483,8 @@ public boolean send (Socket mailbox2)
         
     case LEAVE:
         putNumber2 (sequence);
-        if (group != null)
-            putString (group);
+        if (pool != null)
+            putString (pool);
         else
             putNumber1 ((byte) 0);      //  Empty string
         putNumber1 (status);
@@ -512,15 +494,15 @@ public boolean send (Socket mailbox2)
         putNumber2 (sequence);
         break;
         
-    case PING_OK:
+    case DECENACK:
         putNumber2 (sequence);
         break;
         
     }
     //  If we're sending to a ROUTER, we send the address first
-    if (mailbox2.getType () == ZMQ.ROUTER) {
+    if (port2.getType () == ZMQ.ROUTER) {
         assert (address != null);
-        if (!address.send (mailbox2, ZMQ.SNDMORE)) {
+        if (!address.send (port2, ZMQ.SNDMORE)) {
             destroy ();
             return false;
         }
@@ -534,28 +516,28 @@ public boolean send (Socket mailbox2)
     */
     //  Now send any frame fields, in order
     switch (id) {
-    case WHISPER:
+    case ALIVE:
         //  If content isn't set, send an empty frame
         if (content == null)
             content = new ZFrame ("".getBytes ());
-        if (!content.send (mailbox2, 0)) {
+        if (!content.send (port2, 0)) {
             frame.destroy ();
             destroy ();
             return false;
         }
         break;
-    case SHOUT:
+    case BROADCAST:
         //  If content isn't set, send an empty frame
         if (content == null)
             content = new ZFrame ("".getBytes ());
-        if (!content.send (mailbox2, 0)) {
+        if (!content.send (port2, 0)) {
             frame.destroy ();
             destroy ();
             return false;
         }
         break;
     }
-    //  Destroy ZreMsg object
+    //  Destroy DecenMsg object
     destroy ();
     return true;
 }
@@ -568,47 +550,47 @@ public static void sendHello (
     Socket output,
     int sequence,
     String ipaddress,
-    int mailbox,
-    Collection <String> groups,
+    int port,
+    Collection <String> pools,
     int status,
     Map <String, String> headers) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.HELLO);
+    DecenMsg self = new DecenMsg(DecenMsg.HELLO);
     self.setSequence (sequence);
     self.setIpaddress (ipaddress);
-    self.setMailbox (mailbox);
-    self.setGroups (new ArrayList <String> (groups));
+    self.setport (port);
+    self.setpools (new ArrayList <String> (pools));
     self.setStatus (status);
     self.setHeaders (new HashMap <String, String> (headers));
     self.send (output); 
 }
 
 //--------------------------------------------------------------------------
-//Send the WHISPER to the socket in one step
+//Send the ALIVE to the socket in one step
 
-public static void sendWhisper (
+public static void sendALIVE (
     Socket output,
     int sequence,
     ZFrame content) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.WHISPER);
+    DecenMsg self = new DecenMsg(DecenMsg.ALIVE);
     self.setSequence (sequence);
     self.setContent (content.duplicate ());
     self.send (output); 
 }
 
 //--------------------------------------------------------------------------
-//Send the SHOUT to the socket in one step
+//Send the BROADCAST to the socket in one step
 
-public static void sendShout (
+public static void sendBROADCAST (
     Socket output,
     int sequence,
-    String group,
+    String pool,
     ZFrame content) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.SHOUT);
+    DecenMsg self = new DecenMsg(DecenMsg.BROADCAST);
     self.setSequence (sequence);
-    self.setGroup (group);
+    self.setpool (pool);
     self.setContent (content.duplicate ());
     self.send (output); 
 }
@@ -619,12 +601,12 @@ public static void sendShout (
 public static void sendJoin (
     Socket output,
     int sequence,
-    String group,
+    String pool,
     int status) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.JOIN);
+    DecenMsg self = new DecenMsg(DecenMsg.JOIN);
     self.setSequence (sequence);
-    self.setGroup (group);
+    self.setpool (pool);
     self.setStatus (status);
     self.send (output); 
 }
@@ -635,12 +617,12 @@ public static void sendJoin (
 public static void sendLeave (
     Socket output,
     int sequence,
-    String group,
+    String pool,
     int status) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.LEAVE);
+    DecenMsg self = new DecenMsg(DecenMsg.LEAVE);
     self.setSequence (sequence);
-    self.setGroup (group);
+    self.setpool (pool);
     self.setStatus (status);
     self.send (output); 
 }
@@ -652,64 +634,64 @@ public static void sendPing (
     Socket output,
     int sequence) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.PING);
+    DecenMsg self = new DecenMsg(DecenMsg.PING);
     self.setSequence (sequence);
     self.send (output); 
 }
 
 //--------------------------------------------------------------------------
-//Send the PING_OK to the socket in one step
+//Send the DECENACK to the socket in one step
 
-public static void sendPing_Ok (
+public static void sendDECENACK (
     Socket output,
     int sequence) 
 {
-    ZreMsg self = new ZreMsg (ZreMsg.PING_OK);
+    DecenMsg self = new DecenMsg(DecenMsg.DECENACK);
     self.setSequence (sequence);
     self.send (output); 
 }
 
 
 //  --------------------------------------------------------------------------
-//  Duplicate the ZreMsg message
+//  Duplicate the DecenMsg message
 
-public ZreMsg dup ()
+public DecenMsg dup ()
 {
-    ZreMsg copy = new ZreMsg (this.id);
+    DecenMsg copy = new DecenMsg(this.id);
     if (this.address != null)
         copy.address = this.address.duplicate ();
     switch (this.id) {
     case HELLO:
         copy.sequence = this.sequence;
         copy.ipaddress = this.ipaddress;
-        copy.mailbox = this.mailbox;
-        copy.groups = new ArrayList <String> (this.groups);
+        copy.port = this.port;
+        copy.pools = new ArrayList <String> (this.pools);
         copy.status = this.status;
         copy.headers = new HashMap <String, String> (this.headers);
     break;
-    case WHISPER:
+    case ALIVE:
         copy.sequence = this.sequence;
         copy.content = this.content.duplicate ();
     break;
-    case SHOUT:
+    case BROADCAST:
         copy.sequence = this.sequence;
-        copy.group = this.group;
+        copy.pool = this.pool;
         copy.content = this.content.duplicate ();
     break;
     case JOIN:
         copy.sequence = this.sequence;
-        copy.group = this.group;
+        copy.pool = this.pool;
         copy.status = this.status;
     break;
     case LEAVE:
         copy.sequence = this.sequence;
-        copy.group = this.group;
+        copy.pool = this.pool;
         copy.status = this.status;
     break;
     case PING:
         copy.sequence = this.sequence;
     break;
-    case PING_OK:
+    case DECENACK:
         copy.sequence = this.sequence;
     break;
     }
@@ -717,7 +699,7 @@ public ZreMsg dup ()
 }
 
 //  Dump headers key=value pair to stdout
-public static void headersDump (Map.Entry <String, String> entry, ZreMsg self)
+public static void headersDump (Map.Entry <String, String> entry, DecenMsg self)
 {
     System.out.printf ("        %s=%s\n", entry.getKey (), entry.getValue ());
 }
@@ -736,10 +718,10 @@ public void dump ()
             System.out.printf ("    ipaddress='%s'\n", ipaddress);
         else
             System.out.printf ("    ipaddress=\n");
-        System.out.printf ("    mailbox=%d\n", (long)mailbox);
-        System.out.printf ("    groups={");
-        if (groups != null) {
-            for (String value : groups) {
+        System.out.printf ("    port=%d\n", (long)port);
+        System.out.printf ("    pools={");
+        if (pools != null) {
+            for (String value : pools) {
                 System.out.printf (" '%s'", value);
             }
         }
@@ -753,8 +735,8 @@ public void dump ()
         System.out.printf ("    }\n");
         break;
         
-    case WHISPER:
-        System.out.println ("WHISPER:");
+    case ALIVE:
+        System.out.println ("ALIVE:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
         System.out.printf ("    content={\n");
         if (content != null) {
@@ -773,13 +755,13 @@ public void dump ()
         System.out.printf ("    }\n");
         break;
         
-    case SHOUT:
-        System.out.println ("SHOUT:");
+    case BROADCAST:
+        System.out.println ("BROADCAST:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
-        if (group != null)
-            System.out.printf ("    group='%s'\n", group);
+        if (pool != null)
+            System.out.printf ("    pool='%s'\n", pool);
         else
-            System.out.printf ("    group=\n");
+            System.out.printf ("    pool=\n");
         System.out.printf ("    content={\n");
         if (content != null) {
             int size = content.size ();
@@ -800,20 +782,20 @@ public void dump ()
     case JOIN:
         System.out.println ("JOIN:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
-        if (group != null)
-            System.out.printf ("    group='%s'\n", group);
+        if (pool != null)
+            System.out.printf ("    pool='%s'\n", pool);
         else
-            System.out.printf ("    group=\n");
+            System.out.printf ("    pool=\n");
         System.out.printf ("    status=%d\n", (long)status);
         break;
         
     case LEAVE:
         System.out.println ("LEAVE:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
-        if (group != null)
-            System.out.printf ("    group='%s'\n", group);
+        if (pool != null)
+            System.out.printf ("    pool='%s'\n", pool);
         else
-            System.out.printf ("    group=\n");
+            System.out.printf ("    pool=\n");
         System.out.printf ("    status=%d\n", (long)status);
         break;
         
@@ -822,8 +804,8 @@ public void dump ()
         System.out.printf ("    sequence=%d\n", (long)sequence);
         break;
         
-    case PING_OK:
-        System.out.println ("PING_OK:");
+    case DECENACK:
+        System.out.println ("DECENACK:");
         System.out.printf ("    sequence=%d\n", (long)sequence);
         break;
         
@@ -890,41 +872,41 @@ public void setIpaddress (String format, Object ... args)
 
 
 //  --------------------------------------------------------------------------
-//  Get/set the mailbox field
+//  Get/set the port field
 
-public int mailbox ()
+public int port ()
 {
-    return mailbox;
+    return port;
 }
 
-public void setMailbox (int mailbox)
+public void setport (int port)
 {
-    this.mailbox = mailbox;
+    this.port = port;
 }
 
 
 //  --------------------------------------------------------------------------
-//  Iterate through the groups field, and append a groups value
+//  Iterate through the pools field, and append a pools value
 
-public List <String> groups ()
+public List <String> pools ()
 {
-    return groups;
+    return pools;
 }
 
-public void appendGroups (String format, Object ... args)
+public void appendpools (String format, Object ... args)
 {
     //  Format into newly allocated string
     
     String string = String.format (format, args);
     //  Attach string to list
-    if (groups == null)
-        groups = new ArrayList <String> ();
-    groups.add (string);
+    if (pools == null)
+        pools = new ArrayList <String> ();
+    pools.add (string);
 }
 
-public void setGroups (Collection <String> value)
+public void setpools (Collection <String> value)
 {
-    groups = new ArrayList (value); 
+    pools = new ArrayList (value); 
 }
 
 
@@ -985,7 +967,7 @@ public void insertHeaders (String key, String format, Object ... args)
     headersBytes += key.length () + 1 + string.length ();
 }
 
-public void setHeaders (Map <String, String> value)
+public void setHeaders (HashMap<String, Request> value)
 {
     if (value != null)
         headers = new HashMap <String, String> (value); 
@@ -1011,17 +993,17 @@ public void setContent (ZFrame frame)
 }
 
 //  --------------------------------------------------------------------------
-//  Get/set the group field
+//  Get/set the pool field
 
-public String group ()
+public String pool ()
 {
-    return group;
+    return pool;
 }
 
-public void setGroup (String format, Object ... args)
+public void setpool (String format, Object ... args)
 {
     //  Format into newly allocated string
-    group = String.format (format, args);
+    pool = String.format (format, args);
 }
 
 

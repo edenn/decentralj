@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package com.decentralbank.decentralj.gui.main;
-
+/*
 import java.io.IOException;
 
 import de.jensd.fx.fontawesome.AwesomeDude;
@@ -41,8 +41,8 @@ public class App extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         launch(args);
-    }
+    }*/
 
-}
+//}

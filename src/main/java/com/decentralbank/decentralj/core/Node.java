@@ -2,29 +2,28 @@ package com.decentralbank.decentralj.core;
 
 import java.math.BigInteger;
 
-import com.decentralbank.decentralj.net.MiniDHT;
+import com.decentralbank.decentralj.net.DHT;
 import com.decentralbank.decentralj.net.DecentralPeer;
-import com.decentralbank.decentralj.net.RoutingTable;
-import com.decentralbank.decentralj.net.ServerThread;
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.AddressFormatException;
-import com.google.bitcoin.core.NetworkParameters;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.NetworkParameters;
 
 public class Node {
 	
 	public static final int MAXCON=11;
-	private String NextPeerID;
-	private String ID;
-	private String Port;
-	private String PoolId;
-	private String[] PoolMembers = new String[MAXCON];
-	private String Hostname;
-	private String NextPeerHostName;
-	private String NextPeerPort;
-	private String RedirectPort;
-	private String RedirectHostName;
+	private String nextPeerID;
+	private String id;
+    private String status;
+	private String port;
+	private String poolId;
+	private String[] poolMembers = new String[MAXCON];
+	private String hostname;
+	private String nextPeerHostName;
+	private String nextPeerPort;
+	private String redirectPort;
+	private String redirectHostName;
 	private NodeWallet wallet;
-	private MiniDHT poolDHT; //DHT to keep track of all votin pool members
+	private DHT poolDHT; //DHT to keep track of all votin pool members
 	private static Node instance = new Node();
 	
 	//get instance of node
@@ -39,130 +38,136 @@ public class Node {
 	}
 	
 	public Node() {
-		this.poolDHT = new MiniDHT();
+		this.poolDHT = new DHT();
 	}
 	
 	public String getID() {
-		return ID;
+		return id;
 	}
 
 	public void setID(String ID) {
-		ID = ID;
+		this.id = ID;
 	}
 
 	public String getPort() {
-		return Port;
+		return this.port;
 	}
 
 	public void setPort(String port) {
-		Port = port;
+		this.port = port;
 	}
 	
 	public String getPoolId() {
-		return PoolId;
+		return this.poolId;
 	}
 	
 	public void setPoolId(String poolId) {
-		PoolId = poolId;
+		this.poolId = poolId;
 	}
 
 	public String [] getPoolMembers() {
-		return PoolMembers;
+		return poolMembers;
 	}
 	
 	public void setPoolMembers(String [] members) {
-		PoolMembers = members.clone();
+		poolMembers = members.clone();
 	}
 
 	public String getNextPeerID() {
-		return NextPeerID;
+		return nextPeerID;
 	}
 
 	public void setNextPeerID(String nextPeerID) {
-		NextPeerID = nextPeerID;
+		nextPeerID = nextPeerID;
 	}
 
 	public String getHostname() {
-		return Hostname;
+		return hostname;
 	}
 
 	public void setHostname(String hostname) {
-		Hostname = hostname;
+		hostname = hostname;
 	}
 
 	public String getNextPeerHostName() {
-		return NextPeerHostName;
+		return nextPeerHostName;
 	}
 
 	public void setNextPeerHostName(String NextPeerHostName) {
-		this.NextPeerHostName = NextPeerHostName;
+		this.nextPeerHostName = NextPeerHostName;
 	}
 
 	public String getNextPeerPort() {
-		return NextPeerPort;
+		return nextPeerPort;
 	}
 
 	public void setNextPeerPort(String NextPeerPort) {
-		this.NextPeerPort = NextPeerPort;
+		this.nextPeerPort = NextPeerPort;
 	}
 
 	public String getRedirectHostName() {
-		return RedirectHostName;
+		return redirectHostName;
 	}
 
 	public void setRedirectHostName(String redirectHostName) {
-		RedirectHostName = redirectHostName;
+		redirectHostName = redirectHostName;
 	}
 
 	public String getRedirectPort() {
-		return RedirectPort;
+		return redirectPort;
 	}
 
 	public void setRedirectPort(String redirectPort) {
-		RedirectPort = redirectPort;
+		redirectPort = redirectPort;
 	}
 
+	public DHT getDHT() {
+        return this.poolDHT;
+    }
 
-	public MiniDHT getDHT() {
-		return poolDHT;
-	}
-
-	
-	public void setDHT(MiniDHT lehashtable) {
+	public void setDHT(DHT lehashtable) {
 		poolDHT = lehashtable;
 	}
 	
 	public NodeWallet getWallet(){
-		
 		return wallet;
-		
 	}
 	
 	public void createWallet(){
-		
 		if (wallet != null) {
 		   return;
 		}	
 		wallet = new NodeWallet();
-		
 	}
+
+    public String getStatus() {
+        return this.status;
+    }
 	
 	 // return String of object
 	@Override
 	public String toString(){
-		
-		return "Hostname: "+this.Hostname+" Port: "+this.Port+" ID: "+this.ID+" NextHostname: "+this.NextPeerHostName+" NextPort: "+
-			this.NextPeerPort+" NextID: "+this.NextPeerID+" Maximum connections: "+this.MAXCON+" Hashtable: "+this.getDHT().toString();
-	
+		return "Hostname: "+this.hostname+" Port: "+this.port+" ID: "+this.id+" NextHostname: "+this.nextPeerHostName+" NextPort: "+
+			this.nextPeerPort+" NextID: "+this.nextPeerID+" Maximum connections: "+this.MAXCON+" Routing Table: "+this.getDHT().toString();
 	}
 	
 	
 	public void addPeer(DecentralPeer PeerModel){
-		
-		poolDHT.addPeer(PeerModel);	
-	
+		poolDHT.addPeer(PeerModel);
 	}
-	
+
+    public void connectPool(String localID, String PoolID) {
+        poolDHT.connect( localID, PoolID);
+    }
+
+    public void connectPeer(String localID, String PeerID) {
+        DecentralPeer peer = new DecentralPeer();
+        peer.connect(localID, PeerID);
+    }
+
+    public void disconnect() {
+        poolDHT.disconnect();
+    }
 	
 	//testing
 	public static void main(String [] args) throws AddressFormatException {
@@ -175,7 +180,7 @@ public class Node {
 		// leaddress.equals("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
 		 Address targetAddress = new Address(netParams, "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
 		//Address.getParametersFromAddress("mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn");
-		lewallet.setBalance(targetAddress, leinteger);
+		//lewallet.setBalance(targetAddress, leinteger);
 		//BigInteger result = lewallet.getBalance(leaddress);
 		System.out.print(targetAddress.toString());
 		

@@ -2,9 +2,7 @@ target
 .classpath
 .project
 .settings
-
+.idea/
 bin/
-
-.idea/.name
-
-*.wallet
+wallet/
+wallet.dat

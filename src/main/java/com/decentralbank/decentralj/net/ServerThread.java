@@ -29,9 +29,9 @@ public class ServerThread extends Thread  {
 	    public void run(){
 	    	
 			    Context context = ZMQ.context(1);
-		        Socket sink = context.socket(ZMQ.ROUTER);
-		        sink.bind("tcp://*:8400");
-		
+		        Socket sink = context.socket(ZMQ.ROUTER); // Establish a ROUTER socket to communicate with DEALER connections
+		        sink.bind("tcp://*:8400"); // bind to port 8400
+		        node = Node.getInstance();  //get instance of Node
 		        while (!Thread.currentThread().isInterrupted()) {
 		        	 
 		            // Wait for next request from the client, wrap it inside ZMsg		        	 
@@ -43,8 +43,14 @@ public class ServerThread extends Thread  {
 		        	 //create a list to store frames in
 		        	 Object[] list = new Object[request.size()];     
 		        	  list = request.toArray();
-		        	  //list[0] is peer identity, list[1] is data
-		        	  identities.put(list[0].toString(), list[1].toString());
+		        	//list[0] is peer identity, list[1] is data
+                    //if peer id is not in list add to it
+                    if(!identities.containsKey(list[0].toString())){
+                        identities.put(list[0].toString(), list[1].toString());
+                    } else {
+                        //update value
+                        identities.put(list[0].toString(), list[1].toString());
+                    }
 		        	//print identities
 		            System.out.println(identities);
 		            
@@ -52,14 +58,12 @@ public class ServerThread extends Thread  {
 		            try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 		        }
 
 		    
 		        sink.close ();
-		        anonymous.close ();
 		        context.term();
 
 		    }

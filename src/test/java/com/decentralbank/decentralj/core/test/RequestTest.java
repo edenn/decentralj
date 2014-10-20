@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.bitcoin.core.*;
+import org.bitcoinj.core.*;
 import com.decentralbank.decentralj.core.Request;
 
 public class RequestTest {
