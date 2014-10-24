@@ -561,7 +561,7 @@ public static void sendHello (
     self.setport (port);
     self.setpools (new ArrayList <String> (pools));
     self.setStatus (status);
-    self.setHeaders (new HashMap <String, String> (headers));
+   // self.setHeaders (new HashMap <String, String> (headers));
     self.send (output); 
 }
 
@@ -969,10 +969,10 @@ public void insertHeaders (String key, String format, Object ... args)
 
 public void setHeaders (HashMap<String, Request> value)
 {
-    if (value != null)
-        headers = new HashMap <String, String> (value); 
-    else
-        headers = value;
+    //if (value != null)
+       // headers = new HashMap <String, String> (value);
+   // else
+       // headers = value;
 }
 
 

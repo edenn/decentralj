@@ -2,7 +2,6 @@ package com.decentralbank.decentralj.core;
 
 import java.io.File;
 import java.io.IOException;
-
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import org.bitcoinj.core.*;
@@ -36,6 +35,7 @@ import com.decentralbank.decentralj.core.listeners.AddressConfidenceListener;
 import com.decentralbank.decentralj.core.listeners.BalanceListener;
 import com.decentralbank.decentralj.core.listeners.TxConfidenceListener;
 import com.decentralbank.decentralj.core.listeners.BlockchainDownloadListener;
+import javax.servlet.ServletConfig;
 
 import java.io.File;
 import java.io.Serializable;
@@ -72,11 +72,9 @@ public class NodeWallet {
     
 
     public static void main(String args[]) throws AddressFormatException, BlockStoreException, UnknownHostException {
-        
-
         System.out.println("NodeWallet");
     	NetworkParameters np = NetworkParameters.testNet();
-    	
+
     	NodeWallet lewallet = new NodeWallet();
     	lewallet.addNewAccount();
     	//lewallet.createWallet();

@@ -18,8 +18,7 @@ public class DecentralGroup
     }
     
     //  Construct new group object
-    public static DecentralGroup newGroup (String name, Map<String, DecentralGroup> container)
-    {
+    public static DecentralGroup newGroup (String name, Map<String, DecentralGroup> container) {
     	DecentralGroup group = new DecentralGroup (name);
         container.put (name, group);
         

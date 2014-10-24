@@ -3,6 +3,7 @@ package com.decentralbank.decentralj.core;
 import java.security.SecureRandom;
 import java.util.Scanner;
 
+import com.decentralbank.decentralj.commandline.CommandFactory;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Context;
 
@@ -21,8 +22,9 @@ public class DecentralJ {
 		//ZMQ.Socket serverSocket = context.socket(ZMQ.ROUTER);
 		SecureRandom sr = new SecureRandom();
 	}
-	
-	public void run() throws InterruptedException {
+
+
+    public void run() throws InterruptedException {
 		System.out.println("Decentral Network Version 0.0.1");
 		System.out.println("Type 'help' for a list of commands");
 		String cmd = null;
@@ -31,33 +33,35 @@ public class DecentralJ {
 			Scanner in = new Scanner(System.in);
 			System.out.print(">>> ");	
 			cmd = in.nextLine();
+            CommandFactory.setFactory();
 			switch(cmd.toLowerCase()){
 				case "start":
+                    CommandFactory.getCommand("start");
 					start();
 					break;
                 case "?":
-                    printHelp();
+                    CommandFactory.getCommand("?");
                     break;
 				case "help":
-                    printHelp();
+                    CommandFactory.getCommand("help");
 					break;
                 case "testnet":
-                    printHelp();
+                    CommandFactory.getCommand("testnet");
                     break;
                 case "gen":
-                    printHelp();
+                    CommandFactory.getCommand("gen");
                     break;
                 case "port":
-                    printHelp();
+                    CommandFactory.getCommand("port");
                     break;
                 case "connect":
-                    printHelp();
+                    CommandFactory.getCommand("connect");
                     break;
                 case "listen":
-                    printHelp();
+                    CommandFactory.getCommand("listen");
                     break;
                 case "bind":
-                    printHelp();
+                    CommandFactory.getCommand("bind");
                     break;
 			}
 		}
@@ -71,7 +75,7 @@ public class DecentralJ {
 		System.out.println("Decentral: Connecting to peers...");
 		decentralNode = new Node();
 	}
-	
+
 	public void printHelp(){
 		System.out.println("Commands: ");
 		System.out.println("    -start                   Starts Decentral sever and clients");
