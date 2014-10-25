@@ -63,6 +63,9 @@ public class DecentralJ {
                 case "bind":
                     CommandFactory.getCommand("bind");
                     break;
+                case "exit":
+                    CommandFactory.getCommand("exit");
+                    break;
 			}
 		}
 	}

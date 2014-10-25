@@ -77,6 +77,15 @@ class bindToPort implements Command
     }
 }
 
+
+class exit implements Command
+{
+
+    public void execute(Object ... args) {
+        Runtime.getRuntime().halt(0);
+    }
+}
+
 class add implements Command
 {
 

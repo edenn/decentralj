@@ -1,6 +1,5 @@
 package com.decentralbank.decentralj.net.rpc;
 
-import com.decentralbank.decentralj.core.CommandLine;
 import com.googlecode.jsonrpc4j.JsonRpcServer;
 import com.googlecode.jsonrpc4j.StreamServer;
 
@@ -18,7 +17,6 @@ import javax.servlet.ServletConfig;
 public class RpcServer extends HttpServlet {
 
     private JsonRpcServer jsonRpcServer;
-    private CommandLine commands;
     int maxThreads = 50;
     int port = 1420;
     InetAddress bindAddress;

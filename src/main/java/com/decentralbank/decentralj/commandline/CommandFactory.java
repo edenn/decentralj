@@ -15,35 +15,11 @@ public class CommandFactory {
         map.put("listen", new listen());
         map.put("bind", new bindToPort());
         map.put("add", new add());
+        map.put("exit", new exit());
     }
 
     public static Command getCommand(String type){
-        switch(type){
-            case "start":
-                map.get("start").execute();
-                break;
-            case "?":
-                map.get("?").execute();
-                break;
-            case "help":
-                map.get("help").execute();
-                break;
-            case "gen":
-                map.get("gen").execute();
-                break;
-            case "port":
-                map.get("port").execute();
-                break;
-            case "connect":
-                map.get("connect").execute();
-                break;
-            case "listen":
-                map.put("listen", new listen());
-                break;
-            case "bind":
-                map.get("bind").execute();
-                break;
-        }
+             map.get(type).execute();
         return null;
     }
 }
