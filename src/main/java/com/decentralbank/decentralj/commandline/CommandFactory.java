@@ -22,4 +22,5 @@ public class CommandFactory {
              map.get(type).execute();
         return null;
     }
+
 }
