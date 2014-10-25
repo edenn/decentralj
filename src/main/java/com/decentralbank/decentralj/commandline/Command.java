@@ -8,6 +8,7 @@ interface Command {
     public void execute(Object ... args);
 }
 
+//running serverThread and instantiating Node.
 class start implements Command
 {
     Node decentralNode = Node.getInstance();

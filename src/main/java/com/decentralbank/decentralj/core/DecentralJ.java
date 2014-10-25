@@ -4,22 +4,10 @@ import java.security.SecureRandom;
 import java.util.Scanner;
 
 import com.decentralbank.decentralj.commandline.CommandFactory;
-import org.zeromq.ZMQ;
-import org.zeromq.ZMQ.Context;
-
-import com.decentralbank.decentralj.net.DecentralGroup;
-import com.decentralbank.decentralj.net.ServerThread;
 
 public class DecentralJ {
-	
-	public static Node decentralNode;
-	private static  ZMQ.Socket serverSocket = null;
-    private boolean listening = true;
-    private static ZMQ.Context context = ZMQ.context(1);
-    private static final int Threads = 10;
-	
+
 	public DecentralJ(){
-		//ZMQ.Socket serverSocket = context.socket(ZMQ.ROUTER);
 		SecureRandom sr = new SecureRandom();
 	}
 
@@ -37,7 +25,6 @@ public class DecentralJ {
 			switch(cmd.toLowerCase()){
 				case "start":
                     CommandFactory.getCommand("start");
-					start();
 					break;
                 case "?":
                     CommandFactory.getCommand("?");
@@ -69,26 +56,5 @@ public class DecentralJ {
 			}
 		}
 	}
-	//running serverThread and instantiating Node.
-	public void start() {
-		System.out.println("Decentral: Starting server...");
-		//running thread alongside
-		ServerThread server = new ServerThread(context);
-		server.run();
-		System.out.println("Decentral: Connecting to peers...");
-		decentralNode = new Node();
-	}
-
-	public void printHelp(){
-		System.out.println("Commands: ");
-		System.out.println("    -start                   Starts Decentral sever and clients");
-        System.out.println("    -testnet                 Use Bitcoin Testnet (Default)");
-        System.out.println("    -gen                     Generate Deposit Multisig Addresses");
-        System.out.println("    -connect                 Connect only to the specified node(s)");
-        System.out.println("    -listen                  Accept connections from outside");
-        System.out.println("    -bind                    Bind to given address and always listen on it.");
-        System.out.println("    -exit                    Shutdown");
-    }
-	
 
 }
