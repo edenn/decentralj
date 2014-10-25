@@ -1,8 +1,15 @@
 package com.decentralbank.decentralj.commandline;
 
 import com.decentralbank.decentralj.core.Node;
+import com.decentralbank.decentralj.core.NodeWallet;
 import com.decentralbank.decentralj.net.ServerThread;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.InsufficientMoneyException;
+import org.bitcoinj.store.BlockStoreException;
 import org.zeromq.ZMQ;
+
+import java.util.concurrent.ExecutionException;
 
 interface Command {
     public void execute(Object ... args);
@@ -64,9 +71,23 @@ class connect implements Command
 
 class generateAddress implements Command
 {
-
+    NodeWallet wallet = NodeWallet.getInstance();
     public void execute(Object ... args) {
-
+        ECKey lekey = new ECKey();
+        ECKey lekey2 = new ECKey();
+        try {
+            wallet.createMultisigScript(lekey,lekey2);
+        } catch (BlockStoreException e) {
+            e.printStackTrace();
+        } catch (InsufficientMoneyException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+        }
     }
 }
 

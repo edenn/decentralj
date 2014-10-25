@@ -69,7 +69,7 @@ public class NodeWallet {
     private final List<TxConfidenceListener> txConfidenceListeners = new CopyOnWriteArrayList<>();
     private final List<BalanceListener> balanceListeners = new CopyOnWriteArrayList<>();
     private final List<DownloadListener> downloadListener = new CopyOnWriteArrayList<>();
-    
+    private static NodeWallet instance = new NodeWallet();
 
     public static void main(String args[]) throws AddressFormatException, BlockStoreException, UnknownHostException {
         System.out.println("NodeWallet");
@@ -108,6 +108,15 @@ public class NodeWallet {
     
     public NodeWallet() {
     	
+    }
+
+    public static synchronized NodeWallet getInstance() {
+        return instance;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
     }
 
     //start downloading the blockchain

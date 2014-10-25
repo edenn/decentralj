@@ -22,38 +22,7 @@ public class DecentralJ {
 			System.out.print(">>> ");	
 			cmd = in.nextLine();
             CommandFactory.setFactory();
-			switch(cmd.toLowerCase()){
-				case "start":
-                    CommandFactory.getCommand("start");
-					break;
-                case "?":
-                    CommandFactory.getCommand("?");
-                    break;
-				case "help":
-                    CommandFactory.getCommand("help");
-					break;
-                case "testnet":
-                    CommandFactory.getCommand("testnet");
-                    break;
-                case "gen":
-                    CommandFactory.getCommand("gen");
-                    break;
-                case "port":
-                    CommandFactory.getCommand("port");
-                    break;
-                case "connect":
-                    CommandFactory.getCommand("connect");
-                    break;
-                case "listen":
-                    CommandFactory.getCommand("listen");
-                    break;
-                case "bind":
-                    CommandFactory.getCommand("bind");
-                    break;
-                case "exit":
-                    CommandFactory.getCommand("exit");
-                    break;
-			}
+                    CommandFactory.getCommand(cmd.toLowerCase());
 		}
 	}
 

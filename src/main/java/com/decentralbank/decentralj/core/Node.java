@@ -133,7 +133,7 @@ public class Node {
 		return wallet;
 	}
 	
-	public void createWallet(){
+	public void createWallet() {
 		if (wallet != null) {
 		   return;
 		}	
