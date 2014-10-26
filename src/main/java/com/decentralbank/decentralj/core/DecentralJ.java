@@ -17,6 +17,7 @@ public class DecentralJ {
 		System.out.println("Type 'help' for a list of commands");
 		String cmd = null;
 		while (true){
+            System.out.println("\n");
 			System.out.println("Enter a command:");
 			Scanner in = new Scanner(System.in);
 			System.out.print(">>> ");	

@@ -2,7 +2,7 @@ package com.decentralbank.decentralj.core;
 
 import java.math.BigInteger;
 
-import com.decentralbank.decentralj.net.DHT;
+import com.decentralbank.decentralj.dht.DHT;
 import com.decentralbank.decentralj.net.DecentralPeer;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;

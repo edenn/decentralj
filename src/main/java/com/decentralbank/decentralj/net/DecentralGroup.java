@@ -1,5 +1,7 @@
 package com.decentralbank.decentralj.net;
 
+import com.decentralbank.decentralj.dht.DHT;
+
 import java.util.ArrayList;
 import java.util.Map;
 
