@@ -2,6 +2,7 @@ package com.decentralbank.decentralj.commandline;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.core.NodeWallet;
+import com.decentralbank.decentralj.net.DecentralGroup;
 import com.decentralbank.decentralj.net.ServerThread;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.ECKey;
@@ -46,7 +47,7 @@ class printHelp implements Command
 
 class listen implements Command
 {
-    Node decentralNode = Node.getInstance();
+    //Node decentralNode = Node.getInstance();
     ZMQ.Context context = ZMQ.context(1);
     public void execute(Object ... args) {
 
@@ -71,8 +72,12 @@ class connect implements Command
 
 class generateAddress implements Command
 {
-    NodeWallet wallet = NodeWallet.getInstance();
+    Node singleton = Node.getInstance();
+    //NodeWallet wallet = NodeWallet.getInstance();
+
     public void execute(Object ... args) {
+
+        NodeWallet wallet = singleton.getWallet();
         ECKey lekey = new ECKey();
         ECKey lekey2 = new ECKey();
         try {

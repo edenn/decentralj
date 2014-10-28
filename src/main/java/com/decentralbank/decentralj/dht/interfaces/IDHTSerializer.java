@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * A Serializer is used to transform data to and from a specified form.
  */
-public interface DHTSerializer<T>
+public interface IDHTSerializer<T>
 {
 
     /**

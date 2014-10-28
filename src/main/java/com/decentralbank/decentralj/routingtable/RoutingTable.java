@@ -1,14 +1,16 @@
-package com.decentralbank.decentralj.dht;
+package com.decentralbank.decentralj.routingtable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.dht.Contact;
+import com.decentralbank.decentralj.routingtable.interfaces.IRoutingTable;
 
 //Routing Table to Keep track of network
-public class RoutingTable {
+public class RoutingTable implements IRoutingTable {
 
     private Node node;
     final int BUCKET_SIZE = 20;
@@ -74,4 +76,53 @@ public class RoutingTable {
         return ret;
     }
 
+    @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public void insert(Contact c) {
+
+    }
+
+    @Override
+    public void insert(Node n) {
+
+    }
+
+    @Override
+    public int getBucketId(Contact id) {
+        return 0;
+    }
+
+    @Override
+    public List<Node> findClosest(Contact target, int numNodesRequired) {
+        return null;
+    }
+
+    @Override
+    public List getAllNodes() {
+        return null;
+    }
+
+    @Override
+    public List getAllContacts() {
+        return null;
+    }
+
+    @Override
+    public Bucket[] getBuckets() {
+        return new Bucket[0];
+    }
+
+    @Override
+    public void setUnresponsiveContacts(List<Node> contacts) {
+
+    }
+
+    @Override
+    public void setUnresponsiveContact(Node n) {
+
+    }
 }

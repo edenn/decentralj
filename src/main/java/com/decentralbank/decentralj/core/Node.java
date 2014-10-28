@@ -1,14 +1,25 @@
 package com.decentralbank.decentralj.core;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.NoSuchElementException;
 
+import com.decentralbank.decentralj.dht.Contact;
 import com.decentralbank.decentralj.dht.DHT;
+import com.decentralbank.decentralj.dht.DHTParam;
+import com.decentralbank.decentralj.dht.NodeContent;
+import com.decentralbank.decentralj.dht.interfaces.IDHTSerializer;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaDHT;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataEntry;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataContent;
 import com.decentralbank.decentralj.net.DecentralPeer;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.NetworkParameters;
 
-public class Node {
+public class Node implements IKademliaDHT {
 	
 	public static final int MAXCON=11;
 	private String nextPeerID;
@@ -140,6 +151,8 @@ public class Node {
 		wallet = new NodeWallet();
 	}
 
+    protected static void lemethod() {}
+
     public String getStatus() {
         return this.status;
     }
@@ -185,6 +198,70 @@ public class Node {
 		System.out.print(targetAddress.toString());
 		
 	}
-	
 
+
+    @Override
+    public void initialize() {
+
+    }
+
+    @Override
+    public IDHTSerializer<IKademliaStorageDataEntry> getSerializer() {
+        return null;
+    }
+
+    @Override
+    public boolean store(IKademliaStorageDataEntry content) throws IOException {
+        return false;
+    }
+
+    @Override
+    public boolean store(NodeContent content) throws IOException {
+        return false;
+    }
+
+    @Override
+    public IKademliaStorageDataEntry retrieve(String key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException {
+        return null;
+    }
+
+    @Override
+    public boolean contains(String parameter) {
+        return false;
+    }
+
+    @Override
+    public IKademliaStorageDataEntry retrieve(Contact key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException {
+        return null;
+    }
+
+    @Override
+    public boolean contains(DHTParam param) {
+        return false;
+    }
+
+    @Override
+    public IKademliaStorageDataEntry get(IKademliaStorageDataContent entry) throws IOException, NoSuchElementException {
+        return null;
+    }
+
+    @Override
+    public IKademliaStorageDataEntry get(String parameter) throws NoSuchElementException, IOException {
+        return null;
+    }
+
+    @Override
+    public void remove(IKademliaStorageDataContent entry) throws NoSuchElementException {
+
+    }
+
+    @Override
+    public List<IKademliaStorageDataContent> getStorageEntries() {
+        return null;
+    }
+
+    @Override
+    public void putStorageEntries(List<IKademliaStorageDataContent> entries) {
+
+    }
 }

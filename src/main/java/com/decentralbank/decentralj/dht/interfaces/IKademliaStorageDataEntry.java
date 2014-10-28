@@ -1,7 +1,7 @@
 package com.decentralbank.decentralj.dht.interfaces;
 
 
-public interface KademliaStorageBucket {
+public interface IKademliaStorageDataEntry {
 
     /**
      * Add the content to the storage bucket
@@ -18,5 +18,5 @@ public interface KademliaStorageBucket {
     /**
      * Get the metadata for this storage entry
      */
-    public KademliaStorageBucketData getContentMetadata();
+    public IKademliaStorageDataContent getContentMetadata();
 }

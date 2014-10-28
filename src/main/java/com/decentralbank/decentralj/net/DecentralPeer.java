@@ -15,6 +15,11 @@ import org.zeromq.ZMQ;
 import com.decentralbank.decentralj.core.Request;
 
 //Decentral Peer to handle connections with peers
+
+/**
+ * A Peer Node in the Decentral network - Contains basic node network information.
+ */
+
 public class DecentralPeer {
 
 	private byte[] ip;

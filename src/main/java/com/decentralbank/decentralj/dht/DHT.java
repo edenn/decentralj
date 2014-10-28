@@ -8,18 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.decentralbank.decentralj.dht.interfaces.DHTSerializer;
-import com.decentralbank.decentralj.dht.interfaces.KademliaDHT;
-import com.decentralbank.decentralj.dht.interfaces.KademliaStorageBucket;
-import com.decentralbank.decentralj.dht.interfaces.KademliaStorageBucketData;
+import com.decentralbank.decentralj.dht.interfaces.IDHTSerializer;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaDHT;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataEntry;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataContent;
 import com.decentralbank.decentralj.net.DecentralPeer;
+import com.decentralbank.decentralj.routingtable.RoutingTable;
 import org.zeromq.ZMQ;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.core.Request;
 
 //Decentralized Hash Table for Voting Pool Members 
-public class DHT implements KademliaDHT {
+public class DHT implements IKademliaDHT {
 	
     private RoutingTable routes; // all routes of pool
     private String poolID; // id of the pool
@@ -160,17 +161,22 @@ public class DHT implements KademliaDHT {
     }
 
     @Override
-    public DHTSerializer<KademliaStorageBucket> getSerializer() {
+    public IDHTSerializer<IKademliaStorageDataEntry> getSerializer() {
         return null;
     }
 
     @Override
-    public boolean store(KademliaStorageBucket content) throws IOException {
+    public boolean store(IKademliaStorageDataEntry content) throws IOException {
         return false;
     }
 
     @Override
-    public KademliaStorageBucket retrieve(String key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public boolean store(NodeContent content) throws IOException {
+        return false;
+    }
+
+    @Override
+    public IKademliaStorageDataEntry retrieve(String key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException {
         return null;
     }
 
@@ -180,27 +186,37 @@ public class DHT implements KademliaDHT {
     }
 
     @Override
-    public KademliaStorageBucket get(KademliaStorageBucketData entry) throws IOException, NoSuchElementException {
+    public IKademliaStorageDataEntry retrieve(Contact key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException {
         return null;
     }
 
     @Override
-    public KademliaStorageBucket get(String parameter) throws NoSuchElementException, IOException {
+    public boolean contains(DHTParam param) {
+        return false;
+    }
+
+    @Override
+    public IKademliaStorageDataEntry get(IKademliaStorageDataContent entry) throws IOException, NoSuchElementException {
         return null;
     }
 
     @Override
-    public void remove(KademliaStorageBucketData entry) throws NoSuchElementException {
-
-    }
-
-    @Override
-    public List<KademliaStorageBucketData> getStorageEntries() {
+    public IKademliaStorageDataEntry get(String parameter) throws NoSuchElementException, IOException {
         return null;
     }
 
     @Override
-    public void putStorageEntries(List<KademliaStorageBucketData> entries) {
+    public void remove(IKademliaStorageDataContent entry) throws NoSuchElementException {
+
+    }
+
+    @Override
+    public List<IKademliaStorageDataContent> getStorageEntries() {
+        return null;
+    }
+
+    @Override
+    public void putStorageEntries(List<IKademliaStorageDataContent> entries) {
 
     }
 }

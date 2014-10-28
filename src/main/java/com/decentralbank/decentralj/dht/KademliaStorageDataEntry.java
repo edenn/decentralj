@@ -1,12 +1,12 @@
 package com.decentralbank.decentralj.dht;
 
-import com.decentralbank.decentralj.dht.interfaces.KademliaStorageBucketData;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataContent;
 
 import java.util.Objects;
 import java.util.ArrayList;
 
 //TODO: need to check if it satisfies parameters
-public class ImplKademliaStorageBucketData implements KademliaStorageBucketData
+public class KademliaStorageDataEntry implements IKademliaStorageDataContent
 {
 
     private final String key;
@@ -18,7 +18,7 @@ public class ImplKademliaStorageBucketData implements KademliaStorageBucketData
     /* This value is the last time this content was last updated from the network */
     private long lastRepublished;
 
-    public ImplKademliaStorageBucketData(Contact content)
+    public KademliaStorageDataEntry(Contact content)
     {
         this.key = content.getKey();
         this.ownerId = content.getOwnerId();
@@ -91,7 +91,7 @@ public class ImplKademliaStorageBucketData implements KademliaStorageBucketData
     @Override
     public boolean equals(Object o)
     {
-        if (o instanceof KademliaStorageBucketData)
+        if (o instanceof IKademliaStorageDataContent)
         {
             return this.hashCode() == o.hashCode();
         }

@@ -5,7 +5,7 @@ import com.decentralbank.decentralj.dht.Contact;
 
 import java.util.ArrayList;
 
-public interface KademliaStorageBucketData {
+public interface IKademliaStorageDataContent {
     /**
      * @return The Contact information of this content
      */

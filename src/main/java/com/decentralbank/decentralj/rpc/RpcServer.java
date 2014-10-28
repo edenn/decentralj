@@ -1,17 +1,11 @@
-package com.decentralbank.decentralj.net.rpc;
+package com.decentralbank.decentralj.rpc;
 
 import com.googlecode.jsonrpc4j.JsonRpcServer;
-import com.googlecode.jsonrpc4j.StreamServer;
 
 import javax.servlet.http.*;
-import javax.servlet.ServletConfig;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import javax.portlet.ResourceRequest;
-import javax.servlet.ServletConfig;
-
-
 
 
 public class RpcServer extends HttpServlet {
