@@ -7,6 +7,8 @@ import java.util.*;
 
 import javax.management.ObjectName;
 
+import com.decentralbank.decentralj.dht.interfaces.IKademliaDHT;
+import com.decentralbank.decentralj.routingtable.RoutingTable;
 import com.sun.jndi.toolkit.ctx.Continuation;
 import org.zeromq.ZFrame;
 import org.zeromq.ZMQ.Socket;
@@ -51,6 +53,9 @@ public class DecentralPeer {
     private Map <String, DecentralGroup> peer_pools;     //  Groups that our peers are in
     private Map <String, DecentralGroup> own_pools;      //  Groups that we are in
     private Continuation nodeId;
+
+    private transient IKademliaDHT dht;
+    private transient RoutingTable routingTable;
 
 
     public DecentralPeer(){

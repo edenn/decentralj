@@ -1,41 +1,110 @@
 package com.decentralbank.decentralj.dht;
 
-
-import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataEntry;
 import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataContent;
 
-public class KademliaStorageDataContent implements IKademliaStorageDataEntry
+import java.util.Objects;
+import java.util.ArrayList;
+
+public class KademliaStorageDataContent implements IKademliaStorageDataContent
 {
 
-    private String content;
-    private final KademliaStorageDataEntry metadata;
+    private final String key;
+    private final ArrayList<String> ownerId;
+    private final String type;
+    private final int contentHash;
+    private final long updatedTs;
 
-    public KademliaStorageDataContent(final Contact content)
+    /* This value is the last time this content was last updated from the network */
+    private long lastRepublished;
+
+    public KademliaStorageDataContent(PeerContent content)
     {
-        this(content, new KademliaStorageDataContent(content));
+        this.key = content.getKey();
+        this.ownerId = content.getOwnerId();
+        this.type = content.getType();
+        this.contentHash = content.hashCode();
+        this.updatedTs = content.getLastUpdatedTimestamp();
+
+        this.lastRepublished = System.currentTimeMillis() / 1000L;
     }
 
-    public KademliaStorageDataContent(final IKademliaStorageDataContent metadata)
+    public String getKey()
     {
-        this.metadata = metadata;
+        return this.key;
+    }
+
+    public ArrayList<String> getOwnerId()
+    {
+        return this.ownerId;
     }
 
     @Override
-    public final void setContent(final byte[] data)
-    {
-        this.content = new String(data);
+    public Contact getContact() {
+        return null;
     }
 
     @Override
-    public final byte[] getContent()
-    {
-        return this.content.getBytes();
+    public String getId() {
+        return null;
     }
 
     @Override
-    public final IKademliaStorageDataContent getContentMetadata()
+    public ArrayList<String> getOwnersId() {
+        return null;
+    }
+
+    @Override
+    public String getType()
     {
-        return this.metadata;
+        return this.type;
+    }
+
+    @Override
+    public int getContentHash()
+    {
+        return this.contentHash;
+    }
+
+    @Override
+    public long getLastUpdatedTimestamp()
+    {
+        return this.updatedTs;
+    }
+
+    @Override
+    public long lastRepublished()
+    {
+        return this.lastRepublished;
+    }
+
+    /**
+     * Whenever we republish a content or get this content from the network, we update the last republished time
+     */
+    @Override
+    public void updateLastRepublished()
+    {
+        this.lastRepublished = System.currentTimeMillis() / 1000L;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof IKademliaStorageDataContent)
+        {
+            return this.hashCode() == o.hashCode();
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 3;
+        hash = 23 * hash + Objects.hashCode(this.key);
+        hash = 23 * hash + Objects.hashCode(this.ownerId);
+        hash = 23 * hash + Objects.hashCode(this.type);
+        return hash;
     }
 
     @Override
@@ -43,12 +112,15 @@ public class KademliaStorageDataContent implements IKademliaStorageDataEntry
     {
         StringBuilder sb = new StringBuilder("[StorageEntry: ");
 
-        sb.append("[Content: ");
-        sb.append(this.getContent());
-        sb.append("]");
-
-        sb.append(this.getContentMetadata());
-
+        sb.append("{Key: ");
+        sb.append(this.key);
+        sb.append("} ");
+        sb.append("{Owner: ");
+        sb.append(this.ownerId);
+        sb.append("} ");
+        sb.append("{Type: ");
+        sb.append(this.type);
+        sb.append("} ");
         sb.append("]");
 
         return sb.toString();

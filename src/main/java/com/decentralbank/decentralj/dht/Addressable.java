@@ -76,11 +76,17 @@ public abstract class Addressable implements Comparable<Addressable> {
         return idToString(id);
     }
 
-    public abstract void setSeenNow();
+    public void setSeenNow() {
 
-    public abstract void resetStaleCount();
+    };
 
-    public abstract void staleCount();
+    public void resetStaleCount(){
+    };
 
-    public abstract void incrementStaleCount();
+    public void staleCount(){
+    };
+
+    public void incrementStaleCount() {
+
+    };
 }

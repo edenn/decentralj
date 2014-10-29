@@ -2,7 +2,7 @@ package com.decentralbank.decentralj.dht.interfaces;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.dht.DHTParam;
-import com.decentralbank.decentralj.dht.KademliaStorageDataContent;
+import com.decentralbank.decentralj.dht.KademliaStorageDataEntry;
 import com.decentralbank.decentralj.dht.PeerContent;
 import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.routingtable.RoutingTable;
@@ -46,7 +46,7 @@ public interface IKademliaNode {
      * Stores the specified value under the given key
      * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
      */
-    public int put(KademliaStorageDataContent entry) throws IOException;
+    public int put(KademliaStorageDataEntry entry) throws IOException;
 
     /**
      * Store a content on the local node's DHT
@@ -56,7 +56,7 @@ public interface IKademliaNode {
     /**
      * Get some content stored on the DHT
      */
-    public KademliaStorageDataContent get(DHTParam param) throws NoSuchElementException, IOException;
+    public KademliaStorageDataEntry get(DHTParam param) throws NoSuchElementException, IOException;
 
     /**
      * @return String The ID of the owner of this local network

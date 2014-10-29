@@ -1,112 +1,41 @@
 package com.decentralbank.decentralj.dht;
 
-import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataContent;
 
-import java.util.Objects;
-import java.util.ArrayList;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataEntry;
 
-//TODO: need to check if it satisfies parameters
-public class KademliaStorageDataEntry implements IKademliaStorageDataContent
+public class KademliaStorageDataEntry implements IKademliaStorageDataEntry
 {
 
-    private final String key;
-    private final ArrayList<String> ownerId;
-    private final String type;
-    private final int contentHash;
-    private final long updatedTs;
+    private String content;
+    private final KademliaStorageDataContent metadata;
 
-    /* This value is the last time this content was last updated from the network */
-    private long lastRepublished;
-
-    public KademliaStorageDataEntry(Contact content)
+    public KademliaStorageDataEntry(final PeerContent content)
     {
-        this.key = content.getKey();
-        this.ownerId = content.getOwnerId();
-        this.type = content.getType();
-        this.contentHash = content.hashCode();
-        this.updatedTs = content.getLastUpdatedTimestamp();
-
-        this.lastRepublished = System.currentTimeMillis() / 1000L;
+        this(content, new KademliaStorageDataContent(content));
     }
 
-    @Override
-    public String getKey()
+    public KademliaStorageDataEntry(PeerContent content, final KademliaStorageDataContent metadata)
     {
-        return this.key;
+        this.setContent(content.toSerializedForm());
+        this.metadata = metadata;
     }
 
-    public ArrayList<String> getOwnerId()
+    @Override
+    public final void setContent(final byte[] data)
     {
-        return this.ownerId;
+        this.content = new String(data);
     }
 
     @Override
-    public Contact getContact() {
-        return null;
-    }
-
-    @Override
-    public String getId() {
-        return null;
-    }
-
-    @Override
-    public ArrayList<String> getOwnersId() {
-        return null;
-    }
-
-    @Override
-    public String getType()
+    public final byte[] getContent()
     {
-        return this.type;
+        return this.content.getBytes();
     }
 
     @Override
-    public int getContentHash()
+    public final KademliaStorageDataContent getContentMetadata()
     {
-        return this.contentHash;
-    }
-
-    @Override
-    public long getLastUpdatedTimestamp()
-    {
-        return this.updatedTs;
-    }
-
-    @Override
-    public long lastRepublished()
-    {
-        return this.lastRepublished;
-    }
-
-    /**
-     * Whenever we republish a content or get this content from the network, we update the last republished time
-     */
-    @Override
-    public void updateLastRepublished()
-    {
-        this.lastRepublished = System.currentTimeMillis() / 1000L;
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (o instanceof IKademliaStorageDataContent)
-        {
-            return this.hashCode() == o.hashCode();
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int hash = 3;
-        hash = 23 * hash + Objects.hashCode(this.key);
-        hash = 23 * hash + Objects.hashCode(this.ownerId);
-        hash = 23 * hash + Objects.hashCode(this.type);
-        return hash;
+        return this.metadata;
     }
 
     @Override
@@ -114,15 +43,12 @@ public class KademliaStorageDataEntry implements IKademliaStorageDataContent
     {
         StringBuilder sb = new StringBuilder("[StorageEntry: ");
 
-        sb.append("{Key: ");
-        sb.append(this.key);
-        sb.append("} ");
-        sb.append("{Owner: ");
-        sb.append(this.ownerId);
-        sb.append("} ");
-        sb.append("{Type: ");
-        sb.append(this.type);
-        sb.append("} ");
+        sb.append("[Content: ");
+        sb.append(this.getContent());
+        sb.append("]");
+
+        sb.append(this.getContentMetadata());
+
         sb.append("]");
 
         return sb.toString();

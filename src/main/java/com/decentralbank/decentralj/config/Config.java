@@ -15,8 +15,4 @@ public class Config {
 
     }
 
-    public K() {
-
-    }
-
 }
