@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import com.decentralbank.decentralj.dht.Contact;
 import com.decentralbank.decentralj.dht.DHT;
 import com.decentralbank.decentralj.dht.DHTParam;
-import com.decentralbank.decentralj.dht.NodeContent;
+import com.decentralbank.decentralj.dht.PeerContent;
 import com.decentralbank.decentralj.dht.interfaces.IDHTSerializer;
 import com.decentralbank.decentralj.dht.interfaces.IKademliaDHT;
 import com.decentralbank.decentralj.dht.interfaces.IKademliaStorageDataEntry;
@@ -216,7 +216,7 @@ public class Node implements IKademliaDHT {
     }
 
     @Override
-    public boolean store(NodeContent content) throws IOException {
+    public boolean store(PeerContent content) throws IOException {
         return false;
     }
 

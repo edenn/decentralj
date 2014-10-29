@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.dht.Contact;
+import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.routingtable.interfaces.IRoutingTable;
 
 //Routing Table to Keep track of network
@@ -87,7 +88,7 @@ public class RoutingTable implements IRoutingTable {
     }
 
     @Override
-    public void insert(Node n) {
+    public void insert(DecentralPeer n) {
 
     }
 
@@ -122,7 +123,8 @@ public class RoutingTable implements IRoutingTable {
     }
 
     @Override
-    public void setUnresponsiveContact(Node n) {
+    public void setUnresponsiveContact(DecentralPeer n) {
 
     }
+
 }

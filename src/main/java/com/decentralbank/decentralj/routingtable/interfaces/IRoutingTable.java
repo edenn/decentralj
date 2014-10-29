@@ -3,6 +3,7 @@ package com.decentralbank.decentralj.routingtable.interfaces;
 
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.dht.Contact;
+import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.routingtable.Bucket;
 
 import java.util.List;
@@ -16,17 +17,13 @@ public interface IRoutingTable {
 
     /**
      * Adds a contact to the routing table based on how far it is from the LocalNode.
-     *
-     * @param c The contact to add
      */
     public void insert(Contact c);
 
     /**
      * Adds a node to the routing table based on how far it is from the LocalNode.
-     *
-     * @param n The node to add
      */
-    public void insert(Node n);
+    public void insert(DecentralPeer n);
 
     /**
      * Compute the bucket ID in which a given node should be placed; the bucketId is computed based on how far the node is away from the Local Node.
@@ -61,5 +58,5 @@ public interface IRoutingTable {
     /**
      * Method used by operations to notify the routing table of any contacts that have been unresponsive.
      */
-    public void setUnresponsiveContact(Node n);
+    public void setUnresponsiveContact(DecentralPeer n);
 }

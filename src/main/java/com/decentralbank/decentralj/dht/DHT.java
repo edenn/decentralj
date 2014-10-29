@@ -171,7 +171,7 @@ public class DHT implements IKademliaDHT {
     }
 
     @Override
-    public boolean store(NodeContent content) throws IOException {
+    public boolean store(PeerContent content) throws IOException {
         return false;
     }
 

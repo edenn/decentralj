@@ -1,7 +1,7 @@
 package com.decentralbank.decentralj.dht;
 
 
-import com.decentralbank.decentralj.core.Node;
+import com.decentralbank.decentralj.net.DecentralPeer;
 
 //Peer Information to update DHT
 public class Contact extends Addressable{
@@ -9,9 +9,9 @@ public class Contact extends Addressable{
     private String protocol;
     private String location;
     private String port;
-    private Node node;
+    private DecentralPeer node;
 
-    public Contact() {
+    public Contact(DecentralPeer n) {
         super();
     }
 
@@ -59,7 +59,7 @@ public class Contact extends Addressable{
         return "Contact:" + getId();
     }
 
-    public Node getNode() {
+    public DecentralPeer getNode() {
         return node;
     }
 }

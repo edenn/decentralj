@@ -2,7 +2,7 @@ package com.decentralbank.decentralj.dht.interfaces;
 
 import com.decentralbank.decentralj.dht.Contact;
 import com.decentralbank.decentralj.dht.DHTParam;
-import com.decentralbank.decentralj.dht.NodeContent;
+import com.decentralbank.decentralj.dht.PeerContent;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public interface IKademliaDHT {
          */
         public boolean store(IKademliaStorageDataEntry content) throws IOException;
 
-        public boolean store(NodeContent content) throws IOException;
+        public boolean store(PeerContent content) throws IOException;
         /**
          * Retrieves a Content from local storage
          */

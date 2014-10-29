@@ -3,7 +3,8 @@ package com.decentralbank.decentralj.dht.interfaces;
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.dht.DHTParam;
 import com.decentralbank.decentralj.dht.KademliaStorageDataContent;
-import com.decentralbank.decentralj.dht.NodeContent;
+import com.decentralbank.decentralj.dht.PeerContent;
+import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.routingtable.RoutingTable;
 
 import java.io.IOException;
@@ -33,13 +34,13 @@ public interface IKademliaNode {
     /**
      * Connect to an existing peer-to-peer network.
      * */
-    public void bootstrap(Node n) throws IOException;
+    public void bootstrap(DecentralPeer n) throws IOException;
 
     /**
      * Stores the specified value under the given key
      * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
      */
-    public int put(NodeContent content) throws IOException;
+    public int put(PeerContent content) throws IOException;
 
     /**
      * Stores the specified value under the given key
@@ -50,7 +51,7 @@ public interface IKademliaNode {
     /**
      * Store a content on the local node's DHT
      */
-    public void putLocally(NodeContent content) throws IOException;
+    public void putLocally(PeerContent content) throws IOException;
 
     /**
      * Get some content stored on the DHT

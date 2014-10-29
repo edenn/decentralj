@@ -7,6 +7,7 @@ import java.util.*;
 
 import javax.management.ObjectName;
 
+import com.sun.jndi.toolkit.ctx.Continuation;
 import org.zeromq.ZFrame;
 import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZContext;
@@ -49,6 +50,7 @@ public class DecentralPeer {
 	private Hashtable<String, DecentralPeer> incomingPeers; //  Hash of known peers, fast lookup
     private Map <String, DecentralGroup> peer_pools;     //  Groups that our peers are in
     private Map <String, DecentralGroup> own_pools;      //  Groups that we are in
+    private Continuation nodeId;
 
 
     public DecentralPeer(){
@@ -528,7 +530,9 @@ public class DecentralPeer {
 	 }
 
 
-
+    public Continuation getNodeId() {
+        return nodeId;
+    }
 }
 
 
