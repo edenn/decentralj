@@ -649,5 +649,8 @@ public class NodeWallet {
 	 }
 
 
+    public String createDepositAddress() {
 
+        return "155DMywvJ95s6S6kaKNPquYm5hi2HaEtfz";
+    }
 }

@@ -13,6 +13,10 @@ Give Decentralj (or Decentraljd) the -? or –-help argument and it will print o
 
  -help                  This help message
 
+ -start                 Starts Decentral sever listens for peers
+
+ -exit                  Shutdowns Decentral Server
+
  -conf=<file>           Specify configuration file (default: bitcoin.conf)
 
  -datadir=<directory>   Specify data directory
@@ -74,6 +78,8 @@ Give Decentralj (or Decentraljd) the -? or –-help argument and it will print o
 ###Wallet options:
 
  -disablewallet         Do not load the wallet and disable wallet RPC calls
+
+ -deposit               Generate Deposit Guarantee Addresses for Node
 
  -transactions			List History of Transactions
 

@@ -34,14 +34,20 @@ class start implements Command
 class printHelp implements Command
 {
     public void execute(Object ... args) {
+        /* Decentral Network Server Commands*/
         System.out.println("Commands: ");
-        System.out.println("    -start                   Starts Decentral sever and clients");
+        System.out.println("    -start                   Starts Decentral sever listens for peers");
         System.out.println("    -testnet                 Use Bitcoin Testnet (Default)");
         System.out.println("    -gen                     Generate Deposit Multisig Addresses");
         System.out.println("    -connect                 Connect only to the specified node(s)");
         System.out.println("    -listen                  Accept connections from outside");
         System.out.println("    -bind                    Bind to given address and always listen on it.");
-        System.out.println("    -exit                    Shutdown");
+        System.out.println("    -bind                    Bind to given address and always listen on it.");
+        System.out.println("    -exit                    Shutdowns Decentral Server");
+        /* Decentral Wallet Commands */
+        System.out.println("    -deposit                 Generate Deposit Guarantee Addresses");
+        System.out.println("    -transactions            List History of Transactions");
+
     }
 }
 
@@ -56,7 +62,6 @@ class listen implements Command
 
 class setPort implements Command
 {
-
     public void execute(Object ... args) {
 
     }
@@ -93,6 +98,17 @@ class generateAddress implements Command
         } catch (AddressFormatException e) {
             e.printStackTrace();
         }
+    }
+}
+
+class generateDeposit implements Command
+{
+    Node singleton = Node.getInstance();
+
+    public void execute(Object ... args) {
+        NodeWallet wallet = singleton.getWallet();
+        wallet.createDepositAddress();
+
     }
 }
 
