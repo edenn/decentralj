@@ -1,8 +1,8 @@
 package com.decentralbank.decentralj.routingtable.interfaces;
 
 
-import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.dht.Contact;
+import com.decentralbank.decentralj.dht.KademliaId;
 import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.routingtable.Bucket;
 
@@ -28,12 +28,12 @@ public interface IRoutingTable {
     /**
      * Compute the bucket ID in which a given node should be placed; the bucketId is computed based on how far the node is away from the Local Node.
      */
-    public int getBucketId(Contact id);
+    public int getBucketId(KademliaId id);
 
     /**
      * Find the closest set of contacts to a given NodeId
      */
-    public List<Node> findClosest(Contact target, int numNodesRequired);
+    public List<DecentralPeer> findClosest(KademliaId target, int numNodesRequired);
 
     /**
      * @return List A List of all Nodes in this RoutingTable
@@ -53,7 +53,7 @@ public interface IRoutingTable {
     /**
      * Method used by operations to notify the routing table of any contacts that have been unresponsive.
      */
-    public void setUnresponsiveContacts(List<Node> contacts);
+    public void setUnresponsiveContacts(List<DecentralPeer> contacts);
 
     /**
      * Method used by operations to notify the routing table of any contacts that have been unresponsive.

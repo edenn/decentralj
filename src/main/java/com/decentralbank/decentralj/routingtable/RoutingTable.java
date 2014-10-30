@@ -1,130 +1,211 @@
 package com.decentralbank.decentralj.routingtable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
+import com.decentralbank.decentralj.config.Config;
 import com.decentralbank.decentralj.core.Node;
 import com.decentralbank.decentralj.dht.Contact;
+import com.decentralbank.decentralj.dht.KademliaId;
+import com.decentralbank.decentralj.dht.KeyComparator;
 import com.decentralbank.decentralj.net.DecentralPeer;
 import com.decentralbank.decentralj.routingtable.interfaces.IRoutingTable;
 
 //Routing Table to Keep track of network
 public class RoutingTable implements IRoutingTable {
 
-    private Node node;
-    final int BUCKET_SIZE = 20;
-    private final int CONSTANT=100; //list of 100 nodes
-    private ArrayList[] buckets = new ArrayList[CONSTANT];
+    private DecentralPeer localNode;
+    private transient Bucket[] buckets;
+    private transient Config config;
 
-    public Node getNode() {
-        return node;
+
+    public RoutingTable(DecentralPeer localNode, Config config)
+    {
+        this.localNode = localNode;
+        this.config = config;
+
+        /* Initialize all of the buckets to a specific depth */
+        this.initialize();
+
+        /* Insert the local node */
+        this.insert(localNode);
     }
-    
-    //get Pool ID
-	public String getID() {
-		
-		return node.getID();
-		
-	}
 
-    //update
-    public void update(Contact contact) {
-        //int distance = Contact.getLength(contact.xor(getNode()));
-        ArrayList bucket = buckets[BUCKET_SIZE]; // replace BUCKET_SIZE for distance
-        Contact found = null;
-        for (int i = 0; i < bucket.size(); i++) {
-            Contact el = (Contact) bucket.get(i);
-            if (el.equals(getNode())) {
-                found = contact;
+    /**
+     * Initialize the RoutingTable to it's default state
+     */
+
+    public final void initialize()
+    {
+        this.buckets = new Bucket[KademliaId.ID_LENGTH];
+        for (int i = 0; i < KademliaId.ID_LENGTH; i++)
+        {
+            buckets[i] = new Bucket(i);
+        }
+    }
+
+    /**
+     * Adds a contact to the routing table based on how far it is from the LocalNode.
+     */
+
+    public synchronized final void insert(Contact c)
+    {
+        this.buckets[this.getBucketId(c.getNode().getNodeId())].insert(c);
+    }
+
+    /**
+     * Adds a node to the routing table based on how far it is from the LocalNode.
+     *
+     * @param n The node to add
+     */
+
+    public synchronized final void insert(DecentralPeer n)
+    {
+        this.buckets[this.getBucketId(n.getNodeId())].insert(n);
+    }
+
+    /**
+     * Compute the bucket ID in which a given node should be placed; the bucketId is computed based on how far the node is away from the Local Node.
+     */
+
+    public int getBucketId(KademliaId nid)
+    {
+        int bId = this.localNode.getNodeId().getDistance(nid) - 1;
+
+        /* If we are trying to insert a node into it's own routing table, then the bucket ID will be -1, so let's just keep it in bucket 0 */
+        return bId < 0 ? 0 : bId;
+    }
+
+    /**
+     * Find the closest set of contacts to a given NodeId
+     */
+
+    public synchronized final List<DecentralPeer> findClosest(KademliaId target, int numNodesRequired)
+    {
+        TreeSet<DecentralPeer> sortedSet = new TreeSet<>(new KeyComparator(target));
+        sortedSet.addAll(this.getAllNodes());
+
+        List<DecentralPeer> closest = new ArrayList<>(numNodesRequired);
+
+        /* Now we have the sorted set, lets get the top numRequired */
+        int count = 0;
+        for (DecentralPeer n : sortedSet)
+        {
+            closest.add(n);
+            if (++count == numNodesRequired)
+            {
                 break;
             }
         }
+        return closest;
+    }
 
-        if (found == null) {
-            if (bucket.size() <= BUCKET_SIZE) {
-                bucket.add(0, found);
-            } else {
-                System.out.println("**** Routing table needs GC ");
+    /**
+     * @return List A List of all Nodes in this RoutingTable
+     */
+    @Override
+    public synchronized final List<DecentralPeer> getAllNodes()
+    {
+        List<DecentralPeer> nodes = new ArrayList<>();
+
+        for (Bucket b : this.buckets)
+        {
+            for (Contact c : b.getContacts())
+            {
+                nodes.add(c.getNode());
             }
         }
+
+        return nodes;
     }
-	
-	//set a node
-    public void setNode(Node node) {
-        this.node = node;
+
+    /**
+     * @return List A List of all Nodes in this JKademliaRoutingTable
+     */
+
+    public final List<Contact> getAllContacts()
+    {
+        List<Contact> contacts = new ArrayList<>();
+
+        for (Bucket b : this.buckets)
+        {
+            contacts.addAll(b.getContacts());
+        }
+
+        return contacts;
     }
-    
-    //routing table
-    public RoutingTable(Node id) {
-        this.setNode(id);
-        for (int i = 0; i < CONSTANT; i++) {
-            buckets[i] = new ArrayList<Object>();
+
+    /**
+     * @return Bucket[] The buckets in this Instance
+     */
+
+    public final Bucket[] getBuckets()
+    {
+        return this.buckets;
+    }
+
+    /**
+     * Set the Buckets of this routing table, mainly used when retrieving saved state
+     */
+    public final void setBuckets(Bucket[] buckets)
+    {
+        this.buckets = buckets;
+    }
+
+    /**
+     * Method used by operations to notify the routing table of any contacts that have been unresponsive.
+     */
+
+    public void setUnresponsiveContacts(List<DecentralPeer> contacts)
+    {
+        if (contacts.isEmpty())
+        {
+            return;
+        }
+        for (DecentralPeer n : contacts)
+        {
+            this.setUnresponsiveContact(n);
         }
     }
 
-    //update a peer
-    public void update(Node peer) {
-     
+    /**
+     * Method used by operations to notify the routing table of any contacts that have been unresponsive.
+     */
+
+    public synchronized void setUnresponsiveContact(DecentralPeer n)
+    {
+        int bucketId = this.getBucketId(n.getNodeId());
+
+        /* Remove the contact from the bucket */
+        this.buckets[bucketId].removeNode(n);
     }
 
-    //find available nodes
-    public ArrayList findAvailableNodes(Node target, int count){
-        ArrayList ret = new ArrayList<Object>();
-       
-        
-        return ret;
-    }
 
-    @Override
-    public void initialize() {
+    public synchronized final String toString()
+    {
+        StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
+        int totalContacts = 0;
+        for (Bucket b : this.buckets)
+        {
+            if (b.numContacts() > 0)
+            {
+                totalContacts += b.numContacts();
+                sb.append("# nodes in Bucket with depth ");
+                sb.append(b.getDepth());
+                sb.append(": ");
+                sb.append(b.numContacts());
+                sb.append("\n");
+                sb.append(b.toString());
+                sb.append("\n");
+            }
+        }
 
-    }
+        sb.append("\nTotal Contacts: ");
+        sb.append(totalContacts);
+        sb.append("\n\n");
 
-    @Override
-    public void insert(Contact c) {
+        sb.append("Printing Routing Table Ended ******************** ");
 
-    }
-
-    @Override
-    public void insert(DecentralPeer n) {
-
-    }
-
-    @Override
-    public int getBucketId(Contact id) {
-        return 0;
-    }
-
-    @Override
-    public List<Node> findClosest(Contact target, int numNodesRequired) {
-        return null;
-    }
-
-    @Override
-    public List getAllNodes() {
-        return null;
-    }
-
-    @Override
-    public List getAllContacts() {
-        return null;
-    }
-
-    @Override
-    public Bucket[] getBuckets() {
-        return new Bucket[0];
-    }
-
-    @Override
-    public void setUnresponsiveContacts(List<Node> contacts) {
-
-    }
-
-    @Override
-    public void setUnresponsiveContact(DecentralPeer n) {
-
+        return sb.toString();
     }
 
 }
