@@ -2,7 +2,6 @@ package com.decentralbank.decentralj.core;
 
 import java.io.File;
 import java.io.IOException;
-
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import org.bitcoinj.core.*;
@@ -36,6 +35,7 @@ import com.decentralbank.decentralj.core.listeners.AddressConfidenceListener;
 import com.decentralbank.decentralj.core.listeners.BalanceListener;
 import com.decentralbank.decentralj.core.listeners.TxConfidenceListener;
 import com.decentralbank.decentralj.core.listeners.BlockchainDownloadListener;
+import javax.servlet.ServletConfig;
 
 import java.io.File;
 import java.io.Serializable;
@@ -69,14 +69,12 @@ public class NodeWallet {
     private final List<TxConfidenceListener> txConfidenceListeners = new CopyOnWriteArrayList<>();
     private final List<BalanceListener> balanceListeners = new CopyOnWriteArrayList<>();
     private final List<DownloadListener> downloadListener = new CopyOnWriteArrayList<>();
-    
+    private static NodeWallet instance = new NodeWallet();
 
     public static void main(String args[]) throws AddressFormatException, BlockStoreException, UnknownHostException {
-        
-
         System.out.println("NodeWallet");
     	NetworkParameters np = NetworkParameters.testNet();
-    	
+
     	NodeWallet lewallet = new NodeWallet();
     	lewallet.addNewAccount();
     	//lewallet.createWallet();
@@ -110,6 +108,15 @@ public class NodeWallet {
     
     public NodeWallet() {
     	
+    }
+
+    public static synchronized NodeWallet getInstance() {
+        return instance;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
     }
 
     //start downloading the blockchain
@@ -642,5 +649,8 @@ public class NodeWallet {
 	 }
 
 
+    public String createDepositAddress() {
 
+        return "155DMywvJ95s6S6kaKNPquYm5hi2HaEtfz";
+    }
 }

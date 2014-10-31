@@ -1,5 +1,6 @@
 package com.decentralbank.decentralj.net;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -7,6 +8,10 @@ import java.util.*;
 
 import javax.management.ObjectName;
 
+import com.decentralbank.decentralj.dht.KademliaId;
+import com.decentralbank.decentralj.dht.interfaces.IKademliaDHT;
+import com.decentralbank.decentralj.routingtable.RoutingTable;
+import com.sun.jndi.toolkit.ctx.Continuation;
 import org.zeromq.ZFrame;
 import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZContext;
@@ -15,7 +20,12 @@ import org.zeromq.ZMQ;
 import com.decentralbank.decentralj.core.Request;
 
 //Decentral Peer to handle connections with peers
-public class DecentralPeer {
+
+/**
+ * A Peer Node in the Decentral network - Contains basic node network information.
+ */
+
+public class DecentralPeer implements Serializable {
 
 	private byte[] ip;
 	protected int    port;
@@ -44,6 +54,10 @@ public class DecentralPeer {
 	private Hashtable<String, DecentralPeer> incomingPeers; //  Hash of known peers, fast lookup
     private Map <String, DecentralGroup> peer_pools;     //  Groups that our peers are in
     private Map <String, DecentralGroup> own_pools;      //  Groups that we are in
+    private KademliaId nodeId;
+
+    private transient IKademliaDHT dht;
+    private transient RoutingTable routingTable;
 
 
     public DecentralPeer(){
@@ -523,7 +537,9 @@ public class DecentralPeer {
 	 }
 
 
-
+    public KademliaId getNodeId() {
+        return nodeId;
+    }
 }
 
 

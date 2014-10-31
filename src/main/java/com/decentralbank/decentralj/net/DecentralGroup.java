@@ -1,5 +1,7 @@
 package com.decentralbank.decentralj.net;
 
+import com.decentralbank.decentralj.dht.DHT;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -18,8 +20,7 @@ public class DecentralGroup
     }
     
     //  Construct new group object
-    public static DecentralGroup newGroup (String name, Map<String, DecentralGroup> container)
-    {
+    public static DecentralGroup newGroup (String name, Map<String, DecentralGroup> container) {
     	DecentralGroup group = new DecentralGroup (name);
         container.put (name, group);
         
