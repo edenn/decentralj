@@ -35,6 +35,9 @@ import com.decentralbank.decentralj.core.listeners.AddressConfidenceListener;
 import com.decentralbank.decentralj.core.listeners.BalanceListener;
 import com.decentralbank.decentralj.core.listeners.TxConfidenceListener;
 import com.decentralbank.decentralj.core.listeners.BlockchainDownloadListener;
+import org.bitcoinj.wallet.KeyChain;
+import org.bitcoinj.wallet.KeyChainGroup;
+
 import javax.servlet.ServletConfig;
 
 import java.io.File;
@@ -57,12 +60,12 @@ public class NodeWallet {
 	private String amountToSend;
 	private String recipient;
 	private Wallet wallet;
-	final NetworkParameters netParams = NetworkParameters.testNet();
+    private final String WALLET_FILE = "DECENTRAL";
+	private NetworkParameters netParams = NetworkParameters.prodNet();
 	private File walletFile;
     private Map<Address, Account> NodeInfo = new HashMap<Address, Account>();
     private Map<BigInteger, Transaction> transactionMap = new HashMap<BigInteger, Transaction>();
-    private BlockStore blockStore = new MemoryBlockStore(netParams); //instance which keeps the block chain data structure somewhere, like on disk.
-    private BlockChain chain;                                       // bitcoinj blockchain data structure
+    private KeyChainGroup keyChainGroup;
     private WalletAppKit walletKit;                                  //high level wallet wrapper
     private WalletEventListener walletEventListener;                 // wallet listener for events
     private final List<AddressConfidenceListener> addressConfidenceListeners = new CopyOnWriteArrayList<>();
@@ -71,43 +74,19 @@ public class NodeWallet {
     private final List<DownloadListener> downloadListener = new CopyOnWriteArrayList<>();
     private static NodeWallet instance = new NodeWallet();
 
-    public static void main(String args[]) throws AddressFormatException, BlockStoreException, UnknownHostException {
+    public static void main(String args[]) throws AddressFormatException, UnknownHostException, UnreadableWalletException {
         System.out.println("NodeWallet");
     	NetworkParameters np = NetworkParameters.testNet();
+        NodeWallet wallet = new NodeWallet();
+        DownloadListener downloadListener = new DownloadListener();
+        wallet.start(downloadListener);
+        wallet.addNewAddress();
+        //wallet.createDepositAddress();
 
-    	NodeWallet lewallet = new NodeWallet();
-    	lewallet.addNewAccount();
-    	//lewallet.createWallet();
-        Address leaddress = new Address(NetworkParameters.testNet(),"moMR8WDJTd3PDKRNUpErwPs5MvPVyX2mri");
-       //lewallet.loadWallet("wallet.dat");
-
-
-        //System.out.print(lewallet.getBalance());
-    	lewallet.getTotalNodeBalance();
-        ECKey lekey = new ECKey();
-        ECKey lekey2 = new ECKey();
-        byte [] bytes = lekey.getPubKey();
-
-
-        try {
-            lewallet.createMultisigScript(lekey, lekey2);
-        } catch (BlockStoreException e) {
-            e.printStackTrace();
-        } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        //BigInteger Balance = this.wallet.getBalance();
-
-    	
     }
     
     public NodeWallet() {
-    	
+        wallet = new Wallet(netParams);
     }
 
     public static synchronized NodeWallet getInstance() {
@@ -118,73 +97,35 @@ public class NodeWallet {
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-
-    //start downloading the blockchain
-    public void walletStart() {
-        // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
-            walletKit = new WalletAppKit(netParams, new File("."), "decentral") {
-            @Override
-            protected void onSetupCompleted() {
-                // This is called in a background thread after startAndWait is called, as setting up various objects
-                // can do disk and network IO that may cause UI jank/stuttering in wallet apps if it were to be done
-                // on the main thread.
-                if (wallet().getKeychainSize() < 1)
-                    wallet().importKey(new ECKey());
-            }
-        };
-        // Download the block chain and wait until it's done.
-        walletKit.startAndWait();
-    }
      /******* Wallet ******/
 
     //start waller and download the blockchain
-    public void initialize(org.bitcoinj.core.DownloadListener downloadListener) {
+    public void start(org.bitcoinj.core.DownloadListener downloadListener) {
 
         // If seed is non-null it means we are restoring from backup.
-        walletKit = new WalletAppKit(netParams, new File("."), "DECENTRAL") {
+        walletKit = new WalletAppKit(netParams, new File("."), WALLET_FILE) {
             @Override
             protected void onSetupCompleted() {
                 // TODO: make user wait for 1 confirmation
                 walletKit.wallet().allowSpendingUnconfirmedTransactions();
-                if (params != RegTestParams.get())
+                if (netParams != RegTestParams.get())
                     walletKit.peerGroup().setMaxConnections(11);
                 walletKit.peerGroup().setBloomFilterFalsePositiveRate(0.00001);
                 initWallet();
             }
         };
 
-        /*if (params == RegTestParams.get()) {
-            walletKit.connectToLocalHost();   //regtest mode
-        }*/
-        if (netParams == MainNetParams.get()) {
-            try {
-                walletKit.setCheckpoints(getClass().getResourceAsStream("/wallet/checkpoints"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else if (netParams == TestNet3Params.get()) {
-            walletKit.setCheckpoints(getClass().getResourceAsStream("/wallet/checkpoints.testnet"));
-            //walletAppKit.useTor();
-        }
         walletKit.setDownloadListener(downloadListener)
                 .setBlockingStartup(false)
-                .setUserAgent("BitSquare", "0.1");
+                .setUserAgent("Decentral", "0.1");
 
 
+        walletKit.setAutoSave(true);
         walletKit.startAsync();
     }
 
     private void initWallet() {
         wallet = walletKit.wallet();
-
-        //walletAppKit.peerGroup().setMaxConnections(11);
-
-       /* if (params == RegTestParams.get())
-            walletAppKit.peerGroup().setMinBroadcastConnections(1);
-        else
-            walletAppKit.peerGroup().setMinBroadcastConnections(3);*/
-
 
         walletEventListener = new WalletEventListener() {
             @Override
@@ -368,11 +309,15 @@ public class NodeWallet {
 
     private Coin getBalance(LinkedList<TransactionOutput> transactionOutputs, Address address) {
         Coin balance = Coin.ZERO;
+        System.out.println("called balance");
         for (TransactionOutput transactionOutput : transactionOutputs) {
             if (transactionOutput.getScriptPubKey().isSentToAddress() || transactionOutput.getScriptPubKey()
                     .isSentToP2SH()) {
+                System.out.println("getkey");
                 Address addressOutput = transactionOutput.getScriptPubKey().getToAddress(netParams);
+                System.out.println(addressOutput);
                 if (addressOutput.equals(address)) {
+                    System.out.println("balance"+balance.toString());
                     balance = balance.add(transactionOutput.getValue());
                 }
             }
@@ -453,29 +398,20 @@ public class NodeWallet {
      *******************************************************************************************************************/
 	//create a wallet
     public void createWallet(){
-
-	    Wallet wallet = null;
-	    final File walletFile = new File("wallet.dat");
-	    	         
-	    	try {
-	    			wallet = new Wallet(netParams);    	             
-	    	        // 5 times
-	    	        for (int i = 0; i < 5; i++) {          
-	    	             // create a key and add it to the wallet
-                        ECKey lekey = new ECKey();
-	    	             wallet.addKey(lekey);
-                        System.out.println("lekey"+lekey.toAddress(netParams).toString());
-
-	    	        }
-                System.out.println(wallet.toString());
-	    	             // save wallet contents to disk
-	    	         wallet.saveToFile(walletFile);
-	    	             
-	    	     } catch (IOException e) {
-	    	    	 	System.out.println("Unable to create wallet file.");
-	    	     }
-	        
+        wallet = walletKit.wallet();
+        //      wallet = new Wallet(netParams, keyChainGroup);
 	 }
+
+
+    public void addNewAddress() {
+        this.wallet.freshReceiveAddress();
+     
+    }
+
+    public void loadWallet () throws UnreadableWalletException {
+        File sana = new File("DECENTRAL.wallet");
+        System.out.println(walletKit.wallet().loadFromFile(sana).toString());
+    }
 
     // load a wallet
 	 public void loadWallet(String filename) throws BlockStoreException, UnknownHostException {
@@ -485,18 +421,7 @@ public class NodeWallet {
 		     try {
 				wallet = Wallet.loadFromFile(walletFile);
 
-                 /*final PeerGroup peerGroup =
-                         new PeerGroup(blockStore, netParams, chain);
-                 peerGroup.setUserAgent("MyApp", "1.2");
-                 peerGroup.addWallet(wallet);
-                 peerGroup.addAddress(
-                         new PeerAddress(InetAddress.getLocalHost()));
-                 peerGroup.startAsync();*/
 
-                 BlockChain chain = new BlockChain(netParams, wallet,blockStore);
-                 PeerGroup peerGroup = new PeerGroup(netParams, chain);
-                 peerGroup.addWallet(wallet);
-                 peerGroup.startAsync();
                  //peerGroup.;
                  System.out.println("You have : " + wallet.getWatchedBalance() + " bitcoins" + wallet.toString());
                  System.exit(0);
@@ -536,13 +461,11 @@ public class NodeWallet {
 	 public void buildTransaction(Transaction transaction, String passwordDigest, String amountToSend, String recipient) throws BlockStoreException, AddressFormatException, InsufficientMoneyException, IOException{
 
 		    // initialize BlockChain object
-		    chain = new BlockChain(netParams, wallet, blockStore);
+		    //chain = new BlockChain(netParams, wallet, blockStore);
 		
 		    // instantiate Peer object to handle connections
 		    // final Peer peer = new Peer(netParams, null, new PeerAddress(InetAddress.getLocalHost()), chain, null);
-		    PeerGroup peerGroup = new PeerGroup(netParams, chain); // PeerGroup.setFastCatchupTime
-		    peerGroup.addWallet(wallet);
-		    peerGroup.startAndWait();
+
 		             
 		    // recipient address provided by official Bitcoin client
 		    Address recipientAddress = new Address(netParams, recipient);
@@ -598,8 +521,8 @@ public class NodeWallet {
 	 // create a 2 of 3 p2sh account
 	 public Address createMultisigScript(ECKey clientKey, ECKey clientKey2) throws BlockStoreException, InsufficientMoneyException, InterruptedException, ExecutionException, AddressFormatException {
 		 // initialize BlockChain object
-		 chain = new BlockChain(netParams, wallet, blockStore);
-		 PeerGroup peerGroup = new PeerGroup(netParams, chain);
+		 //chain = new BlockChain(netParams, wallet, blockStore);
+		 //PeerGroup peerGroup = new PeerGroup(netParams, chain);
 		 //The Node's Key for This Account
 		 ECKey serverKey = new ECKey();
 
@@ -642,15 +565,4 @@ public class NodeWallet {
     }
 
 
-	 
-	 //n lock time implementation
-	 public void refund(){
-		 
-	 }
-
-
-    public String createDepositAddress() {
-
-        return "155DMywvJ95s6S6kaKNPquYm5hi2HaEtfz";
-    }
 }

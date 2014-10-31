@@ -107,7 +107,7 @@ class generateDeposit implements Command
 
     public void execute(Object ... args) {
         NodeWallet wallet = singleton.getWallet();
-        wallet.createDepositAddress();
+        wallet.addNewAddress();
 
     }
 }
