@@ -20,15 +20,14 @@ public class RestApi {
 	@GET
 	@Path("contract_address")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Transaction responseMsg(@PathParam("parameter") String parameter,
-			 @QueryParam("value") String value) {
+	public Transaction responseMsg() {
 
 		Date date = new Date();
 
 		MultiSignatureAddress multiSigAddress = new MultiSignatureAddress();
 
-		multiSigAddress.setAccountName("Uwelicious");
-		multiSigAddress.setAccountAddress(parameter);
+		multiSigAddress.setAccountName("YourAddress");
+		multiSigAddress.setAccountAddress("1DVFzKfDPWHkr8TZYPMdACk8mHdVgU4kSq");
 		multiSigAddress.setTimeStamp(new Timestamp(date.getTime()));
 		return multiSigAddress;
 
