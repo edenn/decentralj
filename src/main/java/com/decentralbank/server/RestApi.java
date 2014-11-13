@@ -18,24 +18,42 @@ import javax.ws.rs.core.Response;
 public class RestApi {
 
 	@GET
-	@Path("/account/{parameter}")
+	@Path("contract_address")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Transaction responseMsg(@PathParam("parameter") String parameter,
-			@DefaultValue("Nothing to say") @QueryParam("value") String value) {
+			 @QueryParam("value") String value) {
+
+		Date date = new Date();
+
+		MultiSignatureAddress multiSigAddress = new MultiSignatureAddress();
+
+		multiSigAddress.setAccountName("Uwelicious");
+		multiSigAddress.setAccountAddress(parameter);
+		multiSigAddress.setTimeStamp(new Timestamp(date.getTime()));
+		return multiSigAddress;
+
+	}
+	
+	@GET
+	@Path("contract/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Transaction responseMsg(@PathParam("id") String id) {
 
 		Date date = new Date();
 
 		Transaction transaction = new Transaction();
 
-		transaction.setAccountName("Uwelicious");
-		transaction.setAccountAddress(parameter);
+		transaction.setAccountName(id);
+		transaction.setAccountAddress(id);
 		transaction.setTimeStamp(new Timestamp(date.getTime()));
 		return transaction;
 
 	}
 
+	
+
 	@POST
-	@Path("/transaction/send")
+	@Path("/contract")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response consumeJSON(Transaction transaction) {
 
