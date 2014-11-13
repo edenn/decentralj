@@ -29,7 +29,7 @@ public class DHT implements IKademliaDHT {
     private ArrayList<DecentralPeer> peers = new ArrayList<DecentralPeer>(); // List of Peers
     
     public DHT() {
-		this.routes = new RoutingTable(Node.getInstance());
+		//this.routes = new RoutingTable(Node.getInstance());
     }
     
     public DHT(String poolID) {
@@ -76,7 +76,8 @@ public class DHT implements IKademliaDHT {
 
     //get Node ID
     public String getNodeID() {
-        return getRoutes().getID();
+       // return getRoutes().getID();
+        return null;
     }
     
     //handle connections to a node
